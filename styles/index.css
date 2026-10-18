@@ -1,6 +1,6 @@
 
 :root { --slidev-theme-primary: #171717; }
-.slidev-layout { background: #ffffff; color: #171717; padding: 42px 52px 52px; font-family: "Noto Sans JP", "Hiragino Sans", sans-serif; font-size: 21px; line-height: 1.65; }
+.slidev-layout { background: #ffffff; color: #171717; padding: 42px 52px 52px; font-family: "Noto Sans JP", "Noto Sans CJK JP", "Hiragino Sans", sans-serif; font-size: 21px; line-height: 1.65; }
 .slidev-layout h1 { font-size: 35px; font-weight: 750; line-height: 1.35; margin: 15px 0 29px; letter-spacing: -.035em; }
 .slidev-layout h3 { color: #404040; font-size: 21px; font-weight: 650; margin: 12px 0 14px; }
 .eyebrow { color: #171717; font-size: 14px; font-weight: 700; letter-spacing: .12em; }
@@ -72,3 +72,73 @@
 .uring > span > span { display: block; padding: 0; }
 
 .slidev-layout:has(.takeaway + .fine) .takeaway { bottom: 66px; }
+
+/* Diagrams remain editable HTML and use the existing monochrome canvas. */
+.flow { font-size: 21px; line-height: 1.5; }
+.flow.horizontal { display: grid; grid-template-columns: 1fr 24px 1fr 24px 1fr 24px 1fr; align-items: center; gap: 8px; margin-top: 42px; }
+.flow.horizontal > div { text-align: center; padding: 17px 8px; border-top: 2px solid #262626; background: #f7f7f7; min-width: 0; }
+.flow small { display: block; color: #616161; font-size: 15px; margin-top: 7px; }
+.connector, .diagram-arrow, .down-arrow { text-align: center; color: #616161; font-size: 25px; }
+.runtime-flow { margin-top: 36px !important; }
+.runtime-flow > div { font-size: 19px; }
+.flow.vertical { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-top: 22px; }
+.flow.vertical > div { text-align: center; width: 100%; padding: 10px 8px; background: #f7f7f7; }
+.flow.vertical > span { color: #737373; line-height: 1; }
+.flow.vertical.compact-flow { margin-top: 8px; gap: 3px; }
+.flow.vertical.compact-flow > div { padding: 9px; }
+.adoption-list > div { display: grid; grid-template-columns: 230px 1fr; align-items: baseline; gap: 26px; padding: 14px 0; border-bottom: 1px solid #d4d4d4; }
+.adoption-list h3 { margin: 0; color: #171717; font-size: 24px; }
+.slidev-layout .adoption-list p { margin: 0; font-size: 20px; line-height: 1.6; }
+.syscall-map { display: grid; grid-template-columns: 135px 1fr; gap: 8px 25px; align-items: center; margin: 30px 55px 0; }
+.space-label { color: #616161; font-size: 17px; }
+.flow-node { padding: 10px 20px; background: #f7f7f7; font-size: 24px; }
+.flow-node small { display: block; font-size: 15px; color: #616161; }
+.boundary { border-top: 2px dashed #737373; border-bottom: 2px dashed #737373; padding: 7px 20px; text-align: center; }
+.ring-flow { display: grid; grid-template-columns: 1fr 30px 1fr 30px 1fr; align-items: center; gap: 9px; margin-top: 35px; }
+.ring-stage { display: flex; flex-direction: column; gap: 12px; padding: 18px 16px; background: #f7f7f7; border-top: 2px solid #262626; text-align: center; font-size: 18px; }
+.ring-stage small { font-size: 12px; color: #616161; letter-spacing: .06em; }
+.ring-stage strong { font-size: 22px; }
+.ring-return { display: flex; align-items: center; justify-content: space-between; gap: 18px; border-bottom: 1px solid #d4d4d4; padding: 18px 10px; font-size: 20px; }
+.term-defs { font-size: 17px; line-height: 1.7; }
+.reason-list > div { display: grid; grid-template-columns: 225px 1fr; gap: 24px; border-bottom: 1px solid #d4d4d4; padding: 21px 0; align-items: baseline; }
+.reason-list b { font-size: 24px; }
+.slidev-layout .reason-list p { margin: 0; font-size: 21px; line-height: 1.55; }
+.epoll-flow { margin-top: 48px !important; }
+.epoll-flow strong { font-size: 20px; }
+.compare-flow h3 { margin-top: 5px; }
+.compare-flow .flow.vertical { margin-top: 10px; }
+.compare-flow .fine { margin-top: 16px; }
+.io-interface { grid-template-columns: 1.25fr 1fr; gap: 45px; }
+.io-interface pre { font-size: 16px !important; }
+.branch-line { width: 54%; height: 18px; border-top: 1px solid #737373; border-left: 1px solid #737373; border-right: 1px solid #737373; margin: 17px auto 0; }
+.backend-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: center; margin-top: 3px; }
+.backend-pair > div { padding: 10px 5px; background: #f7f7f7; font-size: 20px; }
+.backend-pair small { display: block; font-size: 14px; color: #616161; margin-top: 4px; }
+.di-diagrams h3 { margin-top: 3px; }
+.di-diagrams .flow { font-size: 20px; }
+.experiment-result { margin-top: 26px; display: flex; justify-content: space-between; align-items: baseline; gap: 20px; border-top: 1px solid #d4d4d4; padding-top: 17px; font-size: 17px; }
+.limits h3 { margin-top: 10px; }
+.slidev-layout .limits p { margin-top: 0; font-size: 20px; line-height: 1.55; }
+.security-flow { grid-template-columns: 1fr 24px 1.5fr 24px 1fr 24px .8fr !important; margin-top: 40px !important; }
+.security-flow > div { font-size: 21px; }
+.closing-list > div { display: grid; grid-template-columns: 43px 1fr; gap: 18px; align-items: baseline; padding: 14px 0; border-bottom: 1px solid #d4d4d4; font-size: 23px; }
+.closing-list b { font-size: 16px; color: #616161; }
+.closing-message { font-size: 22px; }
+.reference-grid { gap: 42px; }
+.reference-grid h3 { margin: 5px 0 10px; font-size: 20px; color: #171717; }
+.reference-grid ul { padding-left: 20px; }
+.reference-grid li { font-size: 17px; margin: 7px 0; line-height: 1.5; }
+.slidev-layout .reference-grid a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: #b5b5b5; }
+.slidev-layout .flow.vertical .ref-operation, .slidev-layout .flow-node .ref-operation { color: var(--code-operation); }
+@media print {
+  .slidev-layout { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* Keep the final message clear of dense comparison content. */
+.reason-list > div { grid-template-columns: 270px 1fr; padding: 14px 0; }
+.reason-list b { font-size: 22px; }
+.slidev-layout:has(.limits) .big-statement { margin: 8px 0 16px !important; }
+.slidev-layout .limits p { font-size: 19px; line-height: 1.5; margin-bottom: 15px; }
+.limits h3 { margin: 6px 0 10px; }
+
+.slidev-layout .fd-table td, .slidev-layout .fd-table th { padding: 6px 13px; }

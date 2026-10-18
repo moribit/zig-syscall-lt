@@ -1,0 +1,28 @@
+{
+  "checkedAt": "2026-10-18T13:42:02.391Z",
+  "kernel": "Linux 7.0.14-orbstack-00380-ga7e0a2dc9535 aarch64 GNU/Linux",
+  "zig": "0.17.0",
+  "programs": {
+    "raw_write": {
+      "stdout": "hello\n",
+      "stderr": ""
+    },
+    "raw_read": {
+      "stdout": "read works\n",
+      "stderr": ""
+    },
+    "io_basic": {
+      "stdout": "hello\n",
+      "stderr": ""
+    },
+    "io_injection": {
+      "stdout": "hello\n",
+      "stderr": "Threaded: success\nfailing: InputOutput\n"
+    },
+    "io_uring_read": {
+      "stdout": "",
+      "stderr": "user_data=42, res=128\n"
+    }
+  },
+  "writeTrace": "write(1, \"hello\\n\", 6)                  = 6\n+++ exited with 0 +++\n"
+}

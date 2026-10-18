@@ -5,12 +5,19 @@
   "scripts": {
     "build": "slidev build",
     "dev": "slidev --open",
-    "export": "slidev export"
+    "export": "slidev export --output output/pdf/zig-linux-async-io.pdf",
+    "check:snippets": "node scripts/check-snippets.mjs",
+    "check:linux": "node scripts/check-linux.mjs",
+    "check:visual": "node scripts/check-visual.mjs",
+    "check:backends": "node scripts/check-backends.mjs"
   },
   "dependencies": {
     "@slidev/cli": "^53.0.0",
     "@slidev/theme-default": "latest",
     "@slidev/theme-seriph": "latest",
     "vue": "^3.5.33"
+  },
+  "devDependencies": {
+    "playwright-chromium": "^1.62.1"
   }
 }

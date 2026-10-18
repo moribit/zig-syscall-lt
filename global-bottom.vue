@@ -1,6 +1,6 @@
 <template>
   <footer v-if="$slidev.nav.currentPage > 1" class="deck-footer">
-    <span>Zig / Linux I/O</span>
+    <span>Zig 0.17.0 / Linux I/O</span>
     <span>{{ $slidev.nav.currentPage }} / {{ $slidev.nav.total }}</span>
   </footer>
 </template>

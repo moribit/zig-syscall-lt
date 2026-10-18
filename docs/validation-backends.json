@@ -1,0 +1,33 @@
+{
+  "checkedAt": "2026-10-18T13:56:15.742Z",
+  "zig": "0.17.0",
+  "kernel": "Linux 7.0.14-orbstack-00380-ga7e0a2dc9535 aarch64 GNU/Linux",
+  "modifiedStandardLibrary": false,
+  "backends": {
+    "threaded": {
+      "build": {
+        "status": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "run": {
+        "status": 0,
+        "stdout": "Hello, World!\n",
+        "stderr": ""
+      },
+      "trace": "2485  writev(1, [{iov_base=\"Hello, World!\\n\", iov_len=14}], 1) = 14\n2485  +++ exited with 0 +++\n"
+    },
+    "evented": {
+      "build": {
+        "status": 1,
+        "stdout": "",
+        "stderr": "install\n+- install io_backend_demo\n   +- compile exe io_backend_demo debug native 1 errors\n/home/mimoc/.zvm/0.17.0/lib/std/Io/Uring.zig:759:14: error: no field named 'processReplacePath' in struct 'Io.VTable'\n            .processReplacePath = processReplacePath,\n             ^~~~~~~~~~~~~~~~~~\n/home/mimoc/.zvm/0.17.0/lib/std/Io.zig:51:20: note: struct declared here\npub const VTable = struct {\n                   ^~~~~~\nreferenced by:\n    main: snippets/io_backend_demo.zig:18:27\n    callMain [inlined]: /home/mimoc/.zvm/0.17.0/lib/std/start.zig:827:30\n    callMainWithArgs [inlined]: /home/mimoc/.zvm/0.17.0/lib/std/start.zig:729:20\n    posixCallMainAndExit: /home/mimoc/.zvm/0.17.0/lib/std/start.zig:681:38\n    2 reference(s) hidden; use '-freference-trace=6' to see all references\nerror: 1 compilation errors\nfailed command: /home/mimoc/.zvm/0.17.0/zig build-exe -Odebug --dep backend_options -Mroot=snippets/io_backend_demo.zig -Mbackend_options=snippets/.zig-cache/o/ebe82e8ffda39a457274e030ef0e96e5/options.zig --cache-dir snippets/.zig-cache --global-cache-dir /home/mimoc/.cache/zig --build-root snippets --name io_backend_demo --zig-lib-dir /home/mimoc/.zvm/0.17.0/lib/ --listen=-\n\nBuild Summary: 1/4 steps succeeded (1 failed)\ninstall transitive failure\n+- install io_backend_demo transitive failure\n   +- compile exe io_backend_demo debug native 1 errors\n\n"
+      }
+    }
+  },
+  "standardLibrary": {
+    "std/Io.zig": "382a4e343017183eff88e311f983066f88306e7bfcd85a890723b3697f4b2732",
+    "std/Io/Uring.zig": "7e7851e9c1fdcf111aa28448e7b40f944c664f82002f872e527753cd96279ab0"
+  },
+  "comparisonCompleted": false
+}

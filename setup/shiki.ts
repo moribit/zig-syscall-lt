@@ -1,29 +1,48 @@
 import { defineShikiSetup } from '@slidev/types'
 
-// Dark code blocks use brighter variants of the prose reference colors.
+const colors = { fd: '#8bb9ff', buffer: '#7ee0cc', result: '#d8b4fe', operation: '#ffc078' }
+function role(value: string): keyof typeof colors {
+  if (/^(io|fd|fd5|0|1|2|5)$/.test(value)) return 'fd'
+  if (value.startsWith('"Hello') || /^(buf|url|"hello\\n")$/.test(value)) return 'buffer'
+  if (/^(n|6|14|128|future|response|text|res)$/.test(value)) return 'result'
+  return 'operation'
+}
+
 export default defineShikiSetup(() => ({
   themes: { light: 'github-dark', dark: 'github-dark' },
   transformers: [{
     name: 'explanation-colors',
-    span(node) {
-      const value = node.children.map(child => child.type === 'text' ? child.value : '').join('').trim()
-      const lang = this.options.lang
-      if (!['zig', 'js', 'javascript', 'sh', 'c'].includes(lang ?? '')) return
-      if (value.startsWith('//')) {
-        node.properties.style = 'color: #a8b5ca'
-        return
+    line(node) {
+      // Work on whole lines so split TextMate tokens (shell output, escapes)
+      // still receive the same semantic hue as their explanation labels.
+      const text = node.children.map((child: any) => child.children?.map((c: any) => c.value ?? '').join('') ?? child.value ?? '').join('')
+      const comment = text.indexOf('//')
+      const ranges = [...text.matchAll(/"Hello, World!\\n"|"hello\\n"|\b(?:io|fd|fd5|buf|url|n|6|14|128|0|1|2|5|future|response|text|res|async|await|cancel|read|writev|write|EAGAIN)\b/g)]
+        .filter(match => comment < 0 || match.index! < comment)
+        .map(match => ({ start: match.index!, end: match.index! + match[0].length, color: colors[role(match[0])] }))
+      let offset = 0
+      const output: any[] = []
+      for (const child of node.children as any[]) {
+        const content = child.children?.map((c: any) => c.value ?? '').join('') ?? child.value ?? ''
+        const start = offset
+        offset += content.length
+        const boundaries = new Set([start, offset])
+        for (const range of ranges) {
+          if (range.start > start && range.start < offset) boundaries.add(range.start)
+          if (range.end > start && range.end < offset) boundaries.add(range.end)
+        }
+        if (comment >= start && comment < offset) boundaries.add(comment)
+        const points = [...boundaries].sort((a, b) => a - b)
+        for (let i = 0; i < points.length - 1; i++) {
+          const from = points[i], to = points[i + 1]
+          const range = ranges.find(r => from >= r.start && to <= r.end)
+          const properties = { ...child.properties }
+          if (comment >= 0 && from >= comment) properties.style = 'color: #a8b5ca'
+          else if (range) properties.style = `color: ${range.color}`
+          output.push({ type: 'element', tagName: 'span', properties, children: [{ type: 'text', value: content.slice(from - start, to - start) }] })
+        }
       }
-      let role: string | undefined
-      if (/^(io|fd|0|1|2)$/.test(value)) role = 'fd'
-      else if (/^(buf|"hello|hello|"hello\\n"|"hello\\n|url|urlA|urlB)$/.test(value)) role = 'buffer'
-      else if (/^(n|6|length|future|task|response|text|ra|rb|a|b)$/.test(value)) role = 'result'
-      else if (/^(read|write|async|concurrent|await|cancel|fetch|fetchLength|EAGAIN)$/.test(value)) role = 'operation'
-      if (role) {
-        this.addClassToHast(node, `ref-${role}`)
-        // Inline colors from Shiki have higher specificity than stylesheets.
-        const palette = { fd: '#8bb9ff', buffer: '#7ee0cc', result: '#d8b4fe', operation: '#ffc078' }
-        node.properties.style = `color: ${palette[role as keyof typeof palette]}`
-      }
+      node.children = output
     },
   }],
 }))
