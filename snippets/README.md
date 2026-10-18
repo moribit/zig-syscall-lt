@@ -15,6 +15,20 @@ Eventedは実験的な実装。Linuxの`std.Io.Evented`は`std.Io.Uring`を選�
 
 ## 実行手順
 
+### Eventedのコンパイル失敗だけを再現する
+
+`evented_compile_failure.zig`は、ビルド設定や追加モジュールなしで失敗を再現する独立したプログラムです。Linux / 未改変のZig 0.17.0で、リポジトリルートから実行します。
+
+```sh
+zig build-exe snippets/evented_compile_failure.zig -fno-emit-bin
+# このMacからLinux VMで確認する場合
+orb -m zig-syscall-lab zig build-exe snippets/evented_compile_failure.zig -fno-emit-bin
+```
+
+期待される結果は終了コード1と、`Io.VTable`に`processReplacePath`フィールドがないというコンパイルエラーです。意図的な`@compileError`ではなく、実際にEventedを使用したときの標準ライブラリ内のエラーを再現します。macOSでは別のバックエンドになるため、Linuxで確認してください。
+
+### バックエンド差し替えデモ
+
 Linux、Zig 0.17.0、straceを用意し、リポジトリルートで実行する。このMacでは`orb -m zig-syscall-lab`でLinuxに入れる。
 
 ```sh

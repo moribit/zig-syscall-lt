@@ -536,7 +536,8 @@ error: no field named
 in struct 'Io.VTable'
 ```
 
-0.17.0の標準ライブラリ内の不整合。<br><strong>io_uringのsyscallは未観測。</strong>
+0.17.0の標準ライブラリ内の不整合。<br><strong>Evented経由のsyscallは未観測。</strong>
+<p class="fine">低レベルのstd.os.linux.IoUringは別途実行済み。<br>straceでsetup / enterの成功を確認。</p>
 
 </div>
 </div>

@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-18T13:58:52.714Z",
+  "checkedAt": "2026-10-18T22:26:27.712Z",
   "slides": [
     {
       "number": 1,
@@ -23,7 +23,7 @@
     },
     {
       "number": 5,
-      "title": "Zigのコードが、そのままsyscallに見える",
+      "title": "Zigでシステムコールを試す",
       "overflow": []
     },
     {
@@ -43,61 +43,76 @@
     },
     {
       "number": 9,
-      "title": "io_uringは、I/Oを依頼して完了を受け取る",
+      "title": "pollとepollは、どちらが速い？",
       "overflow": []
     },
     {
       "number": 10,
-      "title": "なぜio_uringは速くなり得る？",
+      "title": "Zigで実測してみた",
       "overflow": []
     },
     {
       "number": 11,
-      "title": "epollは「I/Oできる状態」を教える",
+      "title": "動的に切り替えれば速くなる？",
       "overflow": []
     },
     {
       "number": 12,
-      "title": "「準備完了」と「操作完了」の違い",
+      "title": "io_uringは、I/Oを依頼して完了を受け取る",
       "overflow": []
     },
     {
       "number": 13,
-      "title": "Zigのstd.Ioで、I/O実装を分離する",
+      "title": "なぜio_uringは速くなり得る？",
       "overflow": []
     },
     {
       "number": 14,
-      "title": "同じコードで、syscallは変わる？",
+      "title": "epollは「I/Oできる状態」を教える",
       "overflow": []
     },
     {
       "number": 15,
-      "title": "std.Ioにも、実装ごとの対応差がある",
+      "title": "「準備完了」と「操作完了」の違い",
       "overflow": []
     },
     {
       "number": 16,
-      "title": "I/Oを差し替えられると、何がうれしい？",
+      "title": "Zigのstd.Ioで、I/O実装を分離する",
       "overflow": []
     },
     {
       "number": 17,
-      "title": "io_uringなら、何でも速い？",
+      "title": "同じコードで、syscallは変わる？",
       "overflow": []
     },
     {
       "number": 18,
-      "title": "使いたくても使えないことがある",
+      "title": "std.Ioにも、実装ごとの対応差がある",
       "overflow": []
     },
     {
       "number": 19,
-      "title": "非同期I/Oの裏側を覗いてみた",
+      "title": "I/Oを差し替えられると、何がうれしい？",
       "overflow": []
     },
     {
       "number": 20,
+      "title": "io_uringなら、何でも速い？",
+      "overflow": []
+    },
+    {
+      "number": 21,
+      "title": "使いたくても使えないことがある",
+      "overflow": []
+    },
+    {
+      "number": 22,
+      "title": "非同期I/Oの裏側を覗いてみた",
+      "overflow": []
+    },
+    {
+      "number": 23,
       "title": "参考資料",
       "overflow": []
     }
@@ -105,7 +120,7 @@
   "animation": {
     "before": 7,
     "after": 3,
-    "url": "http://127.0.0.1:42205/9?clicks=4"
+    "url": "http://127.0.0.1:34485/12?clicks=4"
   },
   "presenter": true,
   "codeColors": {

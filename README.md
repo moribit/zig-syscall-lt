@@ -86,6 +86,8 @@ CHROMIUM_PATH=/path/to/chromium npm run check:visual
 
 **公式Zig 0.17.0では比較を完了できていません。** Threadedは`Hello, World!\n`を出力し、straceでwritevを確認しました。EventedはUringのVTable不整合（processReplacePath）でコンパイルに失敗し、実行・出力一致・io_uring_setup/enterは未確認です。標準ライブラリ未改変での[記録](docs/validation-backends.json)を掲載しています。既存の低レベルIoUringサンプルの成功とは区別してください。性能比較はしていません。
 
+再調査の原因・最小再現例・io_uring syscallの実測は[調査記録](docs/io-uring-investigation.md)にまとめています。低レベルAPIでのio_uring実行は成功し、Eventedのコンパイル失敗とは区別しています。
+
 ## poll / epollの比較実験
 
 [ベンチマークの実行・再分析手順](benchmarks/poll-epoll/README.md)を参照してください。Zig 0.17.0のLinux APIを直接使い、readiness取得とバースト型End-to-Endを別々に測定し、送信・受信区間も分解します。

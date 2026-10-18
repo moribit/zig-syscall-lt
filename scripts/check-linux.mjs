@@ -32,6 +32,11 @@ try {
   run('strace', ['-e', 'write', '-o', join(dir, 'write.trace'), join(dir, 'raw_write')])
   results.writeTrace = readFileSync(join(dir, 'write.trace'), 'utf8')
   assert.match(results.writeTrace, /write\(1, "hello\\n", 6\)\s*= 6/)
+  // Keep direct io_uring evidence distinct from the std.Io.Evented demo.
+  run('strace', ['-f', '-e', 'trace=io_uring_setup,io_uring_register,io_uring_enter', '-o', join(dir, 'uring.trace'), join(dir, 'io_uring_read')])
+  results.uringTrace = readFileSync(join(dir, 'uring.trace'), 'utf8')
+  assert.match(results.uringTrace, /io_uring_setup\(8,[^\n]*= \d+/)
+  assert.match(results.uringTrace, /io_uring_enter\([^\n]*= 1/)
   writeFileSync('docs/validation-linux.json', JSON.stringify(results, null, 2) + '\n')
   console.log(JSON.stringify(results, null, 2))
 } finally { rmSync(dir, { recursive: true, force: true }) }

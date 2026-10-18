@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-18T13:42:02.391Z",
+  "checkedAt": "2026-10-18T14:10:26.685Z",
   "kernel": "Linux 7.0.14-orbstack-00380-ga7e0a2dc9535 aarch64 GNU/Linux",
   "zig": "0.17.0",
   "programs": {
@@ -24,5 +24,6 @@
       "stderr": "user_data=42, res=128\n"
     }
   },
-  "writeTrace": "write(1, \"hello\\n\", 6)                  = 6\n+++ exited with 0 +++\n"
+  "writeTrace": "write(1, \"hello\\n\", 6)                  = 6\n+++ exited with 0 +++\n",
+  "uringTrace": "3383  io_uring_setup(8, {flags=0, sq_thread_cpu=0, sq_thread_idle=1000, sq_entries=8, cq_entries=16, features=IORING_FEAT_SINGLE_MMAP|IORING_FEAT_NODROP|IORING_FEAT_SUBMIT_STABLE|IORING_FEAT_RW_CUR_POS|IORING_FEAT_CUR_PERSONALITY|IORING_FEAT_FAST_POLL|IORING_FEAT_POLL_32BITS|IORING_FEAT_SQPOLL_NONFIXED|IORING_FEAT_EXT_ARG|IORING_FEAT_NATIVE_WORKERS|IORING_FEAT_RSRC_TAGS|IORING_FEAT_CQE_SKIP|IORING_FEAT_LINKED_FILE|IORING_FEAT_REG_REG_RING|IORING_FEAT_RECVSEND_BUNDLE|IORING_FEAT_MIN_TIMEOUT|IORING_FEAT_RW_ATTR|IORING_FEAT_NO_IOWAIT, sq_off={head=0, tail=4, ring_mask=16, ring_entries=24, flags=36, dropped=32, array=384, user_addr=0}, cq_off={head=8, tail=12, ring_mask=20, ring_entries=28, overflow=44, cqes=128, flags=40, user_addr=0}}) = 3\n3383  io_uring_enter(3, 1, 0, 0, NULL, 8) = 1\n3383  +++ exited with 0 +++\n"
 }
