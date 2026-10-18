@@ -136,7 +136,7 @@ https://ziglang.org/documentation/0.17.0/
 
 <div class="eyebrow">04 / FIRST DISCOVERY</div>
 
-# Zigのコードが、そのままsyscallに見える
+# Zigでシステムコールを試す
 
 ```zig
 const n = std.os.linux.write(1, "hello\n", 6);
