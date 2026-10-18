@@ -20,6 +20,7 @@ pollは毎回fd配列を渡し、reventsを走査する。epollは事前に登�
 | metrics.zig | raw syscallエラー、MONOTONIC時刻、getrusage |
 | tests.zig | Ready集合・EOF・EAGAIN・EINTR・解除・解放のテスト |
 | run.py / run.sh | ReleaseFastビルド、ランダムなペア測定、生データ保存 |
+| validate.py | 保存sampleの件数・byte・メッセージ・イベント整合性 |
 | analyze.py | 検証、統計表、ペア比較、Oracle、SVG生成 |
 | results/ | 独立した測定系列、集計、グラフ、動作観察用strace |
 
@@ -101,6 +102,7 @@ FD上限に適合しない場合は測定前に終了する。今回は上限1,0
 ## データ仕様と再分析
 
 ```sh
+python3 benchmarks/poll-epoll/validate.py
 python3 benchmarks/poll-epoll/analyze.py benchmarks/poll-epoll/results/fixed
 python3 benchmarks/poll-epoll/analyze.py benchmarks/poll-epoll/results/replication
 ```

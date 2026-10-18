@@ -18,7 +18,7 @@ const out = process.env.VISUAL_OUTPUT || '/tmp/zig-lt-visual';
 await mkdir(out, { recursive: true });
 const report = { checkedAt: new Date().toISOString(), slides: [], animation: {}, presenter: false };
 try {
-  for (let i = 1; i <= 20; i++) {
+  for (let i = 1; i <= 23; i++) {
     await page.goto(`${base}/${i}?clicks=99`);
     await page.locator('.slidev-layout:visible').first().waitFor();
     await page.evaluate(() => document.fonts.ready);
@@ -46,14 +46,14 @@ try {
   for (const [token, color] of [['1','rgb(139, 185, 255)'], ['6','rgb(216, 180, 254)'], ['write','rgb(255, 192, 120)']]) {
     assert(report.codeColors.tokens.some(t => t.text===token && t.color===color), `Semantic color: ${token}`);
   }
-  await page.goto(`${base}/9?clicks=0`); await page.waitForTimeout(300);
+  await page.goto(`${base}/12?clicks=0`); await page.waitForTimeout(300);
   const before = await page.locator('.slidev-vclick-hidden').count();
   for (let i=0;i<4;i++) await page.keyboard.press('ArrowRight');
   await page.waitForTimeout(300);
   const after = await page.locator('.slidev-vclick-hidden').count();
   report.animation = { before, after, url: page.url() };
   assert(before>after, 'Click steps must reveal the flow');
-  await page.goto(`${base}/presenter/9`); await page.waitForTimeout(500);
+  await page.goto(`${base}/presenter/12`); await page.waitForTimeout(500);
   report.presenter = (await page.locator('body').innerText()).includes('目安80秒');
   assert(report.presenter, 'Presenter notes must be available');
   await writeFile('docs/validation-visual.json', JSON.stringify(report,null,2)+'\n');

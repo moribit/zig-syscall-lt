@@ -1,6 +1,6 @@
 # Zigで覗く、Linuxの非同期I/O
 
-Webエンジニア向けの15分LT。Slidev製、全20枚。普段のasync/awaitからLinuxのI/O機構に興味を持ち、Zigで観察して得た発見を共有します。冒頭のhotoさんのPython非同期処理LTへの言及は、タイトルの発表者ノートにある口頭説明です。
+Webエンジニア向けの15分LT。Slidev製、全23枚。普段のasync/awaitからLinuxのI/O機構に興味を持ち、Zigで観察して得た発見を共有します。冒頭のhotoさんのPython非同期処理LTへの言及は、タイトルの発表者ノートにある口頭説明です。
 
 ## 起動・出力
 
@@ -17,24 +17,27 @@ npm run export
 
 1. Zigで覗く、Linuxの非同期I/O
 2. async/await の下では何が起きている？
-3. 最近よく聞く io_uring（PostgreSQL 18 / Dragonfly / Node.js・libuv）
+3. 最近よく聞く io_uring
 4. ところで、Zigとは？
-5. Zigのコードが、そのままsyscallに見える
+5. Zigでシステムコールを試す
 6. システムコールは、OSへの依頼
 7. fdは、プロセスが持つ番号
 8. データがまだないとき、どうする？
-9. io_uringは、I/Oを依頼して完了を受け取る
-10. なぜio_uringは速くなり得る？
-11. epollは「I/Oできる状態」を教える
-12. 「準備完了」と「操作完了」の違い
-13. Zigのstd.Ioで、I/O実装を分離する
-14. 同じコードで、syscallは変わる？（Threaded実測 / Eventedビルド障害）
-15. std.Ioにも、実装ごとの対応差がある
-16. I/Oを差し替えられると、何がうれしい？
-17. io_uringなら、何でも速い？
-18. 使いたくても使えないことがある
-19. 非同期I/Oの裏側を覗いてみた
-20. 参考資料
+9. pollとepollは、どちらが速い？
+10. Zigで実測してみた
+11. 動的に切り替えれば速くなる？
+12. io_uringは、I/Oを依頼して完了を受け取る
+13. なぜio_uringは速くなり得る？
+14. epollは「I/Oできる状態」を教える
+15. 「準備完了」と「操作完了」の違い
+16. Zigのstd.Ioで、I/O実装を分離する
+17. 同じコードで、syscallは変わる？
+18. std.Ioにも、実装ごとの対応差がある
+19. I/Oを差し替えられると、何がうれしい？
+20. io_uringなら、何でも速い？
+21. 使いたくても使えないことがある
+22. 非同期I/Oの裏側を覗いてみた
+23. 参考資料
 
 ## 編集
 
@@ -82,3 +85,14 @@ CHROMIUM_PATH=/path/to/chromium npm run check:visual
 [デモのコード](snippets/io_backend_demo.zig)と[実行手順](snippets/README.md)を追加しました。同じapp()を使い、`-Dbackend=threaded` / `evented`で呼び出し側の初期化だけを選びます。
 
 **公式Zig 0.17.0では比較を完了できていません。** Threadedは`Hello, World!\n`を出力し、straceでwritevを確認しました。EventedはUringのVTable不整合（processReplacePath）でコンパイルに失敗し、実行・出力一致・io_uring_setup/enterは未確認です。標準ライブラリ未改変での[記録](docs/validation-backends.json)を掲載しています。既存の低レベルIoUringサンプルの成功とは区別してください。性能比較はしていません。
+
+## poll / epollの比較実験
+
+[ベンチマークの実行・再分析手順](benchmarks/poll-epoll/README.md)を参照してください。Zig 0.17.0のLinux APIを直接使い、readiness取得と送信済みバーストの受信を別々に測定します。
+
+```sh
+orb -m zig-syscall-lab sh benchmarks/poll-epoll/run.sh --output /tmp/poll-epoll-new
+orb -m zig-syscall-lab python3 benchmarks/poll-epoll/analyze.py /tmp/poll-epoll-new
+```
+
+初回1280本測定・別seed480本測定では、低Ready率でepoll優位、高Ready率で差の縮小が見られました。測定誤差を超えるpoll優位への逆転とOracleの改善余地は確認できず、Adaptiveは未実装です。raw JSONL、集計CSV、SVGグラフ、測定環境を保存しています。実際のWebサーバや完全な送受信End-to-End性能を示すものではありません。

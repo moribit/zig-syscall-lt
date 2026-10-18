@@ -1,0 +1,22 @@
+{
+  "fixed": {
+    "rows": 1408,
+    "measured": 1280,
+    "warmups": 128,
+    "raw_sha256": "fd138df4bdf9c1ee32f8ac610567b6f401034d6fa57e7b5537d6fe9a1b7af8ab"
+  },
+  "replication": {
+    "rows": 528,
+    "measured": 480,
+    "warmups": 48,
+    "raw_sha256": "de59c9b4ab8eaa298abb34b856ee65bd266f0e53aff27b01ca01ea27b3c415e0"
+  },
+  "source_sha256": {
+    "tests.zig": "b2910b6ab02dbf8d611ab3ab5cac45106a7081e04b965514d2bc3c91ec5b9e8e",
+    "main.zig": "2d8cc8a9c9180fc383c731cf5c7da271b959b305b3dc9526de7dc22b10e902a9",
+    "workload.zig": "0648c6b35b8b76b86dc86ea205cc37231026a682c8025d02f5cee7415c7c336a",
+    "metrics.zig": "2caf05ad55e806b36fc561413f04bd30c8c8c877368641c1b72d0918c2cb151d",
+    "epoll.zig": "e92dce46c495e140c67b494ca681a1c74ae0a95390ec87bb198498e10dcf21c0",
+    "poll.zig": "93ba83ac21b5278d072bf0081b805d8498309e1d7d8dc68b2e0ff38cad800a41"
+  }
+}

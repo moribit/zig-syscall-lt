@@ -29,7 +29,7 @@ exportFilename: zig-linux-async-io
 <div class="cover-bottom">いつも使う async/await の、少し下へ。</div>
 
 <!--
-目安30秒。口頭のみで「hotoさんのPython非同期処理LTを見て、epollなどの裏側が気になった」と話す。hotoさんの発言内容や資料URLは未提供なので引用や推測を追加しない。専用スライドは作らない。
+目安25秒。発表の目安は本編14分25秒＋操作の余白35秒。ノートの詳細は補足・質疑用とし、すべてを読み上げない。口頭のみで「hotoさんのPython非同期処理LTを見て、epollなどの裏側が気になった」と話す。hotoさんの発言内容や資料URLは未提供なので引用や推測を追加しない。専用スライドは作らない。
 「さらに最近io_uringという名前を見かけたので、その仕組みをZigで確かめてみた」という調査の動機を共有する。Zigの文法講座ではなくLinuxのI/Oを知る話。
 対象: Zig 0.17.0、Linux。公式0.17.0リリースと同梱ソースを照合。
 https://ziglang.org/download/index.json
@@ -62,7 +62,7 @@ const text = await response.text();
 <div class="takeaway">普段使う非同期処理の下には、OSのI/O機構がある</div>
 
 <!--
-目安55秒。「awaitは便利。でも、待っている間は誰が何をしているのか気になった」。まず普段のコードを見せる。
+目安45秒。「awaitは便利。でも、待っている間は誰が何をしているのか気になった」。まず普段のコードを見せる。
 図は典型的なネットワークI/Oの概念図。JS/Pythonを単一の実装として扱わない。await構文が直接epollを呼び出すわけではない。runtimeが非同期関数の継続を管理する。
 libuvはLinuxのsocketでepoll、macOS/BSDでkqueue等を使う。ファイルI/Oは既定でthread poolを使う経路もある。PythonにはSelectorEventLoopとProactorEventLoopがあり、全非同期I/Oがevent loopやepollを使うという一般化をしない。
 https://docs.libuv.org/en/v1.x/design.html
@@ -88,7 +88,7 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/awai
 <div class="takeaway">なぜ、これほどいろいろな技術で注目されているのか？</div>
 
 <!--
-目安60秒。「OSの話かと思ったら、いつものWeb技術スタックでも名前が出てきた」。採用例は3つだけ。
+目安45秒。「OSの話かと思ったら、いつものWeb技術スタックでも名前が出てきた」。採用例は3つだけ。
 PostgreSQL18はworker / io_uring / syncを選べる。既定はworker。io_uringはLinux用でliburingを有効にしたビルドが必要。公式発表の最大3倍は特定のストレージ読み取りシナリオにおける新AIO基盤全体の説明。CPU、SSD、SQLなどの再現条件は発表記事だけでは分からない。io_uring vs workerの測定値として扱わない。
 Dragonflyは公式のアーキテクチャ説明とSSD tieringの記事でio_uring、O_DIRECT、registered buffersの利用を確認。性能数値は引用しない。
 libuvはv1.45.0でLinuxの一部ファイルI/Oに導入、v1.49.0から既定のthread poolへ戻した。明示的なUV_LOOP_USE_IO_URING_SQPOLL設定で利用する経路はある。Node.jsの全I/Oがio_uringを使うとは言わない。Nodeの同梱libuvのバージョンにも依存する。
@@ -125,7 +125,7 @@ https://docs.libuv.org/en/v1.x/fs.html
 <div class="takeaway">今回はZigを使って、Linuxの仕組みを実際に観察してみる</div>
 
 <!--
-目安35秒。Zigを知らない人へ、この発表で必要な特徴だけを紹介。
+目安25秒。Zigを知らない人へ、この発表で必要な特徴だけを紹介。
 手動のメモリ/リソース管理、クロスコンパイル、C ABI等との相互運用が特徴。他のシステム言語でもsyscallは呼べるため、Zigでしかできないとは説明しない。今回選んだ観察の道具として位置付ける。RustやGoとの優劣比較はしない。
 標準ライブラリのstd.os.linuxはLinux固有。std.Ioは後半に紹介する別の抽象化の層。
 https://ziglang.org/learn/overview/
@@ -154,7 +154,7 @@ write(1, "hello\n", 6) = 6
 <div class="takeaway">「標準出力へ6 byte書く」が、OSへの依頼として見えた</div>
 
 <!--
-目安60秒。「Zigの1行とstraceの表示が対応したのが最初の発見」。コードはmain内の抜粋。完全なプログラムはsnippets/raw_write.zig。
+目安45秒。「Zigの1行とstraceの表示が対応したのが最初の発見」。コードはmain内の抜粋。完全なプログラムはsnippets/raw_write.zig。
 2026-10-18、Fedora44 / OrbStack zig-syscall-lab、Linux 7.0.14-orbstack-00380-ga7e0a2dc9535 aarch64、Zig0.17.0でコンパイル・実行。strace -e writeでwrite(1,"hello\n",6)=6を実測。stdoutのhelloとstraceのstderrを分離して保存した。
 fdを青、データを緑、byte数/結果を紫、操作を茶で対応させる。
 std.os.linux.writeの戻り値usizeにはrawエラーがエンコードされる。linux.errno(n)で判定する。libcのwriteのように-1とerrno変数を使うAPIとは異なる。成功しても要求より短く書くことがある。最小プログラムはShortWriteを検出し、read例はpartial writeを処理する。
@@ -179,7 +179,7 @@ Zig0.17.0同梱: lib/std/os/linux.zig のwrite / errno
 <div class="takeaway">同じ関数呼び出しに見えても、ここではカーネルへ処理を依頼する</div>
 
 <!--
-目安40秒。syscallはユーザー空間からカーネル機能へ入るインターフェース。通常の関数呼び出しと区別する。
+目安30秒。syscallはユーザー空間からカーネル機能へ入るインターフェース。通常の関数呼び出しと区別する。
 writeにはその下のファイルシステムやドライバー等の処理がある。図は説明のための省略であり、Terminal/Fileが必ず独立したハードウェアやユーザー空間という意味ではない。
 syscall境界の通過そのものと、別のスレッド/プロセスへのスケジューラーによるcontext switchは同義ではない。後の性能説明でも区別する。
 https://man7.org/linux/man-pages/man2/syscalls.2.html
@@ -222,7 +222,7 @@ read / writeは行単位ではなく、<br>byte列を扱う。
 <div class="takeaway">fdはファイル専用ではない。socketやpipeも同じ番号の仕組みで扱う</div>
 
 <!--
-目安45秒。fd = file descriptor。番号の意味はプロセスごとのテーブル内で決まる。別プロセスのfd3が同じ対象とは限らない。
+目安35秒。fd = file descriptor。番号の意味はプロセスごとのテーブル内で決まる。別プロセスのfd3が同じ対象とは限らない。
 0/1/2は通常の起動時の割り当てであり、closeやdup、シェルのリダイレクトで付け替えられる。openしたファイルが必ず3になるわけでもない。表の4は例でありsocketとpipeの同時割り当てを意味しない。
 コードは説明用のread1回分の抜粋。失敗の判定、EOF、EINTR、出力のpartial writeまで扱う完全な例はsnippets/raw_read.zig。readはバッファ長までを読み、戻り値がその時に読めたbyte数。readが0なら通常EOF。端末canonical modeの行バッファリングはread一般の性質ではない。
 https://man7.org/linux/man-pages/man2/open.2.html
@@ -255,7 +255,7 @@ https://man7.org/linux/man-pages/man2/read.2.html
 <div class="takeaway">たくさんのI/Oを効率よく待つには、別の仕組みが必要になる</div>
 
 <!--
-目安50秒。「読めないなら戻ればいい。でも、いつ再試行すればいい？」を次の問いにする。
+目安40秒。「読めないなら戻ればいい。でも、いつ再試行すればいい？」を次の問いにする。
 図はデータが未到着のsocket/pipe等を想定した模式図。regular fileのO_NONBLOCKが同じ待機挙動になるとは言わない。Blocking readもEOFやエラーならデータを待たず戻る。EAGAIN/EWOULDBLOCKは「今は操作できない」結果であり、Promiseのpendingと同一のオブジェクトや再開機構ではない。
 通常、blocking待機中のスレッドはOSがsleepさせる。CPU占有を減らすには、単なるreadの繰り返しではなく準備完了や操作完了を待つ仕組みが必要。
 https://man7.org/linux/man-pages/man2/read.2.html
@@ -264,7 +264,98 @@ https://man7.org/linux/man-pages/man2/open.2.html
 
 ---
 
-<div class="eyebrow">08 / IO_URING</div>
+<div class="eyebrow">08 / READINESS COST</div>
+
+# pollとepollは、どちらが速い？
+
+<p class="benchmark-scenario">1,024 fdのうち、<strong>読み取り可能なのは10 fd</strong>なら？</p>
+
+<div class="benchmark-model">
+<h3 class="bench-poll">poll：毎回fdの集合を渡す</h3>
+<div class="flow horizontal"><div>1,024 fdの配列</div><span class="connector">→</span><div>全体を確認する</div><span class="connector">→</span><div>Readyな10 fd</div></div>
+<h3 class="bench-epoll">epoll：監視対象を先に登録する</h3>
+<div class="flow horizontal"><div>監視対象を登録</div><span class="connector">→</span><div>Ready List</div><span class="connector">→</span><div>Readyな10 fd</div></div>
+</div>
+
+<div class="takeaway">監視fd数だけでなく、Ready率でも取得のコストは変わる</div>
+<p class="fine">Ready率 = 読み取り可能な監視fd数 / 監視fd総数。どちらも受信処理はアプリ側で行う。</p>
+
+<!--
+目安35秒。Non-blockingで全部を何度もreadする代わりに、読み取り可能なfdを待つ仕組みを使う。pollとepollはreadiness通知の方式。epollに登録する費用もあり、常に速いとは限らない、という問いから実験へ。
+1024 fdのうち10 fdは0.9765625%。図は取得経路を簡略化した概念図で、epollが全処理O(1)という意味ではない。取得するReadyイベント数が増えればコピー・処理費用も増える。
+今回の実験はnon-blocking Unix Domain Socketのsocketpair、Consumer 1スレッド。epollはLevel-triggeredで、読み取り可能な状態なら再通知される。
+https://man7.org/linux/man-pages/man2/poll.2.html
+https://man7.org/linux/man-pages/man7/epoll.7.html
+https://man7.org/linux/man-pages/man2/epoll_wait.2.html
+-->
+
+---
+
+<div class="eyebrow">09 / MEASURED COST</div>
+
+# Zigで実測してみた
+
+<div class="columns benchmark-charts">
+<div><h3>A：読み取り可能なfdの取得</h3><img src="/benchmarks/B-ready.svg" alt="1024 fdでReady率別の取得時間。pollは約42µs、epollは約0.23〜16.46µs。中央値、各10回。" /></div>
+<div><h3>B：送信済みデータの受信</h3><img src="/benchmarks/C-throughput.svg" alt="1024 fdでの受信完了速度。低Ready率ではepoll優位、高Ready率では差が縮小。" /></div>
+</div>
+
+<div class="benchmark-numbers"><span>全Ready時の受信：<b class="bench-poll">poll 3.67 M</b> ／ <b class="bench-epoll">epoll 4.03 M msg/s</b></span><small>中央値・各10回。差は約10%。低Ready率ほどepollが有利だった。</small></div>
+
+<div class="takeaway">この環境では、高Ready率で差は縮んだ。逆転は確認できなかった</div>
+<p class="fine">OrbStack VM / Linux 7.0.14 aarch64 / Zig 0.17.0 ReleaseFast。1,024 fd・64 B。帯はIQR。</p>
+
+<!--
+目安55秒。AとBは別の測定で、同一の縦軸や速度比較へ混ぜない。左はwait APIとイベント索引取得の時間/回（µs）。pollのrevents走査とepollのイベント配列走査を含み、データ受信や送信は含めない。全イベント容量Nでmaxevents切り詰めはない。固定Ready集合を繰り返す合成負荷で、新規通信のイベントではない。
+右はprefill済みバーストの全受信・内容照合まで。Producerは同じスレッドで測定開始前に送信し、次の送信は受信完了後。送信時間を除くため、送信開始からの完全なEnd-to-End性能やWebサーバの性能ではない。
+1024 fd/64 B：Aの約1%（10/1024）でpoll42.189µs、epoll0.231µs、100%で42.558µs対16.460µs。Bの100%はpoll3.668M対epoll4.026M msg/s。値は各方式10sampleの中央値。1%等の要求率は整数fdに丸め、実率も記録。CPU affinity未固定、VM・ホストの負荷・周波数の影響は残る。
+全条件は64/256/1024/4096 fd ×1/10/50/100% ×64B/1KiB ×2方式×A/B×10sample=1280本測定。warmup128件は除外。ペアごとに同seedを使い方式順・条件順を乱択。別seedの代表条件480sampleでも同じ傾向を再確認。
+グラフはbenchmarks/poll-epoll/analyze.pyから再生成。raw.jsonl、summary.csv、environment.json、analysis.jsonが一次の実測記録。straceを付けた時間は含めない。
+benchmarks/poll-epoll/README.md / results/fixed / results/replication
+https://man7.org/linux/man-pages/man2/poll.2.html
+https://man7.org/linux/man-pages/man7/epoll.7.html
+-->
+
+---
+
+<div class="eyebrow">10 / ADAPTIVE?</div>
+
+# 動的に切り替えれば速くなる？
+
+<div class="columns benchmark-adaptive">
+<div>
+
+### まず、理想的に選べたら？
+条件ごとに最速の方式を選ぶ<br>オフラインの<strong>Oracleモデル</strong>で確認。
+
+<p class="big-statement smaller">固定epollに対する<br>改善余地：<strong>0%</strong></p>
+
+</div>
+<div>
+
+### 今回はAdaptiveを作らない
+poll優位への逆転が確認できず、<br>方式を切り替える根拠が得られなかった。
+
+推定・切り替えのコストを払えば、<br>さらに不利になる可能性もある。
+
+</div>
+</div>
+
+<div class="takeaway">仮説どおりにならなくても、それが実験の結果</div>
+<p class="fine">初回・別seed再測定とも同じ判断。Oracleは切り替え費用を無視した比較基準。Adaptiveは未実装。</p>
+
+<!--
+目安35秒。今回の本測定64条件比較ではpaired poll/epoll比のbootstrap95%区間がepoll優位62、不確実2、poll優位0。逆転は確認できなかった。多数比較の補正なし、10sampleのため小差は断定しない。
+Oracleは各条件を同じ重みとし、run前半で方式を選び後半で評価。全データから最小値を選ぶ楽観的なモデルも算出。いずれも固定epollへの改善余地0%。同じAPIコスト/メッセージコストを条件間で合計したオフラインの比較で、実運用可能な推定器ではない。
+改善余地が確認できなかったため、Adaptiveの実装・閾値の調整・動的Phase A/B/C負荷には進まない。移動平均、ヒステリシス、最低継続時間、追加のReady率推定、切り替え費用、イベント欠落等を実証済みと説明しない。
+pollが全環境で不要という結論ではない。今回の固定集合・VM・予算の範囲での判断。ベンチマークを期待した逆転へ調整しない。ここから別の設計であるio_uringを調べた話へ戻る。
+benchmarks/poll-epoll/results/fixed/analysis.json
+benchmarks/poll-epoll/results/replication/analysis.json
+-->
+
+---
+
+<div class="eyebrow">11 / IO_URING</div>
 
 # io_uringは、I/Oを依頼して完了を受け取る
 
@@ -293,7 +384,7 @@ Zig0.17.0同梱: lib/std/os/linux/IoUring.zig
 
 ---
 
-<div class="eyebrow">09 / WHY IT CAN HELP</div>
+<div class="eyebrow">12 / WHY IT CAN HELP</div>
 
 # なぜio_uringは速くなり得る？
 
@@ -308,7 +399,7 @@ Zig0.17.0同梱: lib/std/os/linux/IoUring.zig
 <p class="fine">syscallが不要になるわけではない。効果は操作・設定・ワークロードに依存する。</p>
 
 <!--
-目安55秒。共有リングはI/Oデータすべてを常にzero-copyで渡すという意味ではない。
+目安45秒。共有リングはI/Oデータすべてを常にzero-copyで渡すという意味ではない。
 setup / mmap / register / enterなどのsyscallを使う。submitや完了待機をまとめると、1件ずつ要求・待機する場合の境界通過や待機/再開に伴うcontext switchを減らせる可能性がある。ただしsyscallの呼び出しとschedulerのcontext switchは同義ではない。
 SQPOLLなどでsubmit syscallを減らせるが、追加threadやCPUコストがあり無条件な利益ではない。registered buffersはメモリを事前登録しpin/mapping等の処理を償却する最適化で、対応操作やmemlock制限がある。すべてのプログラムで有効になるわけではない。
 PostgreSQLの最大3倍をここの仕組みだけの効果と結び付けて断定しない。FUSE等の追加ベンチマークは条件の紹介に時間が必要なので本編には追加しない。
@@ -319,7 +410,7 @@ https://kernel.org/doc/html/latest/filesystems/fuse/fuse-io-uring.html
 
 ---
 
-<div class="eyebrow">10 / EPOLL</div>
+<div class="eyebrow">13 / EPOLL</div>
 
 # epollは「I/Oできる状態」を教える
 
@@ -332,7 +423,7 @@ https://kernel.org/doc/html/latest/filesystems/fuse/fuse-io-uring.html
 <p class="fine">Edge-triggeredではnon-blockingで処理し、EAGAINで再待機。EOF・エラーも判定する。</p>
 
 <!--
-目安50秒。「io_uringの操作完了に対して、epollは準備完了を知らせる」と戻って比較する。
+目安35秒。「io_uringの操作完了に対して、epollは準備完了を知らせる」と戻って比較する。
 readinessの通知を受けても返り値の確認は必要。readinessは要求byte数すべてを読める保証ではない。通常はnon-blockingでEAGAINまで読む。EOF/エラーも扱う。Level-triggeredとEdge-triggeredの詳しい解説は本編では省く。
 Reactorはパターン名。epollは多数の接続を待つ成熟した方式であり、古いから劣るという話ではない。regular fileのI/O待機を一般的にepollで同じように扱えるとは説明しない。
 https://man7.org/linux/man-pages/man7/epoll.7.html
@@ -340,7 +431,7 @@ https://man7.org/linux/man-pages/man7/epoll.7.html
 
 ---
 
-<div class="eyebrow">11 / READINESS vs COMPLETION</div>
+<div class="eyebrow">14 / READINESS vs COMPLETION</div>
 
 # 「準備完了」と「操作完了」の違い
 
@@ -366,7 +457,7 @@ https://man7.org/linux/man-pages/man7/epoll.7.html
 <p class="fine">io_uringにもpollによるreadiness通知がある。完全に排他的なモデルではない。</p>
 
 <!--
-目安55秒。同じreadの流れを左右で2クリックずつ対比する。Proactorは完了通知を使う設計モデルとして簡潔に触れる。
+目安40秒。同じreadの流れを左右で2クリックずつ対比する。Proactorは完了通知を使う設計モデルとして簡潔に触れる。
 epollは成熟したsocket readiness待機の仕組み。通知後に自分で操作するのでアプリの制御を保ちやすい一方、EAGAINやpartial I/Oなどのループはruntime/アプリ側が管理する。
 io_uringはファイルも含む各種操作を完了として受け取れるが、要求識別、バッファ寿命、キャンセルとの競合などの設計が必要。io_uringにもPOLL_ADD等があり、内部でpollやworkerを使う経路もある。どちらか一方しか利用できないという比較ではない。
 性能で必ずどちらが勝つという主張をしない。利用する操作と実装の複雑さ、既存runtimeとの適合で選ぶ。
@@ -377,7 +468,7 @@ https://man7.org/linux/man-pages/man2/io_uring_enter.2.html
 
 ---
 
-<div class="eyebrow">12 / I/O INTERFACE</div>
+<div class="eyebrow">15 / I/O INTERFACE</div>
 
 # Zigのstd.Ioで、I/O実装を分離する
 
@@ -408,7 +499,7 @@ fn app(io: std.Io) !void {
 <p class="fine">io_uringや実装の差し替えはZig固有ではない。今回は標準ライブラリの設計を見る。</p>
 
 <!--
-目安45秒。epollとio_uringの比較から「操作と実行の仕組みを分ける」話へ。
+目安35秒。epollとio_uringの比較から「操作と実行の仕組みを分ける」話へ。
 同じapp()を両方の分岐から呼ぶsnippets/io_backend_demo.zigを示す。snippets/build.zigの-Dbackendでコンパイル時に選ぶ。ThreadedはIo.Threaded.init(init.gpa, .{})、Eventedはundefinedの変数にtry backend.init(init.gpa, .{})を呼び、どちらもdefer deinit、app(backend.io())。
 0.17.0同梱Io.zigのEventedはfiber.supportedとOSで選択する型。LinuxではUring。この図は設計と選択関係であり、両方の実行成功を示す図ではない。Eventedの実際のコンパイル障害は次のページで示す。
 DIやインターフェースによる実装分離もio_uring利用も他言語で可能。Zigの性能優位性の根拠にはしない。このデモで性能比較は行わない。
@@ -419,7 +510,7 @@ https://ziglang.org/documentation/0.17.0/std/
 
 ---
 
-<div class="eyebrow">13 / OBSERVED RESULT</div>
+<div class="eyebrow">16 / OBSERVED RESULT</div>
 
 # 同じコードで、syscallは変わる？
 
@@ -456,7 +547,7 @@ in struct 'Io.VTable'
 <p class="fine">Linux aarch64 / Zig 0.17.0・標準ライブラリ未改変。straceはPIDを除き折り返し。性能比較なし。</p>
 
 <!--
-目安50秒。両方で同じ出力、Eventedでio_uring_setup/enterという結果を期待したが、実測はThreadedのみ成功。両方が動いたように説明しない。
+目安40秒。両方で同じ出力、Eventedでio_uring_setup/enterという結果を期待したが、実測はThreadedのみ成功。両方が動いたように説明しない。
 実行環境はorb -m zig-syscall-lab、Linux 7.0.14 aarch64、Zig 0.17.0。Threaded stdoutはHello, World!と改行。straceはwritev(1, [{iov_base="Hello, World!\n", iov_len=14}], 1) = 14。スライドではPIDを除き、表示上折り返した。writevは複数のバッファを扱えるwrite系syscall。
 EventedはIo/Uring.zig:759のVTable初期化で、Io.VTableに存在しないprocessReplacePathを指定するためコンパイル失敗。公式ソースアーカイブとローカル・VMの配布ライブラリの一致を確認。標準ライブラリへのパッチや別バージョンへの置換を行った実行結果としては提示しない。
 Io/Uring.zigにはprocessSpawnPathやinheritParentDir/Fileとの不整合もある。1行削除するだけで動くとは説明しない。
@@ -468,7 +559,7 @@ https://ziglang.org/documentation/0.17.0/std/
 
 ---
 
-<div class="eyebrow">14 / BACKEND SUPPORT</div>
+<div class="eyebrow">17 / BACKEND SUPPORT</div>
 
 # std.Ioにも、実装ごとの対応差がある
 
@@ -493,7 +584,7 @@ Linux向けの実験的な実装。<br>0.17.0はビルド不整合があり、<b
 <p class="fine">Futureで関数呼び出しも扱えるが、並行実行の可否やキャンセルの動作も実装に依存する。</p>
 
 <!--
-目安30秒。0.17.0のIo.EventedはOSとfiber.supportedで型を選び、LinuxではIo.Uring、macOSではIo.Dispatch。Threaded / Evented / Uringを独立した3実装として描かない。非対応targetではEventedがvoidになる。
+目安20秒。0.17.0のIo.EventedはOSとfiber.supportedで型を選び、LinuxではIo.Uring、macOSではIo.Dispatch。Threaded / Evented / Uringを独立した3実装として描かない。非対応targetではEventedがvoidになる。
 UringのVTable不整合に加え、netListenIp/netAccept/netConnectIpはUnavailable経由でNetworkDownを返す。process操作等にもTODO panicが残る。完成度や全APIの同等性を保証しない。
 Futureを作るio.asyncは逐次実行へfallback可能で、必ず並行実行する保証はない。io.concurrentは並行実行できなければConcurrencyUnavailable。cancelは停止要求であって強制停止ではない。
 std.os.linux.IoUringという低レベルAPIとstd.Io.Uringは別。低レベルサンプルの成功はEventedバックエンドの成功を意味しない。
@@ -504,7 +595,7 @@ https://ziglang.org/download/0.17.0/release-notes.html
 
 ---
 
-<div class="eyebrow">15 / DEPENDENCY INJECTION</div>
+<div class="eyebrow">18 / DEPENDENCY INJECTION</div>
 
 # I/Oを差し替えられると、何がうれしい？
 
@@ -520,7 +611,7 @@ https://ziglang.org/download/0.17.0/release-notes.html
 <p class="fine">実測はこの小さな出力処理のみ。failingは汎用のMockや全動作を再現する実装ではない。</p>
 
 <!--
-目安55秒。DIはdependency injection、依存性注入。呼び出し側が具体実装を渡す設計の類比であり、DBインターフェースとstd.Ioが同じAPIという意味ではない。
+目安35秒。DIはdependency injection、依存性注入。呼び出し側が具体実装を渡す設計の類比であり、DBインターフェースとstd.Ioが同じAPIという意味ではない。
 Zig0.17.0は標準でstd.Io.failingを提供する。全操作が同じ失敗を返す汎用Mockという意味ではなく、asyncを直接実行するなど操作ごとの振る舞いがある。std.testing.ioもテストから使える。
 snippets/io_injection.zigが、io_basic.zigと同じapp関数をThreadedとstd.Io.failingへ渡す。Linux実測はstdoutにhello、stderrにThreaded: success / failing: InputOutput。この1操作で切り替えと失敗を確かめた。
 これでio_uringの内部処理や性能が検証できたとは言わない。0.17に標準のepollバックエンドが揃い、同じコードの差し替えだけでepoll vs io_uringのベンチマークができるとも言わない。
@@ -531,7 +622,7 @@ https://ziglang.org/documentation/0.17.0/std/
 
 ---
 
-<div class="eyebrow">16 / LIMITS</div>
+<div class="eyebrow">19 / LIMITS</div>
 
 # io_uringなら、何でも速い？
 
@@ -561,7 +652,7 @@ Linuxのバージョン、対応操作、<br>runtimeの実装を確かめる。
 <div class="takeaway">ワークロードを決めて測る。epollが合う場面もある</div>
 
 <!--
-目安60秒。「調べてみると、置き換えれば全部速くなる話ではなかった」。少量I/Oのコストや物理ボトルネックは設計上の考察で、今回の性能実測結果としては示さない。
+目安45秒。「調べてみると、置き換えれば全部速くなる話ではなかった」。少量I/Oのコストや物理ボトルネックは設計上の考察で、今回の性能実測結果としては示さない。
 実際に複数I/Oを並行させなければ利点を得にくい。登録、submit、completionの取り回し、SQPOLLのCPUコストなどがあり、単純な1件ずつのI/Oは有利とは限らない。
 実例としてPostgreSQL18のAIO改善とlibuvの既定方式のrollbackを口頭で対比できる。ただし後者を「遅かったから戻した」と断定しない。公式fsドキュメントはrollbackの事実を示すもので、原因や公平な性能比較を示していない。
 条件付きの公平なepoll対io_uringベンチマークは今回行っていない。新しいマイクロベンチマーク値を創作しない。
@@ -573,7 +664,7 @@ https://man7.org/linux/man-pages/man2/io_uring_register.2.html
 
 ---
 
-<div class="eyebrow">17 / SECURITY & OPERATIONS</div>
+<div class="eyebrow">20 / SECURITY & OPERATIONS</div>
 
 # 使いたくても使えないことがある
 
@@ -599,7 +690,7 @@ https://man7.org/linux/man-pages/man2/io_uring_register.2.html
 <p class="fine">2026-10-18時点のDocker公式資料。EPERMの原因はseccompだけとは限らない。</p>
 
 <!--
-目安45秒。seccompはsyscallをフィルタするLinux機構。現在のDocker公式ドキュメントはdefault profileでio_uring_setup/enter/registerをブロックする一覧を掲載し、セキュリティ問題を理由として説明する。
+目安35秒。seccompはsyscallをフィルタするLinux機構。現在のDocker公式ドキュメントはdefault profileでio_uring_setup/enter/registerをブロックする一覧を掲載し、セキュリティ問題を理由として説明する。
 図は拒否プロファイルが適用された場合の例。すべてのDockerバージョンやカスタムプロファイルが必ず拒否するという意味ではない。システム側のio_uring_disabledや権限などでもEPERMになり得る。環境を確認する。
 今回のOrbStack Linuxでは直接io_uring_readを実行できた。Dockerコンテナ内の拒否は今回実測していない。
 運用上は利用可否の検出とfallbackを検討する。libuvのthreadpool fallback、PostgreSQLのworker選択はその考え方の例。std.Io.Uringが全操作について自動的にThreadedへfallbackする保証はない。
@@ -612,7 +703,7 @@ https://docs.libuv.org/en/v1.x/fs.html
 
 ---
 
-<div class="eyebrow">18 / WHAT I LEARNED</div>
+<div class="eyebrow">21 / WHAT I LEARNED</div>
 
 # 非同期I/Oの裏側を覗いてみた
 
@@ -627,7 +718,7 @@ https://docs.libuv.org/en/v1.x/fs.html
 <div class="takeaway closing-message">普段の非同期処理。その少し下に、Linuxの面白い仕組みがある。</div>
 
 <!--
-目安45秒。調べた順に発見を振り返り、冒頭の「いつも使うawaitの裏側」という問いに戻る。
+目安40秒。調べた順に発見を振り返り、冒頭の「いつも使うawaitの裏側」という問いに戻る。
 Zigは観察の道具であって今回の話をZigだけに閉じない。runtimeのコードやstraceを眺めることも次の入口になる。
 高性能かどうかは自分のワークロードで測る。今回の結果はAPIと動作の確認であり、性能改善の実証ではない。
 最後は「普段何気なく使っている非同期処理。その少し下を覗くと、Linuxの面白い仕組みが見えてくる」と口頭で締める。
@@ -635,7 +726,7 @@ Zigは観察の道具であって今回の話をZigだけに閉じない。runti
 
 ---
 
-<div class="eyebrow">19 / REFERENCES</div>
+<div class="eyebrow">22 / REFERENCES</div>
 
 # 参考資料
 

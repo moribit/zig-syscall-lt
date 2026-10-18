@@ -142,3 +142,16 @@
 .limits h3 { margin: 6px 0 10px; }
 
 .slidev-layout .fd-table td, .slidev-layout .fd-table th { padding: 6px 13px; }
+
+/* poll / epoll experiment: match the plot palette. */
+.slidev-layout .bench-poll { color: #1d4ed8; }
+.slidev-layout .bench-epoll { color: #b45309; }
+.benchmark-scenario { font-size: 25px; margin-bottom: 22px; }
+.benchmark-model h3 { margin: 15px 0 9px; }
+.benchmark-model .flow.horizontal > div { padding: 11px 8px; }
+.benchmark-charts { gap: 22px; }
+.benchmark-charts h3 { font-size: 20px; margin: 0 0 8px; }
+.benchmark-charts img { width: 100%; height: 220px; object-fit: contain; }
+.benchmark-numbers { margin-top: 8px; font-size: 20px; line-height: 1.4; }
+.benchmark-numbers small { display: block; margin-top: 5px; color: #616161; font-size: 14px; }
+.benchmark-adaptive p { line-height: 1.6; }

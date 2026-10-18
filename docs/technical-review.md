@@ -1,6 +1,6 @@
 # 技術レビュー・検証記録
 
-確認日：2026-10-18。対象：Zig 0.17.0、Linux、Slidev 53。20枚、約15分。hotoさんのLTへの言及はタイトルの口頭説明に限定した。
+確認日：2026-10-18。対象：Zig 0.17.0、Linux、Slidev 53。23枚、約15分。hotoさんのLTへの言及はタイトルの口頭説明に限定した。
 
 ## 根拠と修正
 
@@ -49,7 +49,7 @@
 
 `npm install`、`npm run build`、`npm run export`成功。macOSではビルドまで、Linux VMではプラットフォーム専用の依存関係を/tmp/zig-lt-slidevに導入し、システムのChromium headlessでPDF出力。Noto Sans CJK JPを使用。
 
-全20ページのPDFをPNGにして目視。コード背景はダーク、本文は白黒。説明・図・コードの色相を統一。性能説明と限界のページは本文と末尾メッセージの余白を調整。自動表示確認は`npm run check:visual`で再実行でき、スクリーンショットは既定で/tmp/zig-lt-visualに出力する。
+全23ページのPDFをPNGにして目視。コード背景はダーク、本文は白黒。説明・図・コードの色相を統一。性能説明と限界のページは本文と末尾メッセージの余白を調整。自動表示確認は`npm run check:visual`で再実行でき、スクリーンショットは既定で/tmp/zig-lt-visualに出力する。
 
 ## 未検証・改善候補
 
@@ -67,3 +67,15 @@
 一時コピーでの調査ではprocessSpawnPath、inheritParentDir / inheritParentFileにも不整合が見つかった。インストール済み標準ライブラリは変更していない。パッチを当てたライブラリの実測として提示せず、Eventedのstdout一致・setup/enter観測は未完了と明記した。ソース内でリング初期化が行われることと、straceで実際に観測できたことを区別する。
 
 [実測記録](validation-backends.json)のcomparisonCompleted=falseが今回の結論。`npm run check:backends`はビルド可否と成功した経路のみを記録し、Eventedのビルド失敗を隠さない。標準ライブラリの修正版で両経路を実行・比較することが今後の課題。Zigの優位性や性能の証拠として扱わない。
+
+## 追加：poll / epoll比較実験
+
+benchmarks/poll-epoll/にZig 0.17.0の実行可能ベンチマークを追加。std.os.linuxのpoll / epoll_wait（aarch64ではppoll / epoll_pwait）を使用し、Eventedには依存しない。readiness取得Aとprefill済みバーストの受信Bを分け、後者はProducer時間を含む完全なEnd-to-Endではないことを明示した。
+
+初回1280本測定＋代表条件の別seed480本測定。各条件10回、warmup除外、ReleaseFast、方式順と条件順をランダム化。全sampleでReady集合または受信byte数とデータ内容を検査した。保存後の整合性はvalidate.pyで再確認できる。
+
+低Ready率でepoll優位、高Ready率で差が縮小。初回64条件中62はペア比bootstrap95%区間でepoll優位、2は差が不確実。poll優位への逆転は確認できず、Oracleも改善余地0%のためAdaptiveは未実装。実装の詳細・限界と原データはbenchmarks/poll-epoll/README.mdを参照。
+
+fd復習後・io_uring紹介前に3枚追加した。取得時間と受信メッセージ数/sのグラフを分離し、中央値・各10回・VM/OS/CPU/Zig/最適化・64B/1024fdを明記。poll青、epoll茶を図と説明で統一。全23枚のノート目安は本編14分25秒＋操作余白35秒に調整した（実際の発表練習は未実施）。
+
+Linux上の3テストで0/全Ready、集合一致、LT再通知、部分消費、EAGAIN、データ後のEOF、解除、解放、実シグナルEINTRを確認。x86_64-linux向けコンパイルも成功。straceは別実行で回数のみを確認し、時間を性能表へ混ぜていない。
