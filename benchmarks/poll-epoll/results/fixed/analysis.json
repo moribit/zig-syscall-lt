@@ -1,0 +1,1381 @@
+{
+  "criterion": "Paired bootstrap 95% interval of median poll/epoll cost ratio excludes 1, in both directions for receive workloads. No speed-based pass/fail test.",
+  "comparisons": [
+    {
+      "benchmark": "readiness",
+      "fds": 64,
+      "ready_percent": 1,
+      "payload": 64,
+      "paired_ratio_median": 14.367511530330162,
+      "ci95_low": 13.935817549172334,
+      "ci95_high": 14.722425023994388,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 64,
+      "ready_percent": 1,
+      "payload": 1024,
+      "paired_ratio_median": 14.240432420737129,
+      "ci95_low": 13.634038969429557,
+      "ci95_high": 15.39380057557424,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 64,
+      "ready_percent": 10,
+      "payload": 64,
+      "paired_ratio_median": 10.473039073275746,
+      "ci95_low": 10.23339916043092,
+      "ci95_high": 10.86266094420601,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 64,
+      "ready_percent": 10,
+      "payload": 1024,
+      "paired_ratio_median": 10.540517384741744,
+      "ci95_low": 10.279311963174298,
+      "ci95_high": 10.73418865138245,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 64,
+      "ready_percent": 50,
+      "payload": 64,
+      "paired_ratio_median": 4.307477854684302,
+      "ci95_low": 4.157282429727435,
+      "ci95_high": 4.440127676610491,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 64,
+      "ready_percent": 50,
+      "payload": 1024,
+      "paired_ratio_median": 4.416771264756843,
+      "ci95_low": 4.069976091930384,
+      "ci95_high": 4.7411449720639895,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 64,
+      "ready_percent": 100,
+      "payload": 64,
+      "paired_ratio_median": 2.3175702174980435,
+      "ci95_low": 2.2948780108824094,
+      "ci95_high": 2.4150834594259707,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 64,
+      "ready_percent": 100,
+      "payload": 1024,
+      "paired_ratio_median": 2.338800110961892,
+      "ci95_low": 2.3033163256046376,
+      "ci95_high": 2.4494629277585385,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 256,
+      "ready_percent": 1,
+      "payload": 64,
+      "paired_ratio_median": 64.07686156970631,
+      "ci95_low": 62.40067922919279,
+      "ci95_high": 64.7049312224241,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 256,
+      "ready_percent": 1,
+      "payload": 1024,
+      "paired_ratio_median": 64.07457843730332,
+      "ci95_low": 63.14746307330183,
+      "ci95_high": 65.47909020511236,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 256,
+      "ready_percent": 10,
+      "payload": 64,
+      "paired_ratio_median": 25.78421878566638,
+      "ci95_low": 25.292842914727004,
+      "ci95_high": 26.163266961816436,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 256,
+      "ready_percent": 10,
+      "payload": 1024,
+      "paired_ratio_median": 25.634701962077266,
+      "ci95_low": 24.482666881252747,
+      "ci95_high": 26.011476040304593,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 256,
+      "ready_percent": 50,
+      "payload": 64,
+      "paired_ratio_median": 5.63749592869997,
+      "ci95_low": 5.238650322474652,
+      "ci95_high": 5.825341250410483,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 256,
+      "ready_percent": 50,
+      "payload": 1024,
+      "paired_ratio_median": 5.740764176574105,
+      "ci95_low": 5.6397627147799305,
+      "ci95_high": 5.806016618956322,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 256,
+      "ready_percent": 100,
+      "payload": 64,
+      "paired_ratio_median": 2.6657783737125103,
+      "ci95_low": 2.622215692275221,
+      "ci95_high": 2.712216387259237,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 256,
+      "ready_percent": 100,
+      "payload": 1024,
+      "paired_ratio_median": 2.597106032533849,
+      "ci95_low": 2.5696706288675375,
+      "ci95_high": 2.690578383923392,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 1024,
+      "ready_percent": 1,
+      "payload": 64,
+      "paired_ratio_median": 183.53669737899628,
+      "ci95_low": 169.30308009201005,
+      "ci95_high": 187.02105793271267,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 1024,
+      "ready_percent": 1,
+      "payload": 1024,
+      "paired_ratio_median": 184.7877397797361,
+      "ci95_low": 178.65261142871924,
+      "ci95_high": 190.61077492532706,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 1024,
+      "ready_percent": 10,
+      "payload": 64,
+      "paired_ratio_median": 29.304439857455407,
+      "ci95_low": 27.0981391903951,
+      "ci95_high": 29.996971932245796,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 1024,
+      "ready_percent": 10,
+      "payload": 1024,
+      "paired_ratio_median": 28.715185081085473,
+      "ci95_low": 28.392732939956062,
+      "ci95_high": 29.74237744814198,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 1024,
+      "ready_percent": 50,
+      "payload": 64,
+      "paired_ratio_median": 5.530684622172912,
+      "ci95_low": 5.466189319316754,
+      "ci95_high": 5.592303257669142,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 1024,
+      "ready_percent": 50,
+      "payload": 1024,
+      "paired_ratio_median": 5.472061267566021,
+      "ci95_low": 5.392021967095797,
+      "ci95_high": 5.6084453441616695,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 1024,
+      "ready_percent": 100,
+      "payload": 64,
+      "paired_ratio_median": 2.6082601521001654,
+      "ci95_low": 2.515029382872557,
+      "ci95_high": 2.6368301439348922,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 1024,
+      "ready_percent": 100,
+      "payload": 1024,
+      "paired_ratio_median": 2.5384190668975934,
+      "ci95_low": 2.4900385915293395,
+      "ci95_high": 2.6105335916060195,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 4096,
+      "ready_percent": 1,
+      "payload": 64,
+      "paired_ratio_median": 532.3960144780384,
+      "ci95_low": 512.3581582534565,
+      "ci95_high": 542.2752977610008,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 4096,
+      "ready_percent": 1,
+      "payload": 1024,
+      "paired_ratio_median": 527.4704632304179,
+      "ci95_low": 510.8875247985713,
+      "ci95_high": 544.5103719652755,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 4096,
+      "ready_percent": 10,
+      "payload": 64,
+      "paired_ratio_median": 44.90265891761297,
+      "ci95_low": 43.32684011090693,
+      "ci95_high": 47.04237997516002,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 4096,
+      "ready_percent": 10,
+      "payload": 1024,
+      "paired_ratio_median": 45.03190394363631,
+      "ci95_low": 44.355069959808745,
+      "ci95_high": 45.87369860621695,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 4096,
+      "ready_percent": 50,
+      "payload": 64,
+      "paired_ratio_median": 5.348026115563229,
+      "ci95_low": 5.148225614562487,
+      "ci95_high": 5.495646799948465,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 4096,
+      "ready_percent": 50,
+      "payload": 1024,
+      "paired_ratio_median": 5.377815165337045,
+      "ci95_low": 5.361147557195201,
+      "ci95_high": 5.466374253589873,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 4096,
+      "ready_percent": 100,
+      "payload": 64,
+      "paired_ratio_median": 2.470263386867506,
+      "ci95_low": 2.342107379617057,
+      "ci95_high": 2.534881214476123,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 4096,
+      "ready_percent": 100,
+      "payload": 1024,
+      "paired_ratio_median": 2.386820821841542,
+      "ci95_low": 2.338172853270796,
+      "ci95_high": 2.4737764967595086,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 1,
+      "payload": 64,
+      "paired_ratio_median": 6.468726340440272,
+      "ci95_low": 6.318423225403342,
+      "ci95_high": 6.5346699117286935,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 1,
+      "payload": 1024,
+      "paired_ratio_median": 3.783020288862436,
+      "ci95_low": 3.7610241455343894,
+      "ci95_high": 3.8205144439375722,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 10,
+      "payload": 64,
+      "paired_ratio_median": 2.5972998491048083,
+      "ci95_low": 2.5188345577781996,
+      "ci95_high": 2.659618897668908,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 10,
+      "payload": 1024,
+      "paired_ratio_median": 1.645746423271147,
+      "ci95_low": 1.6212303038846914,
+      "ci95_high": 1.673444666428031,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 50,
+      "payload": 64,
+      "paired_ratio_median": 1.3223162821417098,
+      "ci95_low": 1.290007686213451,
+      "ci95_high": 1.3481731426423882,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 50,
+      "payload": 1024,
+      "paired_ratio_median": 1.1217572807496172,
+      "ci95_low": 1.099554125913979,
+      "ci95_high": 1.1566067856448559,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 100,
+      "payload": 64,
+      "paired_ratio_median": 1.0907793823572347,
+      "ci95_low": 1.0505238311782867,
+      "ci95_high": 1.1082823888192916,
+      "poll_faster_runs": 1,
+      "epoll_faster_runs": 9,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 100,
+      "payload": 1024,
+      "paired_ratio_median": 1.0268709334007968,
+      "ci95_low": 0.998936319765912,
+      "ci95_high": 1.0396242206176796,
+      "poll_faster_runs": 2,
+      "epoll_faster_runs": 8,
+      "winner": "uncertain"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 256,
+      "ready_percent": 1,
+      "payload": 64,
+      "paired_ratio_median": 15.719074046478148,
+      "ci95_low": 15.290691854175154,
+      "ci95_high": 16.316140073874735,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 256,
+      "ready_percent": 1,
+      "payload": 1024,
+      "paired_ratio_median": 7.276517355983668,
+      "ci95_low": 6.978632292560163,
+      "ci95_high": 7.335614793278202,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 256,
+      "ready_percent": 10,
+      "payload": 64,
+      "paired_ratio_median": 3.162965647738587,
+      "ci95_low": 3.0747159963247475,
+      "ci95_high": 3.20013406300164,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 256,
+      "ready_percent": 10,
+      "payload": 1024,
+      "paired_ratio_median": 1.7636658173555562,
+      "ci95_low": 1.7494074751901003,
+      "ci95_high": 1.8023812582193866,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 256,
+      "ready_percent": 50,
+      "payload": 64,
+      "paired_ratio_median": 1.3053721106130523,
+      "ci95_low": 1.2941503297810744,
+      "ci95_high": 1.3219971636658592,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 256,
+      "ready_percent": 50,
+      "payload": 1024,
+      "paired_ratio_median": 1.116043168971695,
+      "ci95_low": 1.1022852636411764,
+      "ci95_high": 1.1714364950185057,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 256,
+      "ready_percent": 100,
+      "payload": 64,
+      "paired_ratio_median": 1.1087545701433466,
+      "ci95_low": 1.0834486140077457,
+      "ci95_high": 1.1499929024245763,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 256,
+      "ready_percent": 100,
+      "payload": 1024,
+      "paired_ratio_median": 1.04557831657127,
+      "ci95_low": 1.0264129893204135,
+      "ci95_high": 1.0599795984533853,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 1,
+      "payload": 64,
+      "paired_ratio_median": 23.136843174555125,
+      "ci95_low": 22.572573162053597,
+      "ci95_high": 23.40154131121233,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 1,
+      "payload": 1024,
+      "paired_ratio_median": 9.197393637396747,
+      "ci95_low": 9.042964640174766,
+      "ci95_high": 9.42914575124097,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 10,
+      "payload": 64,
+      "paired_ratio_median": 2.8770586966459755,
+      "ci95_low": 2.859382020091463,
+      "ci95_high": 2.9821980567128565,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 10,
+      "payload": 1024,
+      "paired_ratio_median": 1.7651304632168934,
+      "ci95_low": 1.7267248626332923,
+      "ci95_high": 1.8189894693550208,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 50,
+      "payload": 64,
+      "paired_ratio_median": 1.363661858595549,
+      "ci95_low": 1.34297989512974,
+      "ci95_high": 1.3840767569110435,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 50,
+      "payload": 1024,
+      "paired_ratio_median": 1.1634247653963927,
+      "ci95_low": 1.1367767170573413,
+      "ci95_high": 1.1790758687957155,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 100,
+      "payload": 64,
+      "paired_ratio_median": 1.129537946524735,
+      "ci95_low": 1.0864686768769833,
+      "ci95_high": 1.1671086998688294,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 100,
+      "payload": 1024,
+      "paired_ratio_median": 1.0422189563831876,
+      "ci95_low": 0.9693548818042437,
+      "ci95_high": 1.0788926408346868,
+      "poll_faster_runs": 3,
+      "epoll_faster_runs": 7,
+      "winner": "uncertain"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 1,
+      "payload": 64,
+      "paired_ratio_median": 36.4053078423353,
+      "ci95_low": 35.72923539126221,
+      "ci95_high": 37.079485211603696,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 1,
+      "payload": 1024,
+      "paired_ratio_median": 14.77804583459924,
+      "ci95_low": 14.462033364022675,
+      "ci95_high": 14.900629617209123,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 10,
+      "payload": 64,
+      "paired_ratio_median": 4.522183708293647,
+      "ci95_low": 4.465716804067874,
+      "ci95_high": 4.708133244227216,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 10,
+      "payload": 1024,
+      "paired_ratio_median": 2.557179586852262,
+      "ci95_low": 2.5060692606616,
+      "ci95_high": 2.5850091617865534,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 50,
+      "payload": 64,
+      "paired_ratio_median": 1.5760417658526111,
+      "ci95_low": 1.5310940919851102,
+      "ci95_high": 1.5817863698581185,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 50,
+      "payload": 1024,
+      "paired_ratio_median": 1.3170893544708204,
+      "ci95_low": 1.2960727044605878,
+      "ci95_high": 1.3427112511465702,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 100,
+      "payload": 64,
+      "paired_ratio_median": 1.0684369824489008,
+      "ci95_low": 1.0515406111474166,
+      "ci95_high": 1.0956720622752287,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 100,
+      "payload": 1024,
+      "paired_ratio_median": 1.0520285542321055,
+      "ci95_low": 1.0197456476693212,
+      "ci95_high": 1.0659783877514923,
+      "poll_faster_runs": 1,
+      "epoll_faster_runs": 9,
+      "winner": "epoll"
+    }
+  ],
+  "oracle": {
+    "readiness": {
+      "costs": {
+        "poll": 2858651.358,
+        "epoll": 446875.007,
+        "oracle_in_sample": 446875.007,
+        "oracle_held_out": 446875.007
+      },
+      "unit": "sum of equally weighted condition medians: wait_ns",
+      "optimistic_gain_percent": 0.0,
+      "held_out_gain_percent": 0.0,
+      "choices": [
+        {
+          "condition": [
+            "readiness",
+            64,
+            1,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            64,
+            1,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            64,
+            10,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            64,
+            10,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            64,
+            50,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            64,
+            50,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            64,
+            100,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            64,
+            100,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            256,
+            1,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            256,
+            1,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            256,
+            10,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            256,
+            10,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            256,
+            50,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            256,
+            50,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            256,
+            100,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            256,
+            100,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            1024,
+            1,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            1024,
+            1,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            1024,
+            10,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            1024,
+            10,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            1024,
+            50,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            1024,
+            50,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            1024,
+            100,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            1024,
+            100,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            4096,
+            1,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            4096,
+            1,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            4096,
+            10,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            4096,
+            10,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            4096,
+            50,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            4096,
+            50,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            4096,
+            100,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            4096,
+            100,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        }
+      ],
+      "switch_cost_included": false
+    },
+    "receive": {
+      "costs": {
+        "poll": 52773.595100769104,
+        "epoll": 13474.916352900651,
+        "oracle_in_sample": 13474.916352900651,
+        "oracle_held_out": 13474.916352900651
+      },
+      "unit": "sum of equally weighted condition medians: ns_per_message",
+      "optimistic_gain_percent": 0.0,
+      "held_out_gain_percent": 0.0,
+      "choices": [
+        {
+          "condition": [
+            "receive",
+            64,
+            1,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            64,
+            1,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            64,
+            10,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            64,
+            10,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            64,
+            50,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            64,
+            50,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            64,
+            100,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            64,
+            100,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            256,
+            1,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            256,
+            1,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            256,
+            10,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            256,
+            10,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            256,
+            50,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            256,
+            50,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            256,
+            100,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            256,
+            100,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            1,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            1,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            10,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            10,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            50,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            50,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            100,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            100,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            1,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            1,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            10,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            10,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            50,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            50,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            100,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            100,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        }
+      ],
+      "switch_cost_included": false
+    }
+  },
+  "adaptive_implemented": false,
+  "decision": "No robust reversal in receive conditions; dynamic switching not justified."
+}

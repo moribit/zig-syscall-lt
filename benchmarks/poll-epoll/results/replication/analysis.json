@@ -1,0 +1,541 @@
+{
+  "criterion": "Paired bootstrap 95% interval of median poll/epoll cost ratio excludes 1, in both directions for receive workloads. No speed-based pass/fail test.",
+  "comparisons": [
+    {
+      "benchmark": "readiness",
+      "fds": 64,
+      "ready_percent": 1,
+      "payload": 64,
+      "paired_ratio_median": 13.930495436850968,
+      "ci95_low": 13.603857787044063,
+      "ci95_high": 14.376463896626658,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 64,
+      "ready_percent": 1,
+      "payload": 1024,
+      "paired_ratio_median": 13.671875017018813,
+      "ci95_low": 13.384920900415418,
+      "ci95_high": 14.602334298687335,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 64,
+      "ready_percent": 100,
+      "payload": 64,
+      "paired_ratio_median": 2.3271656218244887,
+      "ci95_low": 2.2643716302270644,
+      "ci95_high": 2.3934324409059817,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 64,
+      "ready_percent": 100,
+      "payload": 1024,
+      "paired_ratio_median": 2.2998394381398914,
+      "ci95_low": 2.1899036341373175,
+      "ci95_high": 2.420879390281714,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 1024,
+      "ready_percent": 1,
+      "payload": 64,
+      "paired_ratio_median": 186.3098859761476,
+      "ci95_low": 181.9377373008565,
+      "ci95_high": 193.22194512605154,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 1024,
+      "ready_percent": 1,
+      "payload": 1024,
+      "paired_ratio_median": 178.10262729712264,
+      "ci95_low": 175.2547890224036,
+      "ci95_high": 181.9036565915245,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 1024,
+      "ready_percent": 100,
+      "payload": 64,
+      "paired_ratio_median": 2.6245831116156717,
+      "ci95_low": 2.5466491180978483,
+      "ci95_high": 2.6825670861354984,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 1024,
+      "ready_percent": 100,
+      "payload": 1024,
+      "paired_ratio_median": 2.5766325004614394,
+      "ci95_low": 2.523305039337439,
+      "ci95_high": 2.6270097504255148,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 4096,
+      "ready_percent": 1,
+      "payload": 64,
+      "paired_ratio_median": 517.8775637430296,
+      "ci95_low": 482.92414661177173,
+      "ci95_high": 538.9631480852914,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 4096,
+      "ready_percent": 1,
+      "payload": 1024,
+      "paired_ratio_median": 523.5329218395107,
+      "ci95_low": 510.0675610275067,
+      "ci95_high": 531.7930999649714,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 4096,
+      "ready_percent": 100,
+      "payload": 64,
+      "paired_ratio_median": 2.323915487196213,
+      "ci95_low": 2.274431555862744,
+      "ci95_high": 2.4010632558716907,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "readiness",
+      "fds": 4096,
+      "ready_percent": 100,
+      "payload": 1024,
+      "paired_ratio_median": 2.3578746470851986,
+      "ci95_low": 2.300137633978506,
+      "ci95_high": 2.4544775780293677,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 1,
+      "payload": 64,
+      "paired_ratio_median": 6.4246975936306825,
+      "ci95_low": 6.026616732020127,
+      "ci95_high": 6.547665012289336,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 1,
+      "payload": 1024,
+      "paired_ratio_median": 3.805568047662407,
+      "ci95_low": 3.6482148962804635,
+      "ci95_high": 3.8760732433853162,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 100,
+      "payload": 64,
+      "paired_ratio_median": 1.0749047832183458,
+      "ci95_low": 1.0656367611190507,
+      "ci95_high": 1.0977035230401695,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 100,
+      "payload": 1024,
+      "paired_ratio_median": 1.0253276676210814,
+      "ci95_low": 1.0070001289144341,
+      "ci95_high": 1.0450668035563768,
+      "poll_faster_runs": 1,
+      "epoll_faster_runs": 9,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 1,
+      "payload": 64,
+      "paired_ratio_median": 22.99148778707933,
+      "ci95_low": 22.166702185274183,
+      "ci95_high": 23.32857548389559,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 1,
+      "payload": 1024,
+      "paired_ratio_median": 9.365529257706937,
+      "ci95_low": 9.234241887766789,
+      "ci95_high": 9.462320875173944,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 100,
+      "payload": 64,
+      "paired_ratio_median": 1.119197024735176,
+      "ci95_low": 1.036450506824145,
+      "ci95_high": 1.1448003052658358,
+      "poll_faster_runs": 2,
+      "epoll_faster_runs": 8,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 100,
+      "payload": 1024,
+      "paired_ratio_median": 1.0419930503482577,
+      "ci95_low": 1.0101008027328957,
+      "ci95_high": 1.0738343583508905,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 1,
+      "payload": 64,
+      "paired_ratio_median": 36.382979967671965,
+      "ci95_low": 36.003949713312394,
+      "ci95_high": 36.83070248982627,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 1,
+      "payload": 1024,
+      "paired_ratio_median": 14.636715273714222,
+      "ci95_low": 14.501539360193792,
+      "ci95_high": 15.372654704887202,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 100,
+      "payload": 64,
+      "paired_ratio_median": 1.0728652475591702,
+      "ci95_low": 1.0481197826396516,
+      "ci95_high": 1.1082544117338478,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 100,
+      "payload": 1024,
+      "paired_ratio_median": 1.0508203800683542,
+      "ci95_low": 1.0254192695603215,
+      "ci95_high": 1.074869150972867,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    }
+  ],
+  "oracle": {
+    "readiness": {
+      "costs": {
+        "poll": 1381436.8059999999,
+        "epoll": 290170.223,
+        "oracle_in_sample": 290170.223,
+        "oracle_held_out": 290170.223
+      },
+      "unit": "sum of equally weighted condition medians: wait_ns",
+      "optimistic_gain_percent": 0.0,
+      "held_out_gain_percent": 0.0,
+      "choices": [
+        {
+          "condition": [
+            "readiness",
+            64,
+            1,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            64,
+            1,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            64,
+            100,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            64,
+            100,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            1024,
+            1,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            1024,
+            1,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            1024,
+            100,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            1024,
+            100,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            4096,
+            1,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            4096,
+            1,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            4096,
+            100,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "readiness",
+            4096,
+            100,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        }
+      ],
+      "switch_cost_included": false
+    },
+    "receive": {
+      "costs": {
+        "poll": 32741.876798750716,
+        "epoll": 5463.082460877954,
+        "oracle_in_sample": 5463.082460877954,
+        "oracle_held_out": 5463.082460877954
+      },
+      "unit": "sum of equally weighted condition medians: ns_per_message",
+      "optimistic_gain_percent": 0.0,
+      "held_out_gain_percent": 0.0,
+      "choices": [
+        {
+          "condition": [
+            "receive",
+            64,
+            1,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            64,
+            1,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            64,
+            100,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            64,
+            100,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            1,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            1,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            100,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            100,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            1,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            1,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            100,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            100,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        }
+      ],
+      "switch_cost_included": false
+    }
+  },
+  "adaptive_implemented": false,
+  "decision": "No robust reversal in receive conditions; dynamic switching not justified."
+}
