@@ -1,0 +1,23 @@
+{
+  "fds": 4096,
+  "payload": 1024,
+  "ready": [
+    41,
+    4096
+  ],
+  "poll_ns": [
+    327037.16015625,
+    6256562.0
+  ],
+  "epoll_ns": [
+    31219.66796875,
+    6507879.25
+  ],
+  "training": "crossover-check runs 1..5 only",
+  "ema_alpha": 0.25,
+  "minimum_dwell_batches": 16,
+  "amortization_batches": 32,
+  "switch_safety_factor": 1.1,
+  "phase_ms": 200,
+  "training_sha256": "8a4e304fc4305a815d432a53f237b5c5e5a373158207bb8914b9e8b293e2d240"
+}

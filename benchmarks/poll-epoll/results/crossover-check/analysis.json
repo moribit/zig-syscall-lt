@@ -1,0 +1,65 @@
+{
+  "criterion": "Paired bootstrap 95% interval of median poll/epoll cost ratio excludes 1, in both directions for receive workloads. No speed-based pass/fail test.",
+  "comparisons": [
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 1,
+      "payload": 1024,
+      "paired_ratio_median": 10.753919519741626,
+      "ci95_low": 10.169371034265051,
+      "ci95_high": 11.04570247006915,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 100,
+      "payload": 1024,
+      "paired_ratio_median": 0.9723995032283276,
+      "ci95_low": 0.8848054318192465,
+      "ci95_high": 0.9971343155113972,
+      "poll_faster_runs": 8,
+      "epoll_faster_runs": 2,
+      "winner": "poll"
+    }
+  ],
+  "oracle": {
+    "receive": {
+      "costs": {
+        "poll": 9837.338149652249,
+        "epoll": 2301.700910614758,
+        "oracle_in_sample": 2298.8474865424923,
+        "oracle_held_out": 2298.8474865424923
+      },
+      "unit": "sum of equally weighted condition medians: e2e_ns_per_message",
+      "optimistic_gain_percent": 0.12397023692811704,
+      "held_out_gain_percent": 0.12397023692811704,
+      "choices": [
+        {
+          "condition": [
+            "receive",
+            4096,
+            1,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            100,
+            1024
+          ],
+          "chosen_from_training": "poll"
+        }
+      ],
+      "switch_cost_included": false
+    }
+  },
+  "adaptive_in_this_dataset": false,
+  "decision": "Reversal detected: evaluate adaptive before drawing conclusions."
+}

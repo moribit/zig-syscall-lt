@@ -1,0 +1,695 @@
+{
+  "criterion": "Paired bootstrap 95% interval of median poll/epoll cost ratio excludes 1, in both directions for receive workloads. No speed-based pass/fail test.",
+  "comparisons": [
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 1,
+      "payload": 64,
+      "paired_ratio_median": 3.8145655483347873,
+      "ci95_low": 3.7532960235640647,
+      "ci95_high": 3.8579872093828644,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 1,
+      "payload": 1024,
+      "paired_ratio_median": 2.80951572948543,
+      "ci95_low": 2.673178486361647,
+      "ci95_high": 2.8772395417287457,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 10,
+      "payload": 64,
+      "paired_ratio_median": 1.8068226395439164,
+      "ci95_low": 1.7781092465281496,
+      "ci95_high": 1.8720986174578205,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 10,
+      "payload": 1024,
+      "paired_ratio_median": 1.4419174090852265,
+      "ci95_low": 1.4017414945879783,
+      "ci95_high": 1.5361978046115943,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 50,
+      "payload": 64,
+      "paired_ratio_median": 1.1512498528206752,
+      "ci95_low": 1.108758762733292,
+      "ci95_high": 1.1723312196835312,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 50,
+      "payload": 1024,
+      "paired_ratio_median": 1.067134445454193,
+      "ci95_low": 1.061559491218285,
+      "ci95_high": 1.096549172658769,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 100,
+      "payload": 64,
+      "paired_ratio_median": 1.0140964782625623,
+      "ci95_low": 1.0024842916213434,
+      "ci95_high": 1.0456237217745028,
+      "poll_faster_runs": 2,
+      "epoll_faster_runs": 8,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 100,
+      "payload": 1024,
+      "paired_ratio_median": 1.0122218257163704,
+      "ci95_low": 1.0043533637252464,
+      "ci95_high": 1.0237509661062292,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 256,
+      "ready_percent": 1,
+      "payload": 64,
+      "paired_ratio_median": 8.542781650462826,
+      "ci95_low": 8.18011180002441,
+      "ci95_high": 8.679417209967971,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 256,
+      "ready_percent": 1,
+      "payload": 1024,
+      "paired_ratio_median": 5.398603901065279,
+      "ci95_low": 5.187304534946093,
+      "ci95_high": 5.467415917997716,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 256,
+      "ready_percent": 10,
+      "payload": 64,
+      "paired_ratio_median": 2.1162101745227027,
+      "ci95_low": 2.1017447377330325,
+      "ci95_high": 2.167294889077427,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 256,
+      "ready_percent": 10,
+      "payload": 1024,
+      "paired_ratio_median": 1.5596312150741543,
+      "ci95_low": 1.5449375546877109,
+      "ci95_high": 1.588526699036416,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 256,
+      "ready_percent": 50,
+      "payload": 64,
+      "paired_ratio_median": 1.1359679835637722,
+      "ci95_low": 1.122479196611076,
+      "ci95_high": 1.1567568581983696,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 256,
+      "ready_percent": 50,
+      "payload": 1024,
+      "paired_ratio_median": 1.067557127410238,
+      "ci95_low": 1.0591204667070884,
+      "ci95_high": 1.078102207291351,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 256,
+      "ready_percent": 100,
+      "payload": 64,
+      "paired_ratio_median": 1.0083320065127117,
+      "ci95_low": 0.9918534950563642,
+      "ci95_high": 1.043389840190806,
+      "poll_faster_runs": 4,
+      "epoll_faster_runs": 6,
+      "winner": "uncertain"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 256,
+      "ready_percent": 100,
+      "payload": 1024,
+      "paired_ratio_median": 1.0150714042776725,
+      "ci95_low": 0.9517776371649267,
+      "ci95_high": 1.026816515786177,
+      "poll_faster_runs": 4,
+      "epoll_faster_runs": 6,
+      "winner": "uncertain"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 1,
+      "payload": 64,
+      "paired_ratio_median": 12.700613454021015,
+      "ci95_low": 12.430802268227065,
+      "ci95_high": 13.00602744274151,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 1,
+      "payload": 1024,
+      "paired_ratio_median": 7.037758528229215,
+      "ci95_low": 6.9096639135999265,
+      "ci95_high": 7.146362147846533,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 10,
+      "payload": 64,
+      "paired_ratio_median": 1.976413463716008,
+      "ci95_low": 1.9543993232320978,
+      "ci95_high": 2.015118200443103,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 10,
+      "payload": 1024,
+      "paired_ratio_median": 1.5283254712265055,
+      "ci95_low": 1.509986597779652,
+      "ci95_high": 1.543372995042758,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 50,
+      "payload": 64,
+      "paired_ratio_median": 1.139574527716467,
+      "ci95_low": 1.0995443203345807,
+      "ci95_high": 1.1853589565567748,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 50,
+      "payload": 1024,
+      "paired_ratio_median": 1.0957688468001754,
+      "ci95_low": 1.058661009002466,
+      "ci95_high": 1.1387952245870976,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 100,
+      "payload": 64,
+      "paired_ratio_median": 1.0385330966081063,
+      "ci95_low": 0.9724031871376564,
+      "ci95_high": 1.0930581728210367,
+      "poll_faster_runs": 2,
+      "epoll_faster_runs": 8,
+      "winner": "uncertain"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 100,
+      "payload": 1024,
+      "paired_ratio_median": 1.0174309209248014,
+      "ci95_low": 0.9837531266493633,
+      "ci95_high": 1.0427104848709101,
+      "poll_faster_runs": 3,
+      "epoll_faster_runs": 7,
+      "winner": "uncertain"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 1,
+      "payload": 64,
+      "paired_ratio_median": 20.313957608360894,
+      "ci95_low": 19.6465401619393,
+      "ci95_high": 20.906495002722252,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 1,
+      "payload": 1024,
+      "paired_ratio_median": 10.857939145090917,
+      "ci95_low": 10.414836086408613,
+      "ci95_high": 11.051987458716408,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 10,
+      "payload": 64,
+      "paired_ratio_median": 2.6758239103132784,
+      "ci95_low": 2.6049340288833114,
+      "ci95_high": 2.7969394038059194,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 10,
+      "payload": 1024,
+      "paired_ratio_median": 2.0021618409896296,
+      "ci95_low": 1.9718643891293026,
+      "ci95_high": 2.032275911365097,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 50,
+      "payload": 64,
+      "paired_ratio_median": 1.2105378176837887,
+      "ci95_low": 1.1754541964522667,
+      "ci95_high": 1.2750014972770998,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 50,
+      "payload": 1024,
+      "paired_ratio_median": 1.1823937843763623,
+      "ci95_low": 1.1551630095864065,
+      "ci95_high": 1.2089994913125275,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 100,
+      "payload": 64,
+      "paired_ratio_median": 0.9852710661865003,
+      "ci95_low": 0.9713687116578833,
+      "ci95_high": 1.0096411040098208,
+      "poll_faster_runs": 7,
+      "epoll_faster_runs": 3,
+      "winner": "uncertain"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 100,
+      "payload": 1024,
+      "paired_ratio_median": 0.986132230731541,
+      "ci95_low": 0.9553497800946404,
+      "ci95_high": 1.1132512662688396,
+      "poll_faster_runs": 7,
+      "epoll_faster_runs": 3,
+      "winner": "uncertain"
+    }
+  ],
+  "oracle": {
+    "receive": {
+      "costs": {
+        "poll": 60769.22400941443,
+        "epoll": 21605.029351535406,
+        "oracle_in_sample": 21591.97426730689,
+        "oracle_held_out": 21607.01949435767
+      },
+      "unit": "sum of equally weighted condition medians: e2e_ns_per_message",
+      "optimistic_gain_percent": 0.060426135119262536,
+      "held_out_gain_percent": -0.009211479373094633,
+      "choices": [
+        {
+          "condition": [
+            "receive",
+            64,
+            1,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            64,
+            1,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            64,
+            10,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            64,
+            10,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            64,
+            50,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            64,
+            50,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            64,
+            100,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            64,
+            100,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            256,
+            1,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            256,
+            1,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            256,
+            10,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            256,
+            10,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            256,
+            50,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            256,
+            50,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            256,
+            100,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            256,
+            100,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            1,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            1,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            10,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            10,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            50,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            50,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            100,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            100,
+            1024
+          ],
+          "chosen_from_training": "poll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            1,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            1,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            10,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            10,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            50,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            50,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            100,
+            64
+          ],
+          "chosen_from_training": "poll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            100,
+            1024
+          ],
+          "chosen_from_training": "poll"
+        }
+      ],
+      "switch_cost_included": false
+    }
+  },
+  "adaptive_in_this_dataset": false,
+  "decision": "No robust reversal in receive conditions; dynamic switching not justified."
+}

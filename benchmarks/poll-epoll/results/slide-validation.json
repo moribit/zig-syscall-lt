@@ -1,0 +1,147 @@
+{
+  "checkedAt": "2026-10-18T22:24:54.175Z",
+  "slides": [
+    {
+      "number": 1,
+      "title": "Zigで覗く、Linuxの非同期I/O",
+      "overflow": []
+    },
+    {
+      "number": 2,
+      "title": "async/await の下では何が起きている？",
+      "overflow": []
+    },
+    {
+      "number": 3,
+      "title": "最近よく聞く io_uring",
+      "overflow": []
+    },
+    {
+      "number": 4,
+      "title": "ところで、Zigとは？",
+      "overflow": []
+    },
+    {
+      "number": 5,
+      "title": "Zigでシステムコールを試す",
+      "overflow": []
+    },
+    {
+      "number": 6,
+      "title": "システムコールは、OSへの依頼",
+      "overflow": []
+    },
+    {
+      "number": 7,
+      "title": "fdは、プロセスが持つ番号",
+      "overflow": []
+    },
+    {
+      "number": 8,
+      "title": "データがまだないとき、どうする？",
+      "overflow": []
+    },
+    {
+      "number": 9,
+      "title": "pollとepollは、どちらが速い？",
+      "overflow": []
+    },
+    {
+      "number": 10,
+      "title": "Zigで実測してみた",
+      "overflow": []
+    },
+    {
+      "number": 11,
+      "title": "動的に切り替えれば速くなる？",
+      "overflow": []
+    },
+    {
+      "number": 12,
+      "title": "io_uringは、I/Oを依頼して完了を受け取る",
+      "overflow": []
+    },
+    {
+      "number": 13,
+      "title": "なぜio_uringは速くなり得る？",
+      "overflow": []
+    },
+    {
+      "number": 14,
+      "title": "epollは「I/Oできる状態」を教える",
+      "overflow": []
+    },
+    {
+      "number": 15,
+      "title": "「準備完了」と「操作完了」の違い",
+      "overflow": []
+    },
+    {
+      "number": 16,
+      "title": "Zigのstd.Ioで、I/O実装を分離する",
+      "overflow": []
+    },
+    {
+      "number": 17,
+      "title": "同じコードで、syscallは変わる？",
+      "overflow": []
+    },
+    {
+      "number": 18,
+      "title": "std.Ioにも、実装ごとの対応差がある",
+      "overflow": []
+    },
+    {
+      "number": 19,
+      "title": "I/Oを差し替えられると、何がうれしい？",
+      "overflow": []
+    },
+    {
+      "number": 20,
+      "title": "io_uringなら、何でも速い？",
+      "overflow": []
+    },
+    {
+      "number": 21,
+      "title": "使いたくても使えないことがある",
+      "overflow": []
+    },
+    {
+      "number": 22,
+      "title": "非同期I/Oの裏側を覗いてみた",
+      "overflow": []
+    },
+    {
+      "number": 23,
+      "title": "参考資料",
+      "overflow": []
+    }
+  ],
+  "animation": {
+    "before": 7,
+    "after": 3,
+    "url": "http://127.0.0.1:33175/12?clicks=4"
+  },
+  "presenter": true,
+  "codeColors": {
+    "background": "rgb(21, 30, 49)",
+    "tokens": [
+      {
+        "text": "write",
+        "color": "rgb(255, 192, 120)"
+      },
+      {
+        "text": "1",
+        "color": "rgb(139, 185, 255)"
+      },
+      {
+        "text": "\"hello",
+        "color": "rgb(126, 224, 204)"
+      },
+      {
+        "text": "6",
+        "color": "rgb(216, 180, 254)"
+      }
+    ]
+  }
+}

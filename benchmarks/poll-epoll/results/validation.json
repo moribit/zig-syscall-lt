@@ -11,9 +11,34 @@
     "warmups": 48,
     "raw_sha256": "de59c9b4ab8eaa298abb34b856ee65bd266f0e53aff27b01ca01ea27b3c415e0"
   },
+  "end-to-end": {
+    "rows": 704,
+    "measured": 640,
+    "warmups": 64,
+    "raw_sha256": "7fdb884f718a3158a104fda4db1e08fe29b42833195ab8d0997c6b153c78039f"
+  },
+  "end-to-end-replication": {
+    "rows": 264,
+    "measured": 240,
+    "warmups": 24,
+    "raw_sha256": "968fd51e2dbde329f4094d98016260431e576a1736753ee484c7bcfc88c4720c"
+  },
+  "crossover-check": {
+    "rows": 44,
+    "measured": 40,
+    "warmups": 4,
+    "raw_sha256": "8a4e304fc4305a815d432a53f237b5c5e5a373158207bb8914b9e8b293e2d240"
+  },
+  "adaptive": {
+    "rows": 33,
+    "measured": 30,
+    "warmups": 3,
+    "raw_sha256": "6556cb41852ce97947708bc01e4cea0f6680261939de9c0970556721fbe58dd0"
+  },
   "source_sha256": {
     "tests.zig": "b2910b6ab02dbf8d611ab3ab5cac45106a7081e04b965514d2bc3c91ec5b9e8e",
-    "main.zig": "2d8cc8a9c9180fc383c731cf5c7da271b959b305b3dc9526de7dc22b10e902a9",
+    "adaptive.zig": "1832ca3ea278137799cf6e4977fe7bacc197a222a3f1ae47b3d4c75b4e14b40a",
+    "main.zig": "2cc0b4cf59ddd35191cab050944f765e436a69be9b3907b8d2e887ea4da02120",
     "workload.zig": "0648c6b35b8b76b86dc86ea205cc37231026a682c8025d02f5cee7415c7c336a",
     "metrics.zig": "2caf05ad55e806b36fc561413f04bd30c8c8c877368641c1b72d0918c2cb151d",
     "epoll.zig": "e92dce46c495e140c67b494ca681a1c74ae0a95390ec87bb198498e10dcf21c0",

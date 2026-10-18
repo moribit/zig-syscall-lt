@@ -88,11 +88,11 @@ CHROMIUM_PATH=/path/to/chromium npm run check:visual
 
 ## poll / epollの比較実験
 
-[ベンチマークの実行・再分析手順](benchmarks/poll-epoll/README.md)を参照してください。Zig 0.17.0のLinux APIを直接使い、readiness取得と送信済みバーストの受信を別々に測定します。
+[ベンチマークの実行・再分析手順](benchmarks/poll-epoll/README.md)を参照してください。Zig 0.17.0のLinux APIを直接使い、readiness取得とバースト型End-to-Endを別々に測定し、送信・受信区間も分解します。
 
 ```sh
 orb -m zig-syscall-lab sh benchmarks/poll-epoll/run.sh --output /tmp/poll-epoll-new
 orb -m zig-syscall-lab python3 benchmarks/poll-epoll/analyze.py /tmp/poll-epoll-new
 ```
 
-初回1280本測定・別seed480本測定では、低Ready率でepoll優位、高Ready率で差の縮小が見られました。測定誤差を超えるpoll優位への逆転とOracleの改善余地は確認できず、Adaptiveは未実装です。raw JSONL、集計CSV、SVGグラフ、測定環境を保存しています。実際のWebサーバや完全な送受信End-to-End性能を示すものではありません。
+低Ready率ではepoll優位、高Ready率では差が縮小しました。送信込みの再測定では4096fd・全Ready・1KiBで小さなpoll優位が再現したため、コストモデルによるAdaptiveも評価しました。1%→100%→1%の動的負荷では切替費用込みの改善は確認できませんでした。raw JSONL、集計CSV、SVGグラフ、測定環境を保存しています。本番Webサーバの継続的な並行到着を再現するものではありません。

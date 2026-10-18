@@ -70,12 +70,14 @@
 
 ## 追加：poll / epoll比較実験
 
-benchmarks/poll-epoll/にZig 0.17.0の実行可能ベンチマークを追加。std.os.linuxのpoll / epoll_wait（aarch64ではppoll / epoll_pwait）を使用し、Eventedには依存しない。readiness取得Aとprefill済みバーストの受信Bを分け、後者はProducer時間を含む完全なEnd-to-Endではないことを明示した。
+benchmarks/poll-epoll/にZig 0.17.0の実行可能ベンチマークを追加。std.os.linuxのpoll / epoll_wait（aarch64ではppoll / epoll_pwait）を使用し、Eventedには依存しない。readiness取得A、受信区間の予備測定、送信開始〜全受信完了のバースト型End-to-End Bを分けた。Producerも測定するBでは送信時間の割合も別記し、Aを併用して取得コストが隠れないようにした。
 
-初回1280本測定＋代表条件の別seed480本測定。各条件10回、warmup除外、ReleaseFast、方式順と条件順をランダム化。全sampleでReady集合または受信byte数とデータ内容を検査した。保存後の整合性はvalidate.pyで再確認できる。
+固定負荷は初回1280＋代表条件480＋送信込み640＋送信込み再測定240＋逆転再確認40本測定。各条件10回、warmup除外、ReleaseFast、方式順・条件順を乱択。全sampleでReady集合または受信byte数とデータ内容を検査。保存後の整合性はvalidate.pyで再確認できる。
 
-低Ready率でepoll優位、高Ready率で差が縮小。初回64条件中62はペア比bootstrap95%区間でepoll優位、2は差が不確実。poll優位への逆転は確認できず、Oracleも改善余地0%のためAdaptiveは未実装。実装の詳細・限界と原データはbenchmarks/poll-epoll/README.mdを参照。
+低Ready率でepoll優位、高Ready率で差が縮小。予備系列では逆転がなかったが、送信込み4096fd/全Ready/1KiBで小さなpoll優位が2系列で出たためAdaptiveへ進んだ。モデルは独立校正crossover-checkのrun1..5から作り、動的評価後のチューニングはしない。EMA・最低継続・切替費用回収判定を含め、切替時はepollをclose/再登録してProducer側に隠れたepoll費用を残さない。
 
-fd復習後・io_uring紹介前に3枚追加した。取得時間と受信メッセージ数/sのグラフを分離し、中央値・各10回・VM/OS/CPU/Zig/最適化・64B/1024fdを明記。poll青、epoll茶を図と説明で統一。全23枚のノート目安は本編14分25秒＋操作余白35秒に調整した（実際の発表練習は未実施）。
+1%→100%→1%、各200ms、各方式10本測定の動的負荷はpoll0.312M、epoll1.076M、Adaptive1.074M msg/s。Adaptiveは中央値2回・2.130msの切替。対epollのペア改善率中央値-0.40%、95%区間-1.61〜+2.48%。改善も悪化も断定せず、今回の改善は確認できなかったと結論した。切替費用を無視したオフラインOracleのheld-out改善余地は約0.80%。
 
-Linux上の3テストで0/全Ready、集合一致、LT再通知、部分消費、EAGAIN、データ後のEOF、解除、解放、実シグナルEINTRを確認。x86_64-linux向けコンパイルも成功。straceは別実行で回数のみを確認し、時間を性能表へ混ぜていない。
+fd復習後・io_uring紹介前に3枚追加。取得時間とEnd-to-End msg/sのグラフを分離し、中央値・各10回・環境・条件を明記。poll青、epoll茶、Adaptive紫を統一。全23枚のノート目安は本編14分25秒＋操作余白35秒（発表練習は未実施）。
+
+Linuxの3テストは0/全Ready、集合一致、LT再通知、部分消費、EAGAIN、データ後のEOF、解除、解放、実シグナルEINTRを確認。Adaptiveの最低継続テスト1件、動的評価全sampleのデータ整合性も確認。x86_64-linuxコンパイル成功。straceの時間は性能表へ混ぜない。

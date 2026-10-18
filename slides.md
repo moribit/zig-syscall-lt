@@ -297,19 +297,20 @@ https://man7.org/linux/man-pages/man2/epoll_wait.2.html
 
 <div class="columns benchmark-charts">
 <div><h3>A：読み取り可能なfdの取得</h3><img src="/benchmarks/B-ready.svg" alt="1024 fdでReady率別の取得時間。pollは約42µs、epollは約0.23〜16.46µs。中央値、各10回。" /></div>
-<div><h3>B：送信済みデータの受信</h3><img src="/benchmarks/C-throughput.svg" alt="1024 fdでの受信完了速度。低Ready率ではepoll優位、高Ready率では差が縮小。" /></div>
+<div><h3>B：送信開始から受信完了まで</h3><img src="/benchmarks/C-throughput.svg" alt="1024 fdで送信開始から受信完了までの速度。低Ready率ではepoll優位、高Ready率では差が縮小。" /></div>
 </div>
 
-<div class="benchmark-numbers"><span>全Ready時の受信：<b class="bench-poll">poll 3.67 M</b> ／ <b class="bench-epoll">epoll 4.03 M msg/s</b></span><small>中央値・各10回。差は約10%。低Ready率ほどepollが有利だった。</small></div>
+<div class="benchmark-numbers"><span>全Ready時の完了速度：<b class="bench-poll">poll 1.94 M</b> ／ <b class="bench-epoll">epoll 2.07 M msg/s</b></span><small>中央値・各10回。送信時間を含むバースト型測定。差は約7%。</small></div>
 
-<div class="takeaway">この環境では、高Ready率で差は縮んだ。逆転は確認できなかった</div>
+<div class="takeaway">高Ready率で差は縮小。条件を変えると、小さな逆転もあった</div>
 <p class="fine">OrbStack VM / Linux 7.0.14 aarch64 / Zig 0.17.0 ReleaseFast。1,024 fd・64 B。帯はIQR。</p>
 
 <!--
 目安55秒。AとBは別の測定で、同一の縦軸や速度比較へ混ぜない。左はwait APIとイベント索引取得の時間/回（µs）。pollのrevents走査とepollのイベント配列走査を含み、データ受信や送信は含めない。全イベント容量Nでmaxevents切り詰めはない。固定Ready集合を繰り返す合成負荷で、新規通信のイベントではない。
-右はprefill済みバーストの全受信・内容照合まで。Producerは同じスレッドで測定開始前に送信し、次の送信は受信完了後。送信時間を除くため、送信開始からの完全なEnd-to-End性能やWebサーバの性能ではない。
-1024 fd/64 B：Aの約1%（10/1024）でpoll42.189µs、epoll0.231µs、100%で42.558µs対16.460µs。Bの100%はpoll3.668M対epoll4.026M msg/s。値は各方式10sampleの中央値。1%等の要求率は整数fdに丸め、実率も記録。CPU affinity未固定、VM・ホストの負荷・周波数の影響は残る。
-全条件は64/256/1024/4096 fd ×1/10/50/100% ×64B/1KiB ×2方式×A/B×10sample=1280本測定。warmup128件は除外。ペアごとに同seedを使い方式順・条件順を乱択。別seedの代表条件480sampleでも同じ傾向を再確認。
+右は同一スレッドのProducerが送信を始めてから、Consumerの全受信・内容照合が終わるまでのバースト型End-to-End。受信区間だけの初回系列も別途保存し、取得コストを分解して確認した。WebサーバやProducerとConsumerの同時実行性能ではない。
+1024 fd/64 B：Aの約1%（10/1024）でpoll42.189µs、epoll0.231µs、100%で42.558µs対16.460µs。Bの100%はpoll1.939M対epoll2.066M msg/s。値は各方式10sampleの中央値。Ready率は整数fdに丸め、実率も記録。CPU affinity未固定、VM・ホストの負荷・周波数の影響は残る。
+このB条件では送信側が総時間の約47〜51%を占め、差を覆い隠す。送信と受信の区間を別々に保存することでAPI取得コストと混同しない。全体の本測定はA/受信区間の初回1280+再測定480、送信込みBの640+再測定240+逆転条件の再確認40。別seedの4096fd/100%/1KiBで小さなpoll優位が出たため次のAdaptive評価へ進んだ。
+
 グラフはbenchmarks/poll-epoll/analyze.pyから再生成。raw.jsonl、summary.csv、environment.json、analysis.jsonが一次の実測記録。straceを付けた時間は含めない。
 benchmarks/poll-epoll/README.md / results/fixed / results/replication
 https://man7.org/linux/man-pages/man2/poll.2.html
@@ -324,33 +325,30 @@ https://man7.org/linux/man-pages/man7/epoll.7.html
 
 <div class="columns benchmark-adaptive">
 <div>
-
-### まず、理想的に選べたら？
-条件ごとに最速の方式を選ぶ<br>オフラインの<strong>Oracleモデル</strong>で確認。
-
-<p class="big-statement smaller">固定epollに対する<br>改善余地：<strong>0%</strong></p>
-
+<img class="adaptive-chart" src="/benchmarks/D-adaptive.svg" alt="動的負荷の中央値。poll0.312M、epoll1.076M、Adaptive1.074M msg/s。各10回。" />
 </div>
 <div>
 
-### 今回はAdaptiveを作らない
-poll優位への逆転が確認できず、<br>方式を切り替える根拠が得られなかった。
+### 高Ready率で小さな逆転はあった
+4,096 fd・全Ready・1 KiBでは、<br>pollが約2%有利な系列を確認。
 
-推定・切り替えのコストを払えば、<br>さらに不利になる可能性もある。
+### ただし、Adaptiveの改善は未確認
+切り替えは中央値<strong>2回・計2.13 ms</strong>。<br>固定epollとほぼ同じ受信完了速度だった。
 
 </div>
 </div>
 
-<div class="takeaway">仮説どおりにならなくても、それが実験の結果</div>
-<p class="fine">初回・別seed再測定とも同じ判断。Oracleは切り替え費用を無視した比較基準。Adaptiveは未実装。</p>
+<div class="takeaway">逆転はあった。ただし、切り替えて速くなるとは限らない</div>
+<p class="fine">4,096 fd / 1 KiB / Ready率1% → 100% → 1%、各200 ms。中央値・各10回。切り替え費用込み。</p>
 
 <!--
-目安35秒。今回の本測定64条件比較ではpaired poll/epoll比のbootstrap95%区間がepoll優位62、不確実2、poll優位0。逆転は確認できなかった。多数比較の補正なし、10sampleのため小差は断定しない。
-Oracleは各条件を同じ重みとし、run前半で方式を選び後半で評価。全データから最小値を選ぶ楽観的なモデルも算出。いずれも固定epollへの改善余地0%。同じAPIコスト/メッセージコストを条件間で合計したオフラインの比較で、実運用可能な推定器ではない。
-改善余地が確認できなかったため、Adaptiveの実装・閾値の調整・動的Phase A/B/C負荷には進まない。移動平均、ヒステリシス、最低継続時間、追加のReady率推定、切り替え費用、イベント欠落等を実証済みと説明しない。
-pollが全環境で不要という結論ではない。今回の固定集合・VM・予算の範囲での判断。ベンチマークを期待した逆転へ調整しない。ここから別の設計であるio_uringを調べた話へ戻る。
-benchmarks/poll-epoll/results/fixed/analysis.json
-benchmarks/poll-epoll/results/replication/analysis.json
+目安35秒。最初の受信区間のみの系列では逆転がなかったが、送信側のReady List維持費用も含むEnd-to-Endでは、4096fd/全Ready/1KiBでpollが有利な小差が独立の2系列で出た。end-to-end-replicationはペア比中央値0.9806（poll約1.9%有利）、95%区間0.9624〜0.9920。その後のcrossover-checkでも同方向を確認したため、Adaptiveの実装条件が成立したと判断した。
+動的負荷は1%→100%→1%、各200ms、10本測定+warmup1。Oracleは固定方式のrun前半からPhaseごとの方式を選び後半で評価。切替費用を無視した改善余地は約0.80%。実運用アルゴリズムではない。
+Adaptiveのコストモデルは別系列crossover-checkのrun1..5から作成し、動的評価結果を見てチューニングしていない。観測した完了fd数をEMA(1/4)で平滑化し、校正済みコスト差が32バースト分で切替推定時間の1.1倍を超える場合に切り替える。最低16バースト継続。単なるReady率の手製閾値ではない。追加pollを呼んでReady率推定する処理はない。
+切替は全受信済みの境界でepollをcloseし、必要時に全fdを再登録する。poll期間も裏でepollを登録し続けてProducerに費用を払わせる不公平を避けた。切替実時間、推定・判定費用は総時間に含む。開始時の初期化は別途記録し、それを含めた速度もsummary.csvに保存。全sampleで送受信・各fdの整合性が通ったが、任意の同時到着がある本番環境の切替の証明ではない。
+結果はpoll0.3115M、epoll1.0763M、Adaptive1.0739M msg/s。切替回数中央値2、切替時間中央値2.130ms。Adaptive/epollのペア比改善率中央値-0.40%、bootstrap95%区間-1.61〜+2.48%。改善も悪化も断定できず、今回の方式で改善は確認できなかった。
+benchmarks/poll-epoll/results/adaptive/model.json / analysis.json / raw.jsonl
+benchmarks/poll-epoll/results/crossover-check / end-to-end-replication
 -->
 
 ---
@@ -741,6 +739,7 @@ Zigは観察の道具であって今回の話をZigだけに閉じない。runti
 
 ### Linux
 - [syscalls(2)](https://man7.org/linux/man-pages/man2/syscalls.2.html) / [read(2)](https://man7.org/linux/man-pages/man2/read.2.html) / [write(2)](https://man7.org/linux/man-pages/man2/write.2.html)
+- [poll(2)](https://man7.org/linux/man-pages/man2/poll.2.html) / [epoll_wait(2)](https://man7.org/linux/man-pages/man2/epoll_wait.2.html)
 - [epoll(7)](https://man7.org/linux/man-pages/man7/epoll.7.html) / [io_uring(7)](https://man7.org/linux/man-pages/man7/io_uring.7.html)
 - [io_uring_register(2)](https://man7.org/linux/man-pages/man2/io_uring_register.2.html)
 

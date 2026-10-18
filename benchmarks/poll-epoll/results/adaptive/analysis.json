@@ -1,0 +1,21 @@
+{
+  "comparison": "adaptive throughput / fixed epoll throughput",
+  "paired_median_percent": -0.3972904650649589,
+  "ci95_percent": [
+    -1.6061156003205346,
+    2.4773623574073866
+  ],
+  "switch_cost_included": true,
+  "initial_setup_in_primary_timing": false,
+  "controller": "model calibrated only on crossover-check runs 1..5; no dynamic-result tuning",
+  "oracle": {
+    "phase_choices": [
+      "epoll",
+      "poll",
+      "epoll"
+    ],
+    "held_out_gain_percent": 0.8036010676153893,
+    "switch_cost_included": false
+  },
+  "conclusion": "No demonstrated throughput improvement over fixed epoll"
+}

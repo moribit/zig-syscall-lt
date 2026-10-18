@@ -1376,6 +1376,6 @@
       "switch_cost_included": false
     }
   },
-  "adaptive_implemented": false,
+  "adaptive_in_this_dataset": false,
   "decision": "No robust reversal in receive conditions; dynamic switching not justified."
 }

@@ -1,0 +1,275 @@
+{
+  "criterion": "Paired bootstrap 95% interval of median poll/epoll cost ratio excludes 1, in both directions for receive workloads. No speed-based pass/fail test.",
+  "comparisons": [
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 1,
+      "payload": 64,
+      "paired_ratio_median": 3.777616496006167,
+      "ci95_low": 3.6441664275466286,
+      "ci95_high": 3.8811441227478425,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 1,
+      "payload": 1024,
+      "paired_ratio_median": 2.7833974256563305,
+      "ci95_low": 2.7375044206318617,
+      "ci95_high": 2.821159105227315,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 100,
+      "payload": 64,
+      "paired_ratio_median": 1.0310411263755874,
+      "ci95_low": 1.0049783001404133,
+      "ci95_high": 1.1079072039230313,
+      "poll_faster_runs": 2,
+      "epoll_faster_runs": 8,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 64,
+      "ready_percent": 100,
+      "payload": 1024,
+      "paired_ratio_median": 1.0040066325649057,
+      "ci95_low": 0.9906602999684508,
+      "ci95_high": 1.0223268978780506,
+      "poll_faster_runs": 3,
+      "epoll_faster_runs": 7,
+      "winner": "uncertain"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 1,
+      "payload": 64,
+      "paired_ratio_median": 12.72833652207916,
+      "ci95_low": 12.578106670445784,
+      "ci95_high": 12.859893891680386,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 1,
+      "payload": 1024,
+      "paired_ratio_median": 7.030943072967547,
+      "ci95_low": 6.889640378026749,
+      "ci95_high": 7.3162804845419185,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 100,
+      "payload": 64,
+      "paired_ratio_median": 0.9708697574483597,
+      "ci95_low": 0.9094788705788743,
+      "ci95_high": 1.1262887164241338,
+      "poll_faster_runs": 6,
+      "epoll_faster_runs": 4,
+      "winner": "uncertain"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 1024,
+      "ready_percent": 100,
+      "payload": 1024,
+      "paired_ratio_median": 1.0475794575315331,
+      "ci95_low": 1.0193762325321951,
+      "ci95_high": 1.069848768252505,
+      "poll_faster_runs": 1,
+      "epoll_faster_runs": 9,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 1,
+      "payload": 64,
+      "paired_ratio_median": 19.8925786635867,
+      "ci95_low": 19.745997737072262,
+      "ci95_high": 20.264679161521684,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 1,
+      "payload": 1024,
+      "paired_ratio_median": 10.930607955622996,
+      "ci95_low": 10.679699304413864,
+      "ci95_high": 11.079502504964044,
+      "poll_faster_runs": 0,
+      "epoll_faster_runs": 10,
+      "winner": "epoll"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 100,
+      "payload": 64,
+      "paired_ratio_median": 0.9714600928703976,
+      "ci95_low": 0.9346389026286186,
+      "ci95_high": 1.1145443618707445,
+      "poll_faster_runs": 8,
+      "epoll_faster_runs": 2,
+      "winner": "uncertain"
+    },
+    {
+      "benchmark": "receive",
+      "fds": 4096,
+      "ready_percent": 100,
+      "payload": 1024,
+      "paired_ratio_median": 0.9806004170268477,
+      "ci95_low": 0.9623562793326648,
+      "ci95_high": 0.9919710428166362,
+      "poll_faster_runs": 8,
+      "epoll_faster_runs": 2,
+      "winner": "poll"
+    }
+  ],
+  "oracle": {
+    "receive": {
+      "costs": {
+        "poll": 36534.89184659632,
+        "epoll": 8924.215967243474,
+        "oracle_in_sample": 8875.513849323552,
+        "oracle_held_out": 8875.513849323552
+      },
+      "unit": "sum of equally weighted condition medians: e2e_ns_per_message",
+      "optimistic_gain_percent": 0.5457299341329658,
+      "held_out_gain_percent": 0.5457299341329658,
+      "choices": [
+        {
+          "condition": [
+            "receive",
+            64,
+            1,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            64,
+            1,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            64,
+            100,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            64,
+            100,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            1,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            1,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            100,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            1024,
+            100,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            1,
+            64
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            1,
+            1024
+          ],
+          "chosen_from_training": "epoll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            100,
+            64
+          ],
+          "chosen_from_training": "poll"
+        },
+        {
+          "condition": [
+            "receive",
+            4096,
+            100,
+            1024
+          ],
+          "chosen_from_training": "poll"
+        }
+      ],
+      "switch_cost_included": false
+    }
+  },
+  "adaptive_in_this_dataset": false,
+  "decision": "Reversal detected: evaluate adaptive before drawing conclusions."
+}

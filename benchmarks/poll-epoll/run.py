@@ -8,6 +8,10 @@ p.add_argument('--runs',type=int,default=10)
 p.add_argument('--iterations',type=int,default=1000)
 p.add_argument('--seed',type=int,default=20261019)
 p.add_argument('--output',type=Path,default=ROOT/'results'/'fixed')
+p.add_argument('--fds',type=int)
+p.add_argument('--payload',type=int)
+p.add_argument('--ready',type=str,help='comma-separated requested ready percentages')
+p.add_argument('--receive-only',action='store_true',help='Measure burst end-to-end and receive intervals')
 p.add_argument('--focus',action='store_true',help='Replication: 64/1024/4096 fds, 1/100 percent')
 p.add_argument('--binary',default='/tmp/poll-epoll-bench')
 a=p.parse_args()
@@ -19,9 +23,14 @@ def cmd(*v): return subprocess.check_output(v,text=True).strip()
 if cmd('zig','version')!='0.17.0': raise SystemExit('Zig 0.17.0 required')
 subprocess.run(['zig','build-exe',str(ROOT/'main.zig'),'-O','ReleaseFast','-femit-bin='+a.binary],check=True)
 conditions=[(n,r,b,m) for n in [64,256,1024,4096] for r in [1,10,50,100] for b in [64,1024] for m in ['readiness','receive']]
+if a.fds: conditions=[c for c in conditions if c[0]==a.fds]
+if a.payload: conditions=[c for c in conditions if c[2]==a.payload]
+if a.ready: conditions=[c for c in conditions if c[1] in [int(v) for v in a.ready.split(',')]]
+if not conditions: raise SystemExit('No matching conditions')
+if a.receive_only: conditions=[c for c in conditions if c[3]=='receive']
 if a.focus: conditions=[c for c in conditions if c[0] in [64,1024,4096] and c[1] in [1,100]]
 if resource.getrlimit(resource.RLIMIT_NOFILE)[0] < 2*4096+32: raise SystemExit('RLIMIT_NOFILE too low: need at least 8224')
-meta=dict(date=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),uname=cmd('uname','-a'),cpu=cmd('lscpu'),distribution=Path('/etc/os-release').read_text(),zig=cmd('zig','version'),git_sha=cmd('git','rev-parse','HEAD'),git_status=cmd('git','status','--short'),environment='OrbStack Linux VM' if 'orbstack' in cmd('uname','-r') else 'unspecified Linux',fd_limit=resource.getrlimit(resource.RLIMIT_NOFILE),optimization='ReleaseFast',runs=a.runs,warmups=1,seed=a.seed,iterations=a.iterations,consumer_threads=1,producer='same-thread prefill outside consumer timing',event_capacity='N for both backends',read_budget='one payload per ready fd per acquisition',conditions=conditions)
+meta=dict(date=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),uname=cmd('uname','-a'),cpu=cmd('lscpu'),distribution=Path('/etc/os-release').read_text(),zig=cmd('zig','version'),git_sha=cmd('git','rev-parse','HEAD'),git_status=cmd('git','status','--short'),environment='OrbStack Linux VM' if 'orbstack' in cmd('uname','-r') else 'unspecified Linux',fd_limit=resource.getrlimit(resource.RLIMIT_NOFILE),optimization='ReleaseFast',runs=a.runs,warmups=1,seed=a.seed,iterations=a.iterations,consumer_threads=1,includes_producer_timing=True,producer='same-thread burst: producer+receive timed together and separately',event_capacity='N for both backends',read_budget='one payload per ready fd per acquisition',conditions=conditions)
 (a.output/'environment.json').write_text(json.dumps(meta,indent=2)+'\n')
 rng=random.Random(a.seed)
 def measure(c,backend,run,warmup):
