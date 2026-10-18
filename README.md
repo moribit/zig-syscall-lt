@@ -23,7 +23,7 @@ npm run export
 6. システムコールは、OSへの依頼
 7. fdは、プロセスが持つ番号
 8. データがまだないとき、どうする？
-9. pollとepollは、どちらが速い？
+9. なぜepollは低Ready率に強い？
 10. Zigで実測してみた
 11. 動的に切り替えれば速くなる？
 12. io_uringは、I/Oを依頼して完了を受け取る
@@ -78,7 +78,7 @@ CHROMIUM_PATH=/path/to/chromium npm run check:visual
 | `io_injection.zig` | 同じ`app(io)`がThreadedで成功、`std.Io.failing`で`InputOutput` |
 | `io_uring_read.zig` | `/dev/zero`から128 byte、CQEの`user_data=42, res=128` |
 
-[Linux実測記録](docs/validation-linux.json)、[技術レビューと検証範囲](docs/technical-review.md)を参照してください。性能ベンチマーク、Docker内の拒否、Uringのキャンセル実行は今回の検証には含みません。
+[Linux実測記録](docs/validation-linux.json)、[技術レビューと検証範囲](docs/technical-review.md)を参照してください。これらのスニペット検証には、Docker内の拒否やUringのキャンセル実行は含みません。
 
 ## バックエンド差し替えデモ
 
@@ -97,4 +97,6 @@ orb -m zig-syscall-lab sh benchmarks/poll-epoll/run.sh --output /tmp/poll-epoll-
 orb -m zig-syscall-lab python3 benchmarks/poll-epoll/analyze.py /tmp/poll-epoll-new
 ```
 
-低Ready率ではepoll優位、高Ready率では差が縮小しました。送信込みの再測定では4096fd・全Ready・1KiBで小さなpoll優位が再現したため、コストモデルによるAdaptiveも評価しました。1%→100%→1%の動的負荷では切替費用込みの改善は確認できませんでした。raw JSONL、集計CSV、SVGグラフ、測定環境を保存しています。本番Webサーバの継続的な並行到着を再現するものではありません。
+低Ready率ではepoll優位、高Ready率では差が縮小しました。送信込みの再測定では4096fd・全Ready・1KiBで小さなpoll優位が再現したため、コストモデルによるAdaptiveも評価しました。各200msの動的負荷では改善未確認でしたが、モデルを固定した追加検証では高Ready区間1秒・5秒で改善を確認しました。条件と信頼区間は追加レポートに掲載しています。raw JSONL、集計CSV、SVGグラフ、測定環境を保存しています。本番Webサーバの継続的な並行到着を再現するものではありません。
+
+追加監査の[原因分析レポート](benchmarks/poll-epoll/ANALYSIS.md)では、待機APIと送信側の費用を区別し、送信順の対照・CPU割当・Adaptiveの区間別挙動と高Ready区間の延長を検証しています。過去のrawと分析ファイルは保持しています。

@@ -266,18 +266,20 @@ https://man7.org/linux/man-pages/man2/open.2.html
 
 <div class="eyebrow">08 / READINESS COST</div>
 
-# pollとepollは、どちらが速い？
+# なぜepollは低Ready率に強い？
 
 <p class="benchmark-scenario">1,024 fdのうち、<strong>読み取り可能なのは10 fd</strong>なら？</p>
 
 <div class="benchmark-model">
-<h3 class="bench-poll">poll：毎回fdの集合を渡す</h3>
+<h3 class="bench-poll">poll：毎回fd集合を走査する</h3>
 <div class="flow horizontal"><div>1,024 fdの配列</div><span class="connector">→</span><div>全体を確認する</div><span class="connector">→</span><div>Readyな10 fd</div></div>
 <h3 class="bench-epoll">epoll：監視対象を先に登録する</h3>
-<div class="flow horizontal"><div>監視対象を登録</div><span class="connector">→</span><div>Ready List</div><span class="connector">→</span><div>Readyな10 fd</div></div>
+<div class="flow horizontal"><div>1,024 fdを事前登録</div><span class="connector">→</span><div>通知でReady Listへ</div><span class="connector">→</span><div>10 fdを確認・取得</div></div>
 </div>
 
-<div class="takeaway">監視fd数だけでなく、Ready率でも取得のコストは変わる</div>
+<p class="kernel-notification">Wait Queue（通知の待ち先） → <code>ep_poll_callback()</code> → Ready List</p>
+
+<div class="takeaway">epollは通知を利用し、待機のたびに全fdを確認する仕事を減らす</div>
 <p class="fine">Ready率 = 読み取り可能な監視fd数 / 監視fd総数。どちらも受信処理はアプリ側で行う。</p>
 
 <!--
@@ -287,6 +289,11 @@ https://man7.org/linux/man-pages/man2/open.2.html
 https://man7.org/linux/man-pages/man2/poll.2.html
 https://man7.org/linux/man-pages/man7/epoll.7.html
 https://man7.org/linux/man-pages/man2/epoll_wait.2.html
+追加監査：上流stable v7.0.14 fs/eventpoll.cのrbr（Interest List索引）、rdllist（Ready List）、ep_insert/ep_ptable_queue_proc、ep_poll_callback、ep_send_eventsを確認。登録時に対象fdのWait Queueへcallbackを登録し、通知で候補をReady Listへ追加。待機時は候補を再確認・コピーし、LTでは再配置する。すべての処理がO(1)ではない。Wait QueueはCPUを使って回り続けるループの意味ではない。
+測定版は7.0.14-orbstack-00380-ga7e0a2dc9535。独自patchの公開ソースを取得できず、同じベース版の上流実装を参照した。完全一致は未確認。
+https://github.com/gregkh/linux/blob/v7.0.14/fs/eventpoll.c#L1267
+https://github.com/gregkh/linux/blob/v7.0.14/fs/select.c#L872
+benchmarks/poll-epoll/ANALYSIS.md
 -->
 
 ---
@@ -295,24 +302,21 @@ https://man7.org/linux/man-pages/man2/epoll_wait.2.html
 
 # Zigで実測してみた
 
-<div class="columns benchmark-charts">
-<div><h3>A：読み取り可能なfdの取得</h3><img src="/benchmarks/B-ready.svg" alt="1024 fdでReady率別の取得時間。pollは約42µs、epollは約0.23〜16.46µs。中央値、各10回。" /></div>
-<div><h3>B：送信開始から受信完了まで</h3><img src="/benchmarks/C-throughput.svg" alt="1024 fdで送信開始から受信完了までの速度。低Ready率ではepoll優位、高Ready率では差が縮小。" /></div>
-</div>
+<img class="audit-measured" src="/benchmarks/audit-measured.svg" alt="別測定の2グラフ。1024 fd・64 B・各10回中央値。Ready率が上がるとepoll取得時間は増え、送信込み速度の差が縮む。" />
 
-<div class="benchmark-numbers"><span>全Ready時の完了速度：<b class="bench-poll">poll 1.94 M</b> ／ <b class="bench-epoll">epoll 2.07 M msg/s</b></span><small>中央値・各10回。送信時間を含むバースト型測定。差は約7%。</small></div>
+<div class="benchmark-numbers"><span>4,096 fd・全Ready・1 KiB：送信順で変わる小差</span><small>ランダム順はpollの時間が約4.3%短い。昇順は明確な差なし（各30回・CPU 2）。</small></div>
 
-<div class="takeaway">高Ready率で差は縮小。条件を変えると、小さな逆転もあった</div>
-<p class="fine">OrbStack VM / Linux 7.0.14 aarch64 / Zig 0.17.0 ReleaseFast。1,024 fd・64 B。帯はIQR。</p>
+<div class="takeaway">全Readyでも取得はepoll優位。送信込みでは別の費用も効く</div>
+<p class="fine">OrbStack VM / Linux 7.0.14 aarch64 / Zig 0.17.0 ReleaseFast。図は1,024 fd・64 B・n=10、帯はIQR。</p>
 
 <!--
-目安55秒。AとBは別の測定で、同一の縦軸や速度比較へ混ぜない。左はwait APIとイベント索引取得の時間/回（µs）。pollのrevents走査とepollのイベント配列走査を含み、データ受信や送信は含めない。全イベント容量Nでmaxevents切り詰めはない。固定Ready集合を繰り返す合成負荷で、新規通信のイベントではない。
-右は同一スレッドのProducerが送信を始めてから、Consumerの全受信・内容照合が終わるまでのバースト型End-to-End。受信区間だけの初回系列も別途保存し、取得コストを分解して確認した。WebサーバやProducerとConsumerの同時実行性能ではない。
-1024 fd/64 B：Aの約1%（10/1024）でpoll42.189µs、epoll0.231µs、100%で42.558µs対16.460µs。Bの100%はpoll1.939M対epoll2.066M msg/s。値は各方式10sampleの中央値。Ready率は整数fdに丸め、実率も記録。CPU affinity未固定、VM・ホストの負荷・周波数の影響は残る。
-このB条件では送信側が総時間の約47〜51%を占め、差を覆い隠す。送信と受信の区間を別々に保存することでAPI取得コストと混同しない。全体の本測定はA/受信区間の初回1280+再測定480、送信込みBの640+再測定240+逆転条件の再確認40。別seedの4096fd/100%/1KiBで小さなpoll優位が出たため次のAdaptive評価へ進んだ。
-
-グラフはbenchmarks/poll-epoll/analyze.pyから再生成。raw.jsonl、summary.csv、environment.json、analysis.jsonが一次の実測記録。straceを付けた時間は含めない。
-benchmarks/poll-epoll/README.md / results/fixed / results/replication
+目安55秒。左右は別測定。AはAPI+索引変換のµs/回、Bは送信開始から全受信・内容照合完了までのM msg/s。図は過去rawから再生成した1024fd/64B各10回中央値、帯IQR。Aの約1%はpoll42.189µs/epoll0.231µs、全Ready42.558/16.460µs。Bの全Ready1.939/2.066 M msg/s。Aは同一Ready状態のLT再通知で、新しい通信イベントではない。
+追加probeは1024/4096fd、約1%/全Readyを各20回。APIのみ・索引走査・集合照合・時計を別ループで測定。4096fd全ReadyでAPIのみpoll293.7/epoll124.6µs、ユーザー走査1.82/1.23µs。時計ペア約24ns、最短epollは約225nsで、短い区間を過度に分解しない。別ループの区間を足して厳密な内訳としない。
+4096fd/全Ready/1KiB・64バースト・CPU2固定・各30回の追加対照。ランダム送信でpoll/epoll費用比中央値0.9567、95%区間0.9373〜0.9721。昇順送信では1.0039、区間0.9944〜1.0181。別seed・CPU未固定の追試は0.9828、区間0.9416〜1.0288。解析・描画を停止したCPU固定の第2seedではランダム順0.9733、区間0.9653〜0.9969、ただしHolm補正符号検定p0.395で強い再現とは断定しない。昇順の第2seedも0.9979、区間0.9849〜1.0091で明確な差なし。小差の逆転は条件依存で、一般的なpoll優位とはしない。
+同じReady集合でもpollの返却索引は配列順、epollは通知/カーネル順。昇順対照はProducerの送信順だけを変え、epoll返却順を強制しない。全Ready・ランダムのProducer中央値はpoll2.169ms/epoll2.526ms。pollで待ちながらepoll登録を残す対照では2.709ms。Consumerはpoll3.774ms/epoll3.691ms。epollが送信中の通知費用も持つ点と整合するが、Ready List/キャッシュ等の要因を一意に特定したわけではない。各区間中央値は足し算で総中央値にはならない。
+同一スレッドsocketpairのバースト合成負荷で、Webサーバの並行到着ではない。ReleaseFast、Zig0.17.0、OrbStack/Linux7.0.14 aarch64。VM/ホスト負荷は残る。追加集計ではseed/run重複検査、ペアbootstrap、符号検定とHolm補正を保存し、外れ値は除外しない。過去のpointwise CIだけで強い一般化をしない。
+benchmarks/poll-epoll/audit-analyze.py / results/audit-v2
+benchmarks/poll-epoll/ANALYSIS.md
 https://man7.org/linux/man-pages/man2/poll.2.html
 https://man7.org/linux/man-pages/man7/epoll.7.html
 -->
@@ -323,32 +327,26 @@ https://man7.org/linux/man-pages/man7/epoll.7.html
 
 # 動的に切り替えれば速くなる？
 
-<div class="columns benchmark-adaptive">
-<div>
-<img class="adaptive-chart" src="/benchmarks/D-adaptive.svg" alt="動的負荷の中央値。poll0.312M、epoll1.076M、Adaptive1.074M msg/s。各10回。" />
-</div>
-<div>
+<img class="audit-timeline" src="/benchmarks/audit-timeline.svg" alt="別の診断runで実際に選んだバックエンド。約233msでepollからpollへ、約409msでepollへ復帰。Phase境界から遅れて切り替わった。" />
 
-### 高Ready率で小さな逆転はあった
-4,096 fd・全Ready・1 KiBでは、<br>pollが約2%有利な系列を確認。
-
-### ただし、Adaptiveの改善は未確認
-切り替えは中央値<strong>2回・計2.13 ms</strong>。<br>固定epollとほぼ同じ受信完了速度だった。
-
-</div>
+<div class="audit-phase-summary">
+<div><strong>各200 ms：系列間でも小差が変動</strong><br>今回の中央値-0.19%。過去は改善未確認。<br><span class="fine">切り替えは中央値2回・計2.18 ms。</span></div>
+<div><strong>高Readyが長く続くと？</strong><br>1秒：<b class="ref-result">+2.53%</b> ／ 5秒：<b class="ref-result">+4.51%</b><br><span class="fine">固定モデルのまま、改善を確認した。</span></div>
 </div>
 
-<div class="takeaway">逆転はあった。ただし、切り替えて速くなるとは限らない</div>
-<p class="fine">4,096 fd / 1 KiB / Ready率1% → 100% → 1%、各200 ms。中央値・各10回。切り替え費用込み。</p>
+<div class="takeaway">切り替える利益が、追随の遅れや切り替え費用を上回るか？</div>
+<p class="fine">4,096 fd / 1 KiB / CPU 2 / 各10回のペア比中央値。A/C各200 ms、Bのみ延長。性能測定は診断無効。</p>
 
 <!--
-目安35秒。最初の受信区間のみの系列では逆転がなかったが、送信側のReady List維持費用も含むEnd-to-Endでは、4096fd/全Ready/1KiBでpollが有利な小差が独立の2系列で出た。end-to-end-replicationはペア比中央値0.9806（poll約1.9%有利）、95%区間0.9624〜0.9920。その後のcrossover-checkでも同方向を確認したため、Adaptiveの実装条件が成立したと判断した。
-動的負荷は1%→100%→1%、各200ms、10本測定+warmup1。Oracleは固定方式のrun前半からPhaseごとの方式を選び後半で評価。切替費用を無視した改善余地は約0.80%。実運用アルゴリズムではない。
-Adaptiveのコストモデルは別系列crossover-checkのrun1..5から作成し、動的評価結果を見てチューニングしていない。観測した完了fd数をEMA(1/4)で平滑化し、校正済みコスト差が32バースト分で切替推定時間の1.1倍を超える場合に切り替える。最低16バースト継続。単なるReady率の手製閾値ではない。追加pollを呼んでReady率推定する処理はない。
-切替は全受信済みの境界でepollをcloseし、必要時に全fdを再登録する。poll期間も裏でepollを登録し続けてProducerに費用を払わせる不公平を避けた。切替実時間、推定・判定費用は総時間に含む。開始時の初期化は別途記録し、それを含めた速度もsummary.csvに保存。全sampleで送受信・各fdの整合性が通ったが、任意の同時到着がある本番環境の切替の証明ではない。
-結果はpoll0.3115M、epoll1.0763M、Adaptive1.0739M msg/s。切替回数中央値2、切替時間中央値2.130ms。Adaptive/epollのペア比改善率中央値-0.40%、bootstrap95%区間-1.61〜+2.48%。改善も悪化も断定できず、今回の方式で改善は確認できなかった。
-benchmarks/poll-epoll/results/adaptive/model.json / analysis.json / raw.jsonl
-benchmarks/poll-epoll/results/crossover-check / end-to-end-replication
+目安35秒。200msの既存結果を起点に、長ければ利益を回収できるかを調べた。モデル・EMA・係数は既存のまま固定、追加データを見て調整していない。B200/1000/5000msは事前指定、A/C各200ms固定、各10回。主解析は全9warmupを先に終えてから本測定したdynamic-warmed.jsonl。初回runnerにはwarmupの並べ替え不備があり、初回dynamic.jsonlとその分析も別に保存して修正前後を比較した。
+Adaptive/固定epollの完了速度改善率のペア中央値、95%percentile bootstrap区間（10000回）、3条件の正確符号検定Holm補正：200ms：-0.19% [-2.25〜+2.25%], Holm p=0.75391 / 1000ms：+2.53% [+1.75〜+3.57%], Holm p=0.042969 / 5000ms：+4.51% [+3.58〜+4.95%], Holm p=0.0058594。少数の同VM追試であり他環境の保証ではない。初期setupは別記、実行中の切替費用は含む。
+200msのPhase別速度中央値（M msg/s）：poll A 0.124 / B 0.660 / C 0.124; epoll A 1.298 / B 0.665 / C 1.298; adaptive A 1.297 / B 0.684 / C 1.273。Phase中央値は足し算できないため、同一run/seedごとの速度差を時間比とPhase速度の寄与へ分解した。全体速度差へ足し上がるのは各ペアの寄与の平均であり、中央値ではない。phase-contributions.csvには過去と追加の全ペアを保存。差の発生区間を示すものでkernel関数への因果分解ではない。全27条件の速度・CPU時間・完了バースト・切替はphase-summary.csv。
+図は性能sampleと別の診断run（seed20261101、B200ms）の実測。epoll→pollはB第5バースト、実験開始232.883msで完了（実費0.463ms）。poll→epollはC第3バースト、409.258msで完了（実費1.702ms）。Phase境界と切替完了は一致しない。理想的なPhase境界切替の図を実挙動として描いていない。64バーストごとと全切替を事前確保メモリへ記録し終了後出力。診断の性能値は通常測定へ混ぜない。
+切替合計中央値ms：200ms 2.183 / 1秒 2.233 / 5秒 2.223。closeと再登録は非対称だがControllerは直近費用を方向別に区別せず使う。初期見積はsetup。EMAは完了fd数を入力とし、generatorのPhaseを直接入力しない。最低16バースト継続、32バースト先までの推定利益と切替費用見積の1.1倍を比較する。
+旧Oracle約0.80%は前半runで選び後半で評価した等時間近似、切替費用なし。追加は固定方式Phase中央値に時間重みを付けて推定しANALYSIS.mdに全条件掲載。別runの中央値からの記述的近似で、同一sampleの厳密な上限ではない。切替時間だけの回収見積は追随遅延・復帰損失を無視する楽観値。Oracleは将来の負荷を知る比較基準であり実運用アルゴリズムではない。
+切替はバースト完全drain後、poll期間はepollをclose、復帰時は全fd再登録。全sampleで内容・byte数・メッセージ数が一致。任意の同時到着の正しさまでは証明しない。
+benchmarks/poll-epoll/ANALYSIS.md
+benchmarks/poll-epoll/results/audit-v2/dynamic-warmed.jsonl / diagnostics.jsonl / analysis.json / phase-summary.csv
 -->
 
 ---
@@ -719,7 +717,7 @@ https://docs.libuv.org/en/v1.x/fs.html
 <!--
 目安40秒。調べた順に発見を振り返り、冒頭の「いつも使うawaitの裏側」という問いに戻る。
 Zigは観察の道具であって今回の話をZigだけに閉じない。runtimeのコードやstraceを眺めることも次の入口になる。
-高性能かどうかは自分のワークロードで測る。今回の結果はAPIと動作の確認であり、性能改善の実証ではない。
+高性能かどうかは自分のワークロードで測る。今回はAPIの観察と合成負荷での比較。Webサーバ全体の性能改善を実証したものではない。
 最後は「普段何気なく使っている非同期処理。その少し下を覗くと、Linuxの面白い仕組みが見えてくる」と口頭で締める。
 -->
 
@@ -743,6 +741,7 @@ Zigは観察の道具であって今回の話をZigだけに閉じない。runti
 - [poll(2)](https://man7.org/linux/man-pages/man2/poll.2.html) / [epoll_wait(2)](https://man7.org/linux/man-pages/man2/epoll_wait.2.html)
 - [epoll(7)](https://man7.org/linux/man-pages/man7/epoll.7.html) / [io_uring(7)](https://man7.org/linux/man-pages/man7/io_uring.7.html)
 - [io_uring_register(2)](https://man7.org/linux/man-pages/man2/io_uring_register.2.html)
+- [Linux v7.0.14: eventpoll.c](https://github.com/gregkh/linux/blob/v7.0.14/fs/eventpoll.c)
 
 </div>
 <div>
@@ -758,7 +757,7 @@ Zigは観察の道具であって今回の話をZigだけに閉じない。runti
 </div>
 </div>
 
-<p class="fine">確認日：2026-10-18。補足・各スライドの出典は発表者ノート、実行例は snippets/ に記載。</p>
+<p class="fine">既存資料確認：2026-10-18、poll/epoll追加調査：10-19。補足と出典は発表者ノート・ANALYSIS.md。</p>
 
 <!--
 参考資料は発表時間に含めて読み上げない。質問時に利用する。すべて一次資料。リンクは2026-10-18に内容を確認。
@@ -770,5 +769,6 @@ https://man7.org/linux/man-pages/man2/io_uring_enter.2.html
 https://man7.org/linux/man-pages/man2/io_uring_setup.2.html
 https://github.com/moby/profiles/blob/main/seccomp/default.json
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await
+poll/epollの追加監査は2026-10-19。上流stable v7.0.14を参照、OrbStack独自patchの完全照合は未確認。benchmarks/poll-epoll/ANALYSIS.mdとresults/audit-v2を参照。
 この資料はzig_async_syscalls_lt_webfriendly.pdfの学習内容をもとに、発見を共有する15分LTとして再構成したもの。
 -->

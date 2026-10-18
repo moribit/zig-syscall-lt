@@ -157,3 +157,11 @@
 .benchmark-adaptive p { line-height: 1.6; }
 
 .adaptive-chart { width: 100%; height: 280px; object-fit: contain; }
+
+/* Existing benchmark pages: retain palette and improve evidence readability. */
+.kernel-notification { margin: 13px 0 0; font-size: 16px; color: #616161; }
+.audit-measured { width: 100%; height: 260px; object-fit: contain; }
+.audit-timeline { width: 100%; height: 170px; object-fit: contain; }
+.audit-phase-summary { display: flex; justify-content: space-between; gap: 24px; font-size: 19px; line-height: 1.5; margin-top: 6px; }
+
+.benchmark-model .flow.horizontal { grid-template-columns: 1fr 24px 1fr 24px 1fr; margin-top: 18px; }

@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-18T22:26:27.712Z",
+  "checkedAt": "2026-10-18T23:08:59.260Z",
   "slides": [
     {
       "number": 1,
@@ -43,7 +43,7 @@
     },
     {
       "number": 9,
-      "title": "pollとepollは、どちらが速い？",
+      "title": "なぜepollは低Ready率に強い？",
       "overflow": []
     },
     {
@@ -120,7 +120,7 @@
   "animation": {
     "before": 7,
     "after": 3,
-    "url": "http://127.0.0.1:34485/12?clicks=4"
+    "url": "http://127.0.0.1:44387/12?clicks=4"
   },
   "presenter": true,
   "codeColors": {

@@ -1,0 +1,76 @@
+{
+  "baseline": "09cbca517845312ddffb10eff853015c59081748",
+  "date": "2026-10-19",
+  "zig": "0.17.0",
+  "optimization": "ReleaseFast",
+  "zig_correctness_tests": 3,
+  "controller_tests": 2,
+  "python_statistic_tests": 3,
+  "historical_rows": 2981,
+  "historical_files_unchanged": 39,
+  "historical_analyses_reproduced": 6,
+  "new_measured_samples_primary": 1430,
+  "new_measured_samples_preliminary_dynamic": 90,
+  "raw_validation": "benchmarks/poll-epoll/results/audit-v2/validation.json",
+  "primary_dynamic": "dynamic-warmed.jsonl",
+  "warmup_protocol_correction": "all nine warmups now precede measurements; original interleaved data/analysis preserved",
+  "slidev_build": "passed",
+  "visual_slides": 23,
+  "visual_overflows": 0,
+  "click_animation": "passed",
+  "presenter_notes": "passed",
+  "code_semantic_colors": "passed",
+  "pdf_pages": 23,
+  "pdf_visual_review": "all pages reviewed; changed pages reviewed again after final export",
+  "dynamic_comparisons": [
+    {
+      "n": 10,
+      "ratio": 0.9980515447507181,
+      "ci95": [
+        0.9774542429650468,
+        1.0224849839963537
+      ],
+      "numerator_wins": 6,
+      "sign_p": 0.75390625,
+      "high_ms": 200,
+      "switch_ns": 2183353.5,
+      "switches": 2.0,
+      "holm_p": 0.75390625
+    },
+    {
+      "n": 10,
+      "ratio": 1.0252638923468038,
+      "ci95": [
+        1.0174724727370121,
+        1.0357476805407322
+      ],
+      "numerator_wins": 1,
+      "sign_p": 0.021484375,
+      "high_ms": 1000,
+      "switch_ns": 2233103.5,
+      "switches": 2.0,
+      "holm_p": 0.04296875
+    },
+    {
+      "n": 10,
+      "ratio": 1.0450816697461294,
+      "ci95": [
+        1.0357964390609884,
+        1.0495142482644808
+      ],
+      "numerator_wins": 0,
+      "sign_p": 0.001953125,
+      "high_ms": 5000,
+      "switch_ns": 2223482.5,
+      "switches": 2.0,
+      "holm_p": 0.005859375
+    }
+  ],
+  "limitations": [
+    "OrbStack patches not fully available; upstream v7.0.14 reviewed",
+    "perf cycles/instructions unsupported",
+    "VM-only; no physical Linux validation",
+    "cache causes remain hypotheses"
+  ],
+  "reaggregation_and_svg_reproduction": "passed; all historical numbers unchanged and new raw-derived artifacts reproduced"
+}
