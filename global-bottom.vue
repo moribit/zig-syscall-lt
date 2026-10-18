@@ -1,0 +1,9 @@
+<template>
+  <footer v-if="$slidev.nav.currentPage > 1" class="deck-footer">
+    <span>Zig / Linux I/O</span>
+    <span>{{ $slidev.nav.currentPage }} / {{ $slidev.nav.total }}</span>
+  </footer>
+</template>
+<style>
+.deck-footer { position: absolute; z-index: 10; bottom: 10px; left: 52px; right: 52px; display: flex; justify-content: space-between; color: #737373; font: 11px sans-serif; pointer-events: none; }
+</style>

@@ -1,0 +1,74 @@
+
+:root { --slidev-theme-primary: #171717; }
+.slidev-layout { background: #ffffff; color: #171717; padding: 42px 52px 52px; font-family: "Noto Sans JP", "Hiragino Sans", sans-serif; font-size: 21px; line-height: 1.65; }
+.slidev-layout h1 { font-size: 35px; font-weight: 750; line-height: 1.35; margin: 15px 0 29px; letter-spacing: -.035em; }
+.slidev-layout h3 { color: #404040; font-size: 21px; font-weight: 650; margin: 12px 0 14px; }
+.eyebrow { color: #171717; font-size: 14px; font-weight: 700; letter-spacing: .12em; }
+.columns { display: grid; grid-template-columns: 1fr 1fr; gap: 42px; align-items: start; }
+.columns > div { min-width: 0; }
+.columns.compact { margin-top: 22px; }
+.code-wide { grid-template-columns: 1.35fr 1fr; gap: 30px; }
+.slidev-layout pre { padding: 20px 23px !important; border: 1px solid #303b50; border-radius: 5px; background: #151e31 !important; color: #e6edf3; font-size: 17px !important; line-height: 1.75 !important; }
+.slidev-layout pre code { font-family: "JetBrains Mono", "SFMono-Regular", monospace; }
+.slidev-layout :not(pre) > code { color: #262626; background: #eeeeee; font-size: .88em; }
+.takeaway { position: absolute; left: 52px; right: 52px; bottom: 49px; color: #171717; font-size: 23px; font-weight: 700; border-top: 1px solid #d4d4d4; padding-top: 17px; }
+.fine { font-size: 14px; color: #616161; margin-top: 18px; }
+.takeaway + .fine { position: absolute; bottom: 32px; left: 52px; margin: 0; font-size: 12px; }
+.inline-defs { display: flex; justify-content: space-between; gap: 20px; margin-top: 24px; font-size: 18px; }
+.inline-defs b { color: #262626; margin-right: 10px; }
+.terminal-label { font-size: 15px; color: #616161; margin: 19px 0 10px; }
+.slidev-layout table { font-size: 20px; width: 100%; }
+.slidev-layout th { color: #616161; font-weight: 500; }
+.slidev-layout td, .slidev-layout th { border-color: #d4d4d4; padding: 9px 13px; }
+.slidev-layout td strong { color: #262626; }
+.sequence { display: flex; align-items: stretch; margin: 35px 0 26px; gap: 12px; }
+.sequence > span { flex: 1; padding: 16px; border-top: 2px solid #171717; background: #f7f7f7; text-align: center; font-family: monospace; font-size: 20px; }
+.sequence .waiting { flex: 1.8; border-color: #262626; color: #262626; }
+.slidev-layout .big-statement { font-size: 31px; line-height: 1.6; margin: 26px 0 !important; }
+.big-statement strong { color: #262626; font-weight: 700; }
+.slidev-layout .big-statement.smaller { font-size: 27px; }
+.uring { margin-top: 40px; }
+.uring > span { display: flex; flex-direction: column; padding: 15px; }
+.uring small { font-family: sans-serif; color: #616161; font-size: 12px; letter-spacing: .1em; }
+.uring b { font-size: 31px; margin: 5px; color: #171717; }
+.roadmap { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 45px; margin-top: 35px; }
+.roadmap > div { display: grid; grid-template-columns: 40px 1fr; border-bottom: 1px solid #d4d4d4; padding-bottom: 12px; }
+.roadmap b { grid-row: span 2; color: #171717; font-size: 16px; }
+.roadmap strong { font-size: 24px; }
+.roadmap span { color: #616161; font-size: 17px; }
+.summary-list { margin-top: 36px; }
+.summary-list > div { display: grid; grid-template-columns: 43px 265px 1fr; gap: 8px; padding: 17px 0; border-bottom: 1px solid #d4d4d4; align-items: center; }
+.summary-list b { color: #171717; font-size: 16px; }
+.summary-list strong { font-size: 23px; }
+.summary-list span { color: #404040; font-size: 18px; }
+.sources li { margin: 17px 0; font-size: 20px; }
+.sources span { color: #616161; font-size: 16px; }
+.slidev-layout a { color: #262626; border: 0; }
+.cover { padding-top: 45px; }
+.cover h1 { font-size: 57px; line-height: 1.3; margin: 35px 0 20px; letter-spacing: -.035em; }
+.cover-sub { color: #616161; font-family: monospace; font-size: 23px; }
+.cover-sub strong { color: #262626; }
+.cover-bottom { position: absolute; bottom: 57px; font-size: 23px; color: #171717; }
+
+/* Color is reserved for code and the explanations that refer to it. */
+:root { --code-fd: #1d4ed8; --code-buffer: #0f766e; --code-result: #7e22ce; --code-operation: #b45309; }
+.slidev-layout .ref-fd { color: var(--code-fd); font-weight: 650; }
+.slidev-layout .ref-buffer { color: var(--code-buffer); font-weight: 650; }
+.slidev-layout .ref-result { color: var(--code-result); font-weight: 650; }
+.slidev-layout .ref-operation { color: var(--code-operation); font-weight: 650; }
+.slidev-layout code .ref-fd, .slidev-layout code .ref-buffer,
+.slidev-layout code .ref-result, .slidev-layout code .ref-operation { font-weight: inherit; }
+.slidev-layout .inline-defs b { color: inherit; }
+.slidev-layout .inline-defs { flex-wrap: wrap; gap: 10px 25px; }
+.code-key { display: flex; gap: 24px; font-size: 16px; margin-top: 14px; }
+
+/* Match hues across white prose and dark code, with contrast for each surface. */
+.slidev-layout pre .ref-fd { color: #8bb9ff; }
+.slidev-layout pre .ref-buffer { color: #7ee0cc; }
+.slidev-layout pre .ref-result { color: #d8b4fe; }
+.slidev-layout pre .ref-operation { color: #ffc078; }
+/* Text inside a code block must inherit the dark-surface palette. */
+.slidev-layout pre code { background: transparent; color: inherit; }
+.uring > span > span { display: block; padding: 0; }
+
+.slidev-layout:has(.takeaway + .fine) .takeaway { bottom: 66px; }
