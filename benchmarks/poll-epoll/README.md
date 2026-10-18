@@ -195,3 +195,54 @@ cp benchmarks/poll-epoll/results/fixed/B-ready.svg public/benchmarks/
 cp benchmarks/poll-epoll/results/end-to-end/C-throughput.svg public/benchmarks/
 cp benchmarks/poll-epoll/results/adaptive/D-adaptive.svg public/benchmarks/
 ```
+
+
+## 追加監査・原因分析（audit-v2）
+
+結果と限界は[ANALYSIS.md](ANALYSIS.md)を参照。過去のraw・environment・analysis・図表を上書きせず、`results/audit-v2/`へ追加した。
+
+```sh
+# Linux / Zig 0.17.0 / Python 3 + matplotlib / taskset、CPU 2が利用可能であること
+python3 benchmarks/poll-epoll/audit-tests.py
+python3 benchmarks/poll-epoll/audit-validate.py
+zig test benchmarks/poll-epoll/tests.zig
+# 保存済みrawの整合性。過去のvalidation.jsonを上書きしない
+python3 benchmarks/poll-epoll/validate.py --output /tmp/historical-validation.json
+# 過去6系列を一時ディレクトリで再集計し、数値とCSVの一致を確認
+python3 benchmarks/poll-epoll/audit-reaggregate.py
+# 新しい出力先を指定する。既存測定結果への追記・上書きは拒否
+python3 benchmarks/poll-epoll/audit-run.py --output /tmp/poll-audit-new
+python3 benchmarks/poll-epoll/audit-confirm.py --output /tmp/poll-audit-new
+python3 benchmarks/poll-epoll/audit-validate.py /tmp/poll-audit-new
+python3 benchmarks/poll-epoll/audit-analyze.py /tmp/poll-audit-new
+# 保存済み追加測定から集計とSVGを再生成
+python3 benchmarks/poll-epoll/audit-analyze.py
+```
+
+`audit-run.py`はReleaseFastで3つのバイナリをビルドする。`main.zig`の従来CLIは維持し、`poll-watched`（pollで取得するがepoll登録を残す対照）と末尾の`ascending`（同じReady集合への送信順のみ昇順）を追加した。epollの返却順は強制しない。
+
+`probe.zig backend mode N ready repeats seed`は`combined`（取得+索引変換）、`syscall`（APIのみ）、`scan`（事前取得配列の走査）、`validate`（Ready集合照合）、`clocks`（時計ペア）を別々のループで測る。測定区間内に送受信はない。区間は別プロセス・別状態なので足し合わせて厳密な内訳にはできない。ns/eventは同じReady fdへのLT再通知の費用であり、新しいメッセージの費用ではない。
+
+`adaptive.zig backend low_ms seed [high_ms [diagnostic]]`ではA/Cの時間を固定しBだけ変更できる。従来の3引数では全Phaseが同じ長さ。モデルは既存`results/adaptive/model.json`のまま固定。通常は診断配列を確保せず、診断時は事前確保メモリに64バーストごと・全切替を記録し、全測定終了後にJSONL出力する。診断runは性能比較に混ぜない。
+
+追加JSONLの仕様：
+
+- `probe.jsonl`：4条件×2方式×5モード×（warmup1+測定20）、`duration_ns / iterations`が1回費用。
+- `controls.jsonl`：Ready41/4096×送信順2×3方式×（1+30）、64バースト。通常のmain出力に`order`・`run`・`seed`を付加。
+- `replication.jsonl`：全Ready・通常送信順・poll/epoll・別seed・affinity未固定、各1+30。
+- `confirmation.jsonl`：全Readyを送信順2×poll/epoll×（1+30）、CPU 2固定、さらに別seed。解析・描画終了後に単独で追試。
+- `dynamic-warmed.jsonl`：B=200/1000/5000ms×3方式×（1+10）。全warmup先行。PhaseごとのCPU時間・バースト数・切替回数/時間。初回の`dynamic.jsonl`はwarmup順序の不備があった予備系列として削除せず分離した。
+- `diagnostics.jsonl`：専用seedの集計行に続き、`diagnostic:true`の判断ログ。`elapsed_ns`は実験開始から切替完了/記録時点、`actual_ns>0`が実際の切替。`before_epoll` / `after_epoll`、EMA、両方式推定費用、切替見積を保持。
+- 通常行の`sequence`・開始/終了Unix時刻は実行順序の記録。`warmup`のみ集計から除外。環境・モデルSHA・ソースSHA・CPU割当・全体の/proc/statとloadavgは`environment.json`。
+- `analysis.json`：seed/run一致を確認したペア比、95% percentile bootstrap（10,000回）、正確符号検定とHolm補正、Oracle、実切替。既存n=10の小差は探索的な結果とする。
+- `probe-summary.csv`・`controls-summary.csv`・`phase-summary.csv`・`historical-phase-summary.csv`：図表の元。`measured.svg`・`phases.svg`・`timeline.svg`は生データから再生成。
+
+CPU 2固定が不可能な環境ではrunnerの設定を変更し、その条件を別系列として保存する。VM内のCPU affinityはホスト側の専有CPUを保証しない。perf/straceによる追加観察は通常測定終了後に別実行し、その時間を通常の測定値に混ぜない。
+
+公開レポートの数表も再生成する場合：`python3 benchmarks/poll-epoll/audit-report.py`。過去の結果は変更せず、ANALYSIS.mdの追加結果区間だけを更新する。
+
+warmup順序に不備があった初回追加系列の結果は、予備系列としてraw・分析を保存した。最終のwarmup先行系列：B=200ms：-0.19%（95%区間-2.25〜+2.25%） / B=1000ms：+2.53%（95%区間+1.75〜+3.57%） / B=5000ms：+4.51%（95%区間+3.58〜+4.95%）。全条件と修正前後を掲載し、過去の結果はそのまま保持する。
+
+動的負荷だけのwarmup順序修正は`audit-dynamic.py --output <結果ディレクトリ> --binary <ReleaseFast adaptive>`で実行した。既存`dynamic-warmed.jsonl`への上書きを拒否する。最終レポートでは予備系列との比較も掲載する。
+
+公開スライドのAdaptive数値・ノートを主解析へ同期する場合：`python3 benchmarks/poll-epoll/audit-slides.py`。その後、SlidevビルドとPDF出力・表示検査を再実行する。

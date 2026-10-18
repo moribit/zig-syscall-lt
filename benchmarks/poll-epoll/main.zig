@@ -8,9 +8,10 @@ fn number(s: []const u8) !usize {
 }
 pub fn main(init: std.process.Init) !void {
     const args = try init.minimal.args.toSlice(init.arena.allocator());
-    if (args.len != 8) return error.Usage_backend_mode_fds_ready_payload_iterations_seed;
+    if (args.len != 8 and args.len != 9) return error.Usage_backend_mode_fds_ready_payload_iterations_seed;
     const is_epoll = std.mem.eql(u8, args[1], "epoll");
-    if (!is_epoll and !std.mem.eql(u8, args[1], "poll")) return error.BadBackend;
+    const watched = std.mem.eql(u8, args[1], "poll-watched");
+    if (!is_epoll and !watched and !std.mem.eql(u8, args[1], "poll")) return error.BadBackend;
     const readiness = std.mem.eql(u8, args[2], "readiness");
     if (!readiness and !std.mem.eql(u8, args[2], "receive")) return error.BadMode;
     const n = try number(args[3]);
@@ -21,12 +22,18 @@ pub fn main(init: std.process.Init) !void {
     if (n == 0 or ready > n or (payload != 64 and payload != 1024) or rounds == 0 or (!readiness and ready == 0)) return error.InvalidCondition;
     var w = try W.init(init.gpa, n, seed);
     defer w.deinit();
+    if (args.len == 9) {
+        if (!std.mem.eql(u8, args[8], "ascending")) return error.BadOrder;
+        std.mem.sort(usize, w.order[0..ready], {}, std.sort.asc(usize));
+    }
     var p: Poll = undefined;
     var e: Epoll = undefined;
     const setup_start = m.now();
-    if (is_epoll) e = try Epoll.init(init.gpa, w.pairs) else p = try Poll.init(init.gpa, w.pairs);
+    if (is_epoll or watched) e = try Epoll.init(init.gpa, w.pairs);
+    if (!is_epoll) p = try Poll.init(init.gpa, w.pairs);
     defer {
-        if (is_epoll) e.deinit() else p.deinit();
+        if (is_epoll or watched) e.deinit();
+        if (!is_epoll) p.deinit();
     }
     const setup_ns = m.now() - setup_start;
     const indices = try init.gpa.alloc(usize, n);

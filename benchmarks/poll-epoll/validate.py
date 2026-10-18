@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Validate counts and transport invariants without testing relative speed."""
-import collections, hashlib, json
+import argparse, collections, hashlib, json
 from pathlib import Path
 root=Path(__file__).resolve().parent
+parser=argparse.ArgumentParser(); parser.add_argument("--output",type=Path,default=root/"results/validation.json"); args=parser.parse_args()
 report={}
 for group in ['fixed','replication','end-to-end','end-to-end-replication','crossover-check']:
  directory=root/'results'/group
@@ -38,5 +39,5 @@ if adaptive.exists():
    assert p['messages']==ready*p['batches'] and p['bytes']==p['messages']*1024
  report['adaptive']=dict(rows=33,measured=30,warmups=3,raw_sha256=hashlib.sha256(adaptive.read_bytes()).hexdigest())
 report['source_sha256']={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in root.glob('*.zig')}
-(root/'results/validation.json').write_text(json.dumps(report,indent=2)+'\n')
+args.output.write_text(json.dumps(report,indent=2)+'\n')
 print('All saved samples satisfy count, byte, message, and event invariants.')

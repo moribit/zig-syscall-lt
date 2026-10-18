@@ -1,0 +1,38 @@
+{
+  "measured_kernel": "7.0.14-orbstack-00380-ga7e0a2dc9535",
+  "reference": "upstream stable v7.0.14",
+  "exact_vendor_source_available": false,
+  "vendor_commit_lookup": "https://github.com/orbstack/linux-macvirt/tree/a7e0a2dc9535 (404 at lookup)",
+  "sources": {
+    "fs/eventpoll.c": {
+      "url": "https://github.com/gregkh/linux/blob/v7.0.14/fs/eventpoll.c",
+      "sha256": "e8dace5d2d4b8d8def7a5e32485cb4e4051940f71303ac4740334510aeae214b",
+      "anchors": {
+        "interest_rbr": 201,
+        "ready_rdllist": 195,
+        "ep_poll_callback": 1267,
+        "ep_ptable_queue_proc": 1378,
+        "ep_insert": 1584,
+        "ep_send_events": 1783,
+        "recheck": 1838,
+        "LT_requeue": 1865
+      }
+    },
+    "fs/select.c": {
+      "url": "https://github.com/gregkh/linux/blob/v7.0.14/fs/select.c",
+      "sha256": "321a153b85522c64262f7af59c6daf7504da3374597816883a3935d9fe941dc8",
+      "anchors": {
+        "do_pollfd": 849,
+        "do_poll": 872,
+        "scan": 899
+      }
+    },
+    "net/unix/af_unix.c": {
+      "url": "https://github.com/gregkh/linux/blob/v7.0.14/net/unix/af_unix.c",
+      "sha256": "163ffe392f60dfff7b9386508291dc63bcee62b3dbb3e52c0fbc1f148b7efb46",
+      "anchors": {
+        "stream_send_data_ready": 2293
+      }
+    }
+  }
+}

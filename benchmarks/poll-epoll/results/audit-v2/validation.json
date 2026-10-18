@@ -1,0 +1,52 @@
+{
+  "probe": {
+    "rows": 840,
+    "groups": 40,
+    "warmups": 40,
+    "sha256": "94c88dbd77191867c3e0ad185cb8a9f26ec1e6830fe52da46e27fc540c46053b"
+  },
+  "controls": {
+    "rows": 372,
+    "groups": 12,
+    "warmups": 12,
+    "sha256": "a1f389f86f8accde321d52045e9a29f3daaeda350e89d620169f8659db9be8d3"
+  },
+  "replication": {
+    "rows": 62,
+    "groups": 2,
+    "warmups": 2,
+    "sha256": "48f44116371903ad2a3db9d7ccb9e235996a22fb30d929ecdf21baf81633b529"
+  },
+  "dynamic": {
+    "rows": 99,
+    "groups": 9,
+    "warmups": 9,
+    "sha256": "0f2b18d2abd0a450c9024af7f376f170e1da4eb91382796ec70996f3a833f550"
+  },
+  "dynamic-warmed": {
+    "rows": 99,
+    "groups": 9,
+    "warmups": 9,
+    "sha256": "e76fb9c48c94401c71853bae754745f26ddfdef1957383d85088e21eb405fe03"
+  },
+  "confirmation": {
+    "rows": 124,
+    "groups": 4,
+    "warmups": 4,
+    "sha256": "843be63a6ccf9404c7ca8d533492ba6aacedb4a24ebdf5c742236d40fa725e3d"
+  },
+  "diagnostics_200": {
+    "decisions": 201,
+    "switches": 2
+  },
+  "diagnostics_1000": {
+    "decisions": 203,
+    "switches": 2
+  },
+  "diagnostics_5000": {
+    "decisions": 211,
+    "switches": 2
+  },
+  "historical_files_unchanged": 39,
+  "measured_source_snapshot_matches": true
+}

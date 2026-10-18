@@ -21,6 +21,8 @@ for b in ['poll','epoll','adaptive']:
  q=statistics.quantiles(rates,n=4)
  summary.append(dict(backend=b,n=10,messages_s_median=statistics.median(rates),messages_s_min=min(rates),messages_s_max=max(rates),messages_s_q1=q[0],messages_s_q3=q[2],switches_median=statistics.median(x['switches'] for x in g),switch_ns_median=statistics.median(x['switch_ns'] for x in g),setup_ns_median=statistics.median(x['setup_ns'] for x in g),including_setup_messages_s_median=statistics.median(x['messages']*1e9/(x['duration_ns']+x['setup_ns']) for x in g)))
 d={b:{x['run']:x for x in sample if x['backend']==b} for b in ['poll','epoll','adaptive']}
+assert all(len(d[b])==10 for b in d), 'duplicate/missing runs'
+assert all(d[b][i]['seed']==d['epoll'][i]['seed'] for b in d for i in range(1,11)), 'unpaired seeds'
 ratio=[(d['adaptive'][i]['messages']/d['adaptive'][i]['duration_ns'])/(d['epoll'][i]['messages']/d['epoll'][i]['duration_ns']) for i in range(1,11)]
 rng=random.Random(314159)
 boots=sorted(statistics.median(rng.choices(ratio,k=10)) for _ in range(10000))

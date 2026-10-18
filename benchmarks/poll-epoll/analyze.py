@@ -29,6 +29,9 @@ rng=random.Random(271828)
 comparisons=[]
 for mode,n,ratio,payload in sorted({k[:4] for k in groups}):
  d={b:{x['run']:x for x in groups[(mode,n,ratio,payload,b)]} for b in ['poll','epoll']}
+ assert all(len(d[b]) == len(groups[(mode,n,ratio,payload,b)]) for b in d), 'duplicate run'
+ assert set(d['poll']) == set(d['epoll']) == set(range(1,meta['runs']+1)), 'unpaired runs'
+ assert all(d['poll'][i]['seed'] == d['epoll'][i]['seed'] for i in d['poll']), 'unpaired seed'
  metric='wait_ns' if mode=='readiness' else ('e2e_ns_per_message' if meta.get('includes_producer_timing') else 'ns_per_message')
  ratios=[metrics(d['poll'][i])[metric]/metrics(d['epoll'][i])[metric] for i in range(1,meta['runs']+1)]
  boots=sorted(statistics.median(rng.choices(ratios,k=len(ratios))) for _ in range(4000))
@@ -53,7 +56,7 @@ for mode in sorted({k[0] for k in groups}):
  best=min(costs['poll'],costs['epoll'])
  oracles[mode]=dict(costs=costs,unit='sum of equally weighted condition medians: '+metric,optimistic_gain_percent=100*(1-costs['oracle_in_sample']/best),held_out_gain_percent=100*(1-costs['oracle_held_out']/best),choices=choices,switch_cost_included=False)
 receive_winners={x['winner'] for x in comparisons if x['benchmark']=='receive'}
-assessment=dict(criterion='Paired bootstrap 95% interval of median poll/epoll cost ratio excludes 1, in both directions for receive workloads. No speed-based pass/fail test.',comparisons=comparisons,oracle=oracles,adaptive_in_this_dataset=False,decision='No robust reversal in receive conditions; dynamic switching not justified.' if not {'poll','epoll'}<=receive_winners else 'Reversal detected: evaluate adaptive before drawing conclusions.')
+assessment=dict(inference_scope='Exploratory pointwise bootstrap intervals; no multiple-comparison correction. winner is descriptive, not confirmatory.',criterion='Paired bootstrap 95% interval of median poll/epoll cost ratio excludes 1, in both directions for receive workloads. No speed-based pass/fail test.',comparisons=comparisons,oracle=oracles,adaptive_in_this_dataset=False,decision='No robust reversal in receive conditions; dynamic switching not justified.' if not {'poll','epoll'}<=receive_winners else 'Reversal detected: evaluate adaptive before drawing conclusions.')
 (a.directory/'analysis.json').write_text(json.dumps(assessment,indent=2)+'\n')
 # One stable palette throughout the deck.
 colors={'poll':'#1d4ed8','epoll':'#b45309'}

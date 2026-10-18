@@ -1,0 +1,37 @@
+{
+  "uname": "Linux zig-syscall-lab 7.0.14-orbstack-00380-ga7e0a2dc9535 #1 SMP PREEMPT Fri Aug  7 03:48:40 UTC 2026 aarch64 GNU/Linux",
+  "cpu": "Architecture:                            aarch64\nCPU op-mode(s):                          64-bit\nByte Order:                              Little Endian\nCPU(s):                                  8\nOn-line CPU(s) list:                     0-7\nVendor ID:                               Apple\nModel name:                              -\nModel:                                   0\nThread(s) per core:                      1\nCore(s) per cluster:                     8\nSocket(s):                               -\nCluster(s):                              1\nStepping:                                0x0\nCPU(s) scaling MHz:                      100%\nCPU max MHz:                             2000.0000\nCPU min MHz:                             2000.0000\nBogoMIPS:                                48.00\nFlags:                                   fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm sb dcpodp flagm2 frint i8mm bf16 ecv\nL1d cache:                               1 MiB (8 instances)\nL1i cache:                               1.5 MiB (8 instances)\nL2 cache:                                32 MiB (2 instances)\nL3 cache:                                64 MiB (1 instance)\nVulnerability Gather data sampling:      Not affected\nVulnerability Ghostwrite:                Not affected\nVulnerability Indirect target selection: Not affected\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Old microcode:             Not affected\nVulnerability Reg file data sampling:    Not affected\nVulnerability Retbleed:                  Not affected\nVulnerability Spec rstack overflow:      Not affected\nVulnerability Spec store bypass:         Vulnerable\nVulnerability Spectre v1:                Mitigation; __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; CSV2, but not BHB\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Not affected\nVulnerability Tsx async abort:           Not affected\nVulnerability Vmscape:                   Not affected",
+  "os": "NAME=\"Fedora Linux\"\nVERSION=\"44 (Container Image)\"\nRELEASE_TYPE=stable\nID=fedora\nVERSION_ID=44\nVERSION_CODENAME=\"\"\nPRETTY_NAME=\"Fedora Linux 44 (Container Image)\"\nANSI_COLOR=\"0;38;2;60;110;180\"\nLOGO=fedora-logo-icon\nCPE_NAME=\"cpe:/o:fedoraproject:fedora:44\"\nDEFAULT_HOSTNAME=\"fedora\"\nHOME_URL=\"https://fedoraproject.org/\"\nDOCUMENTATION_URL=\"https://docs.fedoraproject.org/en-US/fedora/f44/\"\nSUPPORT_URL=\"https://ask.fedoraproject.org/\"\nBUG_REPORT_URL=\"https://bugzilla.redhat.com/\"\nREDHAT_BUGZILLA_PRODUCT=\"Fedora\"\nREDHAT_BUGZILLA_PRODUCT_VERSION=44\nREDHAT_SUPPORT_PRODUCT=\"Fedora\"\nREDHAT_SUPPORT_PRODUCT_VERSION=44\nSUPPORT_END=2027-05-19\nVARIANT=\"Container Image\"\nVARIANT_ID=container\n",
+  "zig": "0.17.0",
+  "git_sha": "09cbca517845312ddffb10eff853015c59081748",
+  "git_status": "M benchmarks/poll-epoll/adaptive.zig\n M benchmarks/poll-epoll/main.zig\n?? benchmarks/poll-epoll/audit-run.py\n?? benchmarks/poll-epoll/probe.zig\n?? benchmarks/poll-epoll/results/audit-v2/",
+  "affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "measurement_cpu": 2,
+  "optimization": "ReleaseFast",
+  "vm": "OrbStack",
+  "fd_limit": "1048576",
+  "model_sha256": "6db8cdcc93b8cef37b90c44e8a7959778ba82a31aa7027968a0d35a76ceadafe",
+  "sources": {
+    "tests.zig": "b2910b6ab02dbf8d611ab3ab5cac45106a7081e04b965514d2bc3c91ec5b9e8e",
+    "adaptive.zig": "01016df1a651d2b7d55862e2d063113461c30dd92a866783490bf46756cda27c",
+    "main.zig": "513ad169ed64a3355959fb3de006cc1085ae7cf4c196f4bb2fe82461cad82a56",
+    "workload.zig": "0648c6b35b8b76b86dc86ea205cc37231026a682c8025d02f5cee7415c7c336a",
+    "metrics.zig": "2caf05ad55e806b36fc561413f04bd30c8c8c877368641c1b72d0918c2cb151d",
+    "epoll.zig": "e92dce46c495e140c67b494ca681a1c74ae0a95390ec87bb198498e10dcf21c0",
+    "poll.zig": "93ba83ac21b5278d072bf0081b805d8498309e1d7d8dc68b2e0ff38cad800a41",
+    "probe.zig": "1cad1323b6cd44ee125d1f728a1148d0a7c0ce228e9f1f2657f1107ef1549ea8"
+  },
+  "start_load": "0.60 0.16 0.05 1/264 10901\n",
+  "start_stat": "cpu  41285 66 17903 8141456 464 0 2605 0 0 0\ncpu0 7349 0 3106 1013658 330 0 1843 0 0 0\ncpu1 8683 0 2367 1014081 24 0 446 0 0 0\ncpu2 6766 0 2744 1015590 10 0 179 0 0 0\ncpu3 5153 11 2583 1017433 11 0 78 0 0 0\ncpu4 4242 43 2531 1018355 33 0 31 0 0 0\ncpu5 3574 8 2197 1019506 12 0 16 0 0 0\ncpu6 5516 0 2371 1017291 42 0 9 0 0 0\ncpu7 0 0 0 1025539 0 0 0 0 0 0\nintr 2151171 0 16398 1060775 0 0 0 762 0 0 0 0 933145 0 92 1 446 13 179 0 1 0 5203 0 3 133380 764 7 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nctxt 3843282\nbtime 1792353329\nprocesses 11672\nprocs_running 1\nprocs_blocked 0\nsoftirq 491636 0 42643 71 177562 5207 0 363 231010 0 34780\n",
+  "schedule_seed": 20261023,
+  "end_load": "1.00 0.82 0.43 1/262 12437\n",
+  "end_stat": "cpu  54530 66 48399 8447694 469 0 2630 0 0 0\ncpu0 7613 0 3317 1056896 335 0 1865 0 0 0\ncpu1 8715 0 2442 1057722 24 0 449 0 0 0\ncpu2 19018 0 31723 1018114 10 0 179 0 0 0\ncpu3 5379 11 3023 1060518 11 0 79 0 0 0\ncpu4 4480 43 2878 1061523 33 0 31 0 0 0\ncpu5 3689 8 2420 1062920 12 0 16 0 0 0\ncpu6 5634 0 2594 1060701 42 0 9 0 0 0\ncpu7 0 0 0 1069296 0 0 0 0 0 0\nintr 2620466 0 19549 1075600 0 0 0 768 0 0 0 0 1382125 0 93 1 476 13 186 0 1 0 5247 0 3 135629 766 7 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nctxt 3882006\nbtime 1792353329\nprocesses 13214\nprocs_running 1\nprocs_blocked 0\nsoftirq 519735 0 45980 71 179762 5251 0 372 246425 0 41874\n"
+}

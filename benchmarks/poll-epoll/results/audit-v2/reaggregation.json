@@ -1,0 +1,26 @@
+{
+  "fixed": {
+    "analysis_numbers_unchanged": true,
+    "summary_csv_identical": true
+  },
+  "replication": {
+    "analysis_numbers_unchanged": true,
+    "summary_csv_identical": true
+  },
+  "end-to-end": {
+    "analysis_numbers_unchanged": true,
+    "summary_csv_identical": true
+  },
+  "end-to-end-replication": {
+    "analysis_numbers_unchanged": true,
+    "summary_csv_identical": true
+  },
+  "crossover-check": {
+    "analysis_numbers_unchanged": true,
+    "summary_csv_identical": true
+  },
+  "adaptive": {
+    "analysis_numbers_unchanged": true,
+    "summary_csv_identical": true
+  }
+}

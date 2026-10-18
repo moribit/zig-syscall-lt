@@ -1,0 +1,170 @@
+const std = @import("std");
+const m = @import("metrics.zig");
+const W = @import("workload.zig").Workload;
+const Poll = @import("poll.zig").Poll;
+const Epoll = @import("epoll.zig").Epoll;
+const model = @import("model");
+
+// Policy frozen before the dynamic evaluation: costs learned from independent
+// calibration samples, EMA 1/4, 16-batch dwell, 32-batch amortization horizon,
+// 10% safety margin over measured switching cost. No generator-ready input.
+const Controller = struct {
+    ema: f64 = 0,
+    initialized: bool = false,
+    dwell: usize = 0,
+    switch_estimate_ns: f64,
+    fn choose(c: *Controller, current_epoll: bool, observed: usize) bool {
+        c.ema = if (c.initialized) c.ema * 0.75 + @as(f64, @floatFromInt(observed)) * 0.25 else @floatFromInt(observed);
+        c.initialized = true;
+        c.dwell += 1;
+        if (c.dwell < 16) return current_epoll;
+        const x = std.math.clamp((c.ema - model.ready[0]) / (model.ready[1] - model.ready[0]), 0, 1);
+        const poll_ns = model.poll_ns[0] * (1 - x) + model.poll_ns[1] * x;
+        const epoll_ns = model.epoll_ns[0] * (1 - x) + model.epoll_ns[1] * x;
+        const saving = if (current_epoll) epoll_ns - poll_ns else poll_ns - epoll_ns;
+        if (saving * 32 <= c.switch_estimate_ns * 1.1) return current_epoll;
+        c.dwell = 0;
+        return !current_epoll;
+    }
+};
+const Decision = struct { phase: usize, burst: u64, elapsed_ns: u64, before_epoll: bool, after_epoll: bool, completed: usize, ema: f64, poll_ns: f64, epoll_ns: f64, estimate_ns: f64, actual_ns: u64 };
+const Phase = struct { ready: usize = 0, duration: u64 = 0, messages: u64 = 0, bytes: u64 = 0, batches: u64 = 0, user: u64 = 0, system: u64 = 0, switches: u64 = 0, switch_ns: u64 = 0 };
+pub fn main(init: std.process.Init) !void {
+    const args = try init.minimal.args.toSlice(init.arena.allocator());
+    if (args.len < 4 or args.len > 6) return error.Usage_backend_phase_ms_seed;
+    const adaptive = std.mem.eql(u8, args[1], "adaptive");
+    const fixed_epoll = std.mem.eql(u8, args[1], "epoll");
+    if (!adaptive and !fixed_epoll and !std.mem.eql(u8, args[1], "poll")) return error.BadBackend;
+    const phase_ns = (try std.fmt.parseInt(u64, args[2], 10)) * 1_000_000;
+    if (phase_ns < 10_000_000) return error.PhaseTooShort;
+    const high_ns = if (args.len >= 5) (try std.fmt.parseInt(u64, args[4], 10)) * 1_000_000 else phase_ns;
+    if (high_ns < 10_000_000) return error.PhaseTooShort;
+    if (args.len == 6 and !std.mem.eql(u8, args[5], "diagnostic")) return error.BadDiagnosticOption;
+    const diagnostic = args.len == 6 and std.mem.eql(u8, args[5], "diagnostic");
+    const seed = try std.fmt.parseInt(u64, args[3], 10);
+    const n = model.fds;
+    const payload = model.payload;
+    var w = try W.init(init.gpa, n, seed);
+    defer w.deinit();
+    const setup_start = m.now();
+    var poll = try Poll.init(init.gpa, w.pairs);
+    defer poll.deinit();
+    var epoll: Epoll = undefined;
+    var active_epoll = adaptive or fixed_epoll;
+    if (active_epoll) epoll = try Epoll.init(init.gpa, w.pairs);
+    defer {
+        if (active_epoll) epoll.deinit();
+    }
+    const setup_ns = m.now() - setup_start;
+    var controller: Controller = .{ .switch_estimate_ns = @floatFromInt(@max(setup_ns, 1)) };
+    const indices = try init.gpa.alloc(usize, n);
+    defer init.gpa.free(indices);
+    const received = try init.gpa.alloc(usize, n);
+    defer init.gpa.free(received);
+    var stats: m.Stats = .{};
+    var switches: u64 = 0;
+    var switch_ns: u64 = 0;
+    const decisions = try init.gpa.alloc(Decision, if (diagnostic) 8192 else 0);
+    defer init.gpa.free(decisions);
+    var decision_count: usize = 0;
+    const experiment_start = m.now();
+    var phases: [3]Phase = @splat(.{});
+    for (&phases, [_]usize{ 41, 4096, 41 }, 0..) |*phase, ready, phase_index| {
+        phase.ready = ready;
+        const cpu0 = m.Cpu.get();
+        const start = m.now();
+        while (m.now() - start < (if (phase_index == 1) high_ns else phase_ns)) {
+            @memset(received, 0);
+            const round = phase_index * 1_000_000 + phase.batches;
+            const sent = try w.fill(ready, payload, @intCast(round), &stats);
+            var bytes: usize = 0;
+            var completed: usize = 0;
+            const deadline = m.now() + 5_000_000_000;
+            while (bytes < sent) {
+                if (m.now() > deadline) return error.ConsumerTimeout;
+                const count = if (active_epoll) try epoll.wait(indices, 0, &stats) else try poll.wait(indices, 0, &stats);
+                for (indices[0..count]) |index| {
+                    if (received[index] >= payload) return error.DuplicateEvent;
+                    const got = try w.receive(index, payload - received[index], @intCast(round % 251), &stats);
+                    bytes += got;
+                    received[index] += got;
+                    if (received[index] == payload) completed += 1;
+                }
+            }
+            if (bytes != sent or completed != ready) return error.DataMismatch;
+            for (w.order[0..ready]) |index| if (received[index] != payload) return error.MissingData;
+            phase.messages += completed;
+            phase.bytes += bytes;
+            phase.batches += 1;
+            if (adaptive) {
+                const before = active_epoll;
+                const estimate = controller.switch_estimate_ns;
+                var actual: u64 = 0;
+                const next = controller.choose(active_epoll, completed);
+                if (next != active_epoll) {
+                    const switch_start = m.now();
+                    // Switch only after the current batch has been fully drained.
+                    // Poll mode has no live epoll registrations: it must not pay
+                    // epoll's producer-side ready-list maintenance implicitly.
+                    if (next) epoll = try Epoll.init(init.gpa, w.pairs) else epoll.deinit();
+                    const cost = m.now() - switch_start;
+                    active_epoll = next;
+                    switches += 1;
+                    switch_ns += cost;
+                    phase.switches += 1;
+                    phase.switch_ns += cost;
+                    actual = cost;
+                    controller.switch_estimate_ns = @floatFromInt(cost);
+                }
+                if (diagnostic and (actual > 0 or phase.batches % 64 == 1)) {
+                    if (decision_count == decisions.len) return error.DiagnosticCapacity;
+                    const x = std.math.clamp((controller.ema - model.ready[0]) / (model.ready[1] - model.ready[0]), 0, 1);
+                    decisions[decision_count] = .{ .phase = phase_index, .burst = phase.batches, .elapsed_ns = m.now() - experiment_start, .before_epoll = before, .after_epoll = active_epoll, .completed = completed, .ema = controller.ema, .poll_ns = model.poll_ns[0] * (1 - x) + model.poll_ns[1] * x, .epoll_ns = model.epoll_ns[0] * (1 - x) + model.epoll_ns[1] * x, .estimate_ns = estimate, .actual_ns = actual };
+                    decision_count += 1;
+                }
+            }
+        }
+        phase.duration = m.now() - start;
+        const cpu1 = m.Cpu.get();
+        phase.user = cpu1.user - cpu0.user;
+        phase.system = cpu1.system - cpu0.system;
+    }
+    var duration: u64 = 0;
+    var messages: u64 = 0;
+    for (phases) |p| {
+        duration += p.duration;
+        messages += p.messages;
+    }
+    var buf: [4096]u8 = undefined;
+    var writer: std.Io.Writer = .fixed(&buf);
+    try writer.print("{{\"backend\":\"{s}\",\"duration_ns\":{d},\"messages\":{d},\"setup_ns\":{d},\"switches\":{d},\"switch_ns\":{d},\"wait_calls\":{d},\"send_calls\":{d},\"recv_calls\":{d},\"errors\":0,\"phases\":[", .{ args[1], duration, messages, setup_ns, switches, switch_ns, stats.wait_calls, stats.send_calls, stats.recv_calls });
+    for (phases, 0..) |p, i| {
+        if (i != 0) try writer.writeByte(',');
+        try writer.print("{{\"ready_fds\":{d},\"duration_ns\":{d},\"messages\":{d},\"bytes\":{d},\"batches\":{d},\"user_us\":{d},\"system_us\":{d},\"switches\":{d},\"switch_ns\":{d}}}", .{ p.ready, p.duration, p.messages, p.bytes, p.batches, p.user, p.system, p.switches, p.switch_ns });
+    }
+    try writer.writeAll("]}\n");
+    try std.Io.File.stdout().writeStreamingAll(init.io, writer.buffered());
+    for (decisions[0..decision_count]) |d| {
+        writer = .fixed(&buf);
+        try writer.print("{{\"diagnostic\":true,\"phase\":{d},\"burst\":{d},\"elapsed_ns\":{d},\"before_epoll\":{},\"after_epoll\":{},\"completed\":{d},\"ema\":{d},\"poll_ns\":{d},\"epoll_ns\":{d},\"estimate_ns\":{d},\"actual_ns\":{d}}}\n", .{ d.phase, d.burst, d.elapsed_ns, d.before_epoll, d.after_epoll, d.completed, d.ema, d.poll_ns, d.epoll_ns, d.estimate_ns, d.actual_ns });
+        try std.Io.File.stdout().writeStreamingAll(init.io, writer.buffered());
+    }
+}
+
+test "controller dwell prevents switching every sample" {
+    var c: Controller = .{ .switch_estimate_ns = 0 };
+    var current = true;
+    for (0..15) |_| {
+        const next = c.choose(current, 4096);
+        try std.testing.expectEqual(current, next);
+        current = next;
+    }
+}
+
+test "controller includes switching cost and chooses calibrated lower cost after dwell" {
+    var expensive: Controller = .{ .switch_estimate_ns = 1e30 };
+    for (0..100) |_| try std.testing.expect(expensive.choose(true, 4096));
+    var free: Controller = .{ .switch_estimate_ns = 0 };
+    for (0..15) |_| try std.testing.expect(free.choose(true, 4096));
+    try std.testing.expectEqual(model.epoll_ns[1] <= model.poll_ns[1], free.choose(true, 4096));
+}
