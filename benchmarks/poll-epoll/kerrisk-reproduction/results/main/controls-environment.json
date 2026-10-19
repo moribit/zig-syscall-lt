@@ -1,0 +1,67 @@
+{
+  "date_utc": "2026-10-19T00:14:53.214393+00:00",
+  "uname": "Linux zig-syscall-lab 7.0.14-orbstack-00380-ga7e0a2dc9535 #1 SMP PREEMPT Fri Aug  7 03:48:40 UTC 2026 aarch64 GNU/Linux",
+  "cpu": "Architecture:                            aarch64\nCPU op-mode(s):                          64-bit\nByte Order:                              Little Endian\nCPU(s):                                  8\nOn-line CPU(s) list:                     0-7\nVendor ID:                               Apple\nModel name:                              -\nModel:                                   0\nThread(s) per core:                      1\nCore(s) per cluster:                     8\nSocket(s):                               -\nCluster(s):                              1\nStepping:                                0x0\nCPU(s) scaling MHz:                      100%\nCPU max MHz:                             2000.0000\nCPU min MHz:                             2000.0000\nBogoMIPS:                                48.00\nFlags:                                   fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm sb dcpodp flagm2 frint i8mm bf16 ecv\nL1d cache:                               1 MiB (8 instances)\nL1i cache:                               1.5 MiB (8 instances)\nL2 cache:                                32 MiB (2 instances)\nL3 cache:                                64 MiB (1 instance)\nVulnerability Gather data sampling:      Not affected\nVulnerability Ghostwrite:                Not affected\nVulnerability Indirect target selection: Not affected\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Old microcode:             Not affected\nVulnerability Reg file data sampling:    Not affected\nVulnerability Retbleed:                  Not affected\nVulnerability Spec rstack overflow:      Not affected\nVulnerability Spec store bypass:         Vulnerable\nVulnerability Spectre v1:                Mitigation; __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; CSV2, but not BHB\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Not affected\nVulnerability Tsx async abort:           Not affected\nVulnerability Vmscape:                   Not affected",
+  "os": "NAME=\"Fedora Linux\"\nVERSION=\"44 (Container Image)\"\nRELEASE_TYPE=stable\nID=fedora\nVERSION_ID=44\nVERSION_CODENAME=\"\"\nPRETTY_NAME=\"Fedora Linux 44 (Container Image)\"\nANSI_COLOR=\"0;38;2;60;110;180\"\nLOGO=fedora-logo-icon\nCPE_NAME=\"cpe:/o:fedoraproject:fedora:44\"\nDEFAULT_HOSTNAME=\"fedora\"\nHOME_URL=\"https://fedoraproject.org/\"\nDOCUMENTATION_URL=\"https://docs.fedoraproject.org/en-US/fedora/f44/\"\nSUPPORT_URL=\"https://ask.fedoraproject.org/\"\nBUG_REPORT_URL=\"https://bugzilla.redhat.com/\"\nREDHAT_BUGZILLA_PRODUCT=\"Fedora\"\nREDHAT_BUGZILLA_PRODUCT_VERSION=44\nREDHAT_SUPPORT_PRODUCT=\"Fedora\"\nREDHAT_SUPPORT_PRODUCT_VERSION=44\nSUPPORT_END=2027-05-19\nVARIANT=\"Container Image\"\nVARIANT_ID=container\n",
+  "host": "M2 MacBook Air (user supplied; host sysctl: Apple M2)",
+  "virtualization": "OrbStack/Fedora VM",
+  "allowed_affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "measurement_affinity": [
+    2
+  ],
+  "fd_limit": [
+    1048576,
+    1048576
+  ],
+  "gcc": "gcc (GCC) 16.2.1 20260819 (Red Hat 16.2.1-2)\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+  "zig": "0.17.0",
+  "git_sha": "ddd78fd3e2b035beb94288b38cbbb2d87802048e",
+  "git_status": "?? benchmarks/poll-epoll/kerrisk-reproduction/",
+  "build_commands": [
+    [
+      "gcc",
+      "-O2",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "/Users/mimoc/zig-syscall-lt/benchmarks/poll-epoll/kerrisk-reproduction/c/reconstructed.c",
+      "-o",
+      "/tmp/kerrisk-reproduction-bin/c"
+    ],
+    [
+      "zig",
+      "build-exe",
+      "-O",
+      "ReleaseFast",
+      "/Users/mimoc/zig-syscall-lt/benchmarks/poll-epoll/kerrisk-reproduction/zig/main.zig",
+      "-femit-bin=/tmp/kerrisk-reproduction-bin/zig"
+    ]
+  ],
+  "binary_sha256": {
+    "c": "20632458d865704eb5fdb56510690b749d38987cbcc797b10d345def26a28c73",
+    "zig": "a8d6fe4933a62a55519cc182b628d9c200ef2949f0e4213ee2ec6e892c082c2b"
+  },
+  "source_sha256": {
+    "c/reconstructed.c": "8d3fc2be915a7c2127de87ab71854fd064602f3e1749ba81cf75b0130eeabe6f",
+    "zig/main.zig": "41414c7b971a5c440d9ca208ee449c9907333b8ed8ddcb1602ae5dafe4d0aaec"
+  },
+  "source_snapshot": "controls-source-snapshot",
+  "index_bytes_c": 8,
+  "index_bytes_zig": 8,
+  "verification_barrier": true,
+  "plan_sha256": "9ee011f19f241cfc64829a6eea0ec9ad4066ee57b34e70e35228dff46084cbf9",
+  "start_load": "1.00 1.00 0.92 1/261 17158\n",
+  "start_stat": "cpu  85205 112 253741 11953006 548 0 3258 0 0 0\ncpu0 10150 25 3812 1521275 399 0 2258 0 0 0\ncpu1 12338 1 2855 1521377 28 0 580 0 0 0\ncpu2 34547 3 235150 1266862 12 0 226 0 0 0\ncpu3 8077 11 3315 1525195 14 0 112 0 0 0\ncpu4 6896 56 3179 1526497 35 0 44 0 0 0\ncpu5 6147 8 2633 1527950 13 0 23 0 0 0\ncpu6 7048 5 2793 1526792 43 0 12 0 0 0\ncpu7 0 0 0 1537055 0 0 0 0 0 0\nintr 5375626 0 26517 1327961 0 0 0 1118 0 0 0 0 3852837 0 110 1 678 13 262 0 1 0 5754 0 3 159506 856 7 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nctxt 9278280\nbtime 1792353522\nprocesses 18012\nprocs_running 1\nprocs_blocked 0\nsoftirq 685304 0 62687 88 216631 5758 0 451 345376 0 54313\n",
+  "affinity_caveat": "VM affinity does not reserve a physical host CPU",
+  "end_load": "1.00 1.00 0.94 2/260 17915\n",
+  "end_stat": "cpu  86012 112 276926 12122686 548 0 3298 0 0 0\ncpu0 10151 25 3824 1545463 400 0 2294 0 0 0\ncpu1 12338 1 2861 1545578 28 0 584 0 0 0\ncpu2 35343 3 258292 1267138 12 0 226 0 0 0\ncpu3 8085 11 3331 1549381 14 0 113 0 0 0\ncpu4 6896 56 3181 1550704 35 0 44 0 0 0\ncpu5 6147 8 2640 1552151 13 0 23 0 0 0\ncpu6 7048 5 2794 1551002 43 0 12 0 0 0\ncpu7 0 0 0 1561265 0 0 0 0 0 0\nintr 5630862 0 28146 1333721 0 0 0 1118 0 0 0 0 4098467 0 110 1 697 13 266 0 1 0 5761 0 3 161691 858 7 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\nctxt 9295309\nbtime 1792353522\nprocesses 18770\nprocs_running 2\nprocs_blocked 0\nsoftirq 697270 0 63849 88 218714 5765 0 451 352694 0 55709\n"
+}

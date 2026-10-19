@@ -1,0 +1,44 @@
+{
+  "reason": "Static audit: original source unavailable; reconstruction fills before ADD, existing benchmark registers before fill. Test only this order, not tune a winner.",
+  "runs": 5,
+  "loops": 20000,
+  "seed_base": 20261106,
+  "affinity": [
+    2
+  ],
+  "ready": [
+    10,
+    1000
+  ],
+  "variants": [
+    {
+      "label": "pipe",
+      "kind": "pipe",
+      "layout": "contiguous",
+      "timeout": -1,
+      "work": "api"
+    },
+    {
+      "label": "socket",
+      "kind": "socket",
+      "layout": "contiguous",
+      "timeout": -1,
+      "work": "api"
+    },
+    {
+      "label": "bridge",
+      "kind": "socket",
+      "layout": "normal",
+      "timeout": 0,
+      "work": "scan"
+    }
+  ],
+  "orders": [
+    "after-fill",
+    "before-fill"
+  ],
+  "languages": [
+    "c",
+    "zig"
+  ]
+}

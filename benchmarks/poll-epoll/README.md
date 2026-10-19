@@ -246,3 +246,7 @@ warmup順序に不備があった初回追加系列の結果は、予備系列�
 動的負荷だけのwarmup順序修正は`audit-dynamic.py --output <結果ディレクトリ> --binary <ReleaseFast adaptive>`で実行した。既存`dynamic-warmed.jsonl`への上書きを拒否する。最終レポートでは予備系列との比較も掲載する。
 
 公開スライドのAdaptive数値・ノートを主解析へ同期する場合：`python3 benchmarks/poll-epoll/audit-slides.py`。その後、SlidevビルドとPDF出力・表示検査を再実行する。
+
+## Kerrisk講義資料からの独立した再構成
+
+[実行手順](kerrisk-reproduction/README.md) / [結果と限界](kerrisk-reproduction/REPORT.md) / [原典・入手状況](kerrisk-reproduction/SOURCES.md)。別ディレクトリでCとZig 0.17.0を比較し、既存resultsとAdaptive実装を保持しています。

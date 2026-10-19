@@ -1,0 +1,19 @@
+--- zig/main.zig
++++ zig-after-fill.zig
+@@ -212,6 +212,8 @@
+     var observed: u64 = 0;
+     var checksum: u64 = 0;
+     var controls: u64 = 0;
++    var order_hash: u64 = 1469598103934665603;
++    for (indices[0..nr]) |i| order_hash = (order_hash ^ @as(u64, i)) *% 1099511628211;
+     const cpu0 = cpu();
+     const begin = now();
+     for (0..loops) |iteration| {
+@@ -252,6 +254,6 @@
+     const duration = now() - begin;
+     const cpu1 = cpu();
+     var buf: [2048]u8 = undefined;
+-    const text = try std.fmt.bufPrint(&buf, "{{\"ready_hash\":{d},\"duration_ns\":{d},\"setup_epoll_ns\":{d},\"wait_calls\":{d},\"events_observed\":{d},\"checksum\":{d},\"ctl_calls\":{d},\"user_us\":{d},\"system_us\":{d},\"min_fd\":{d},\"max_fd\":{d},\"preflight_ready\":{d},\"errors\":0}}\n", .{ ready_hash, duration, setup, calls, observed, checksum, controls, us(cpu1.utime) - us(cpu0.utime), us(cpu1.stime) - us(cpu0.stime), pairs[0][0], b.maxfd, found });
++    const text = try std.fmt.bufPrint(&buf, "{{\"preflight_order_hash\":{d},\"ready_hash\":{d},\"duration_ns\":{d},\"setup_epoll_ns\":{d},\"wait_calls\":{d},\"events_observed\":{d},\"checksum\":{d},\"ctl_calls\":{d},\"user_us\":{d},\"system_us\":{d},\"min_fd\":{d},\"max_fd\":{d},\"preflight_ready\":{d},\"errors\":0}}\n", .{ order_hash, ready_hash, duration, setup, calls, observed, checksum, controls, us(cpu1.utime) - us(cpu0.utime), us(cpu1.stime) - us(cpu0.stime), pairs[0][0], b.maxfd, found });
+     try std.Io.File.stdout().writeStreamingAll(init.io, text);
+ }

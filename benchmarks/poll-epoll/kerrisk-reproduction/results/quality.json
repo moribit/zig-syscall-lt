@@ -1,0 +1,39 @@
+{
+  "checked_at": "2026-10-19T00:22:41.376628+00:00",
+  "zig": "0.17.0",
+  "release_build": "ReleaseFast, successful for primary/controls/registration",
+  "correctness": {
+    "reconstruction_scenarios": 171,
+    "c_asan_ubsan": true,
+    "zig_debug": true,
+    "existing_zig_tests": 3
+  },
+  "measurement_validation": {
+    "primary_measured": 216,
+    "controls_measured": 630,
+    "registration_measured": 120,
+    "existing_result_files_unchanged": 91,
+    "raw_and_source_hashes_checked": true
+  },
+  "figures": {
+    "report_svg_visually_checked": 7,
+    "source": "JSONL and historical.csv; regenerated successfully"
+  },
+  "slides": {
+    "build": true,
+    "pdf_export": true,
+    "pages": 23,
+    "all_pages_rendered_and_visually_checked": true,
+    "overflow": [],
+    "presenter": true,
+    "click_animation": true,
+    "dark_code_and_semantic_colors": true,
+    "pdf_sha256": "115ca2d2038498d72ed958983acf3068b4bfab1c799728688c118ba36de47ac4"
+  },
+  "limits": [
+    "Original altio_speed.c not found in searched official distributions/URLs",
+    "Primary n=3 intervals descriptive; not confirmatory 95% coverage",
+    "OrbStack affinity does not reserve physical CPU",
+    "Historical reversal cause remains unidentified"
+  ]
+}

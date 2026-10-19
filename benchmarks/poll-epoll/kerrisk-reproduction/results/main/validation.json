@@ -1,0 +1,15 @@
+{
+  "primary": {
+    "rows": 288,
+    "measured": 216,
+    "conditions": 36,
+    "sha256": "24cd3c3c5f9e9972efa8d15ae857bcf14e56ba68ef6d237fb9e5c487e7f3f5f6"
+  },
+  "controls": {
+    "rows": 756,
+    "measured": 630,
+    "conditions": 63,
+    "sha256": "6153a3bbf16927d2fbf56dc332f1ae2426e1d180dc8f9e5dbaf5e257da20a9b4"
+  },
+  "existing_files_unchanged": 91
+}

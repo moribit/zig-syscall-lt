@@ -1,0 +1,18 @@
+{
+  "reference": "Linux stable v7.0.14",
+  "measured": "7.0.14-orbstack-00380-ga7e0a2dc9535",
+  "vendor_patches_fully_verified": false,
+  "sources": {
+    "fs/select.c": {
+      "url": "https://raw.githubusercontent.com/gregkh/linux/v7.0.14/fs/select.c",
+      "sha256": "321a153b85522c64262f7af59c6daf7504da3374597816883a3935d9fe941dc8",
+      "zero_timeout_line": 882,
+      "ready_found_line": 903
+    },
+    "fs/pipe.c": {
+      "url": "https://raw.githubusercontent.com/gregkh/linux/v7.0.14/fs/pipe.c",
+      "sha256": "56251a2dd4baac01424132e2b96413b14d85d9ff13284146658be5d3c347b68c",
+      "pipe_poll_line": 660
+    }
+  }
+}

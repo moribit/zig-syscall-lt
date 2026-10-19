@@ -1,0 +1,16 @@
+{
+  "primary": {
+    "snapshot": "main/source-snapshot",
+    "c_index_bytes": 4,
+    "zig_index_bytes": 8,
+    "timed_work": "API only (indices used only during unmeasured preflight)",
+    "source_status": "Frozen original reconstruction used for the million-iteration series"
+  },
+  "controls": {
+    "snapshot": "main/controls-source-snapshot",
+    "c_index_bytes": 8,
+    "zig_index_bytes": 8,
+    "change": "Match C size_t indices to Zig usize; add compiler memory barriers to prepared verification in both languages before any control measurement",
+    "primary_data_reused": false
+  }
+}

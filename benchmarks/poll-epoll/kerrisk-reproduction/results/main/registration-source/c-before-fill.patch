@@ -1,0 +1,59 @@
+--- c/reconstructed.c
++++ c-before-fill.c
+@@ -119,15 +119,6 @@
+     order[0] = n - 1;
+   } else
+     require(!strcmp(placement, "first"), "placement");
+-  for (int i = 0; i < r; i++) {
+-    expected[order[i]] = 1;
+-    ssize_t nr;
+-    do {
+-      nr = write(pairs[order[i]][1], "x", 1);
+-    } while (nr < 0 && errno == EINTR);
+-    if (nr != 1)
+-      fail("write");
+-  }
+   fd_set master, readyset;
+   FD_ZERO(&master);
+   int maxfd = 0;
+@@ -153,6 +144,15 @@
+     }
+   }
+   setup = now() - setup;
++  for (int i = 0; i < r; i++) {
++    expected[order[i]] = 1;
++    ssize_t nr;
++    do {
++      nr = write(pairs[order[i]][1], "x", 1);
++    } while (nr < 0 && errno == EINTR);
++    if (nr != 1)
++      fail("write");
++  }
+   uint64_t calls = 0, observed = 0, checksum = 0, controls = 0;
+   int nr = 0, found = 0;
+   /* Prime results and verify the ENTIRE ready set, including bounded epoll
+@@ -196,6 +196,8 @@
+   uint64_t ready_hash = 1469598103934665603ULL;
+   for (int i = 0; i < n; i++)
+     ready_hash = (ready_hash ^ expected[i]) * 1099511628211ULL;
++  uint64_t order_hash = 1469598103934665603ULL;
++  for (int j = 0; j < nr; j++) order_hash = (order_hash ^ indices[j]) * 1099511628211ULL;
+   struct rusage cpu0, cpu1;
+   getrusage(RUSAGE_SELF, &cpu0);
+   uint64_t begin = now();
+@@ -271,13 +273,13 @@
+   }
+   uint64_t duration = now() - begin;
+   getrusage(RUSAGE_SELF, &cpu1);
+-  printf("{\"ready_hash\":%" PRIu64 ",\"duration_ns\":%" PRIu64
++  printf("{\"preflight_order_hash\":%" PRIu64 ",\"ready_hash\":%" PRIu64 ",\"duration_ns\":%" PRIu64
+          ",\"setup_epoll_ns\":%" PRIu64 ",\"wait_calls\":%" PRIu64
+          ",\"events_observed\":%" PRIu64 ",\"checksum\":%" PRIu64
+          ",\"ctl_calls\":%" PRIu64 ",\"user_us\":%" PRIu64
+          ",\"system_us\":%" PRIu64
+          ",\"min_fd\":%d,\"max_fd\":%d,\"preflight_ready\":%d,\"errors\":0}\n",
+-         ready_hash, duration, setup, calls, observed, checksum, controls,
++         order_hash, ready_hash, duration, setup, calls, observed, checksum, controls,
+          us(cpu1.ru_utime) - us(cpu0.ru_utime),
+          us(cpu1.ru_stime) - us(cpu0.ru_stime), pairs[0][0], maxfd, found);
+   if (ep) {
