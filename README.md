@@ -24,7 +24,7 @@ npm run export
 7. fdは、プロセスが持つ番号
 8. データがまだないとき、どうする？
 9. なぜepollは低Ready率に強い？
-10. Zigで実測してみた
+10. Kerrisk氏の測定を、CとZigで追試
 11. 動的に切り替えれば速くなる？
 12. io_uringは、I/Oを依頼して完了を受け取る
 13. なぜio_uringは速くなり得る？
@@ -100,3 +100,5 @@ orb -m zig-syscall-lab python3 benchmarks/poll-epoll/analyze.py /tmp/poll-epoll-
 低Ready率ではepoll優位、高Ready率では差が縮小しました。送信込みの再測定では4096fd・全Ready・1KiBで小さなpoll優位が再現したため、コストモデルによるAdaptiveも評価しました。各200msの動的負荷では改善未確認でしたが、モデルを固定した追加検証では高Ready区間1秒・5秒で改善を確認しました。条件と信頼区間は追加レポートに掲載しています。raw JSONL、集計CSV、SVGグラフ、測定環境を保存しています。本番Webサーバの継続的な並行到着を再現するものではありません。
 
 追加監査の[原因分析レポート](benchmarks/poll-epoll/ANALYSIS.md)では、待機APIと送信側の費用を区別し、送信順の対照・CPU割当・Adaptiveの区間別挙動と高Ready区間の延長を検証しています。過去のrawと分析ファイルは保持しています。
+
+Kerrisk氏の講義資料を追試した[独立C/Zig再構成実験](benchmarks/poll-epoll/kerrisk-reproduction/README.md)と[結果レポート](benchmarks/poll-epoll/kerrisk-reproduction/REPORT.md)も追加しました。元Cソースは未入手のため厳密再現ではなく、仮定と実測を分け、100万反復の結果・対照・再生成可能なCSV/SVGを保存しています。

@@ -300,25 +300,27 @@ benchmarks/poll-epoll/ANALYSIS.md
 
 <div class="eyebrow">09 / MEASURED COST</div>
 
-# Zigで実測してみた
+# Kerrisk氏の測定を、CとZigで追試
 
-<img class="audit-measured" src="/benchmarks/audit-measured.svg" alt="別測定の2グラフ。1024 fd・64 B・各10回中央値。Ready率が上がるとepoll取得時間は増え、送信込み速度の差が縮む。" />
+<img class="audit-measured" src="/benchmarks/kerrisk-density.svg" alt="過去の表と現在のC/Zig再構成を別パネルで比較。1,000 fd、100万回。過去の高Ready率ではpollが優位。現在の結果は保存済み実測から生成。" />
 
-<div class="benchmark-numbers"><span>4,096 fd・全Ready・1 KiB：送信順で変わる小差</span><small>ランダム順はpollの時間が約4.3%短い。昇順は明確な差なし（各30回・CPU 2）。</small></div>
+<div class="benchmark-numbers"><span>過去は高Ready率で<b class="bench-poll">poll優位</b>。今回の条件ではepoll優位。</span><small>元Cは未入手。公開仕様から再構成し、過去と現在を別の実験として比較した。</small></div>
 
-<div class="takeaway">全Readyでも取得はepoll優位。送信込みでは別の費用も効く</div>
-<p class="fine">OrbStack VM / Linux 7.0.14 aarch64 / Zig 0.17.0 ReleaseFast。図は1,024 fd・64 B・n=10、帯はIQR。</p>
+<div class="takeaway">I/O APIの性能は、何をどこまで測るかによっても変わる</div>
+<p class="fine">今回：1,000 pipe fd・低位連続・100万回×各3回。timeout=-1、容量N、走査なしは仮定。OrbStack / Zig 0.17.0。</p>
 
 <!--
-目安55秒。左右は別測定。AはAPI+索引変換のµs/回、Bは送信開始から全受信・内容照合完了までのM msg/s。図は過去rawから再生成した1024fd/64B各10回中央値、帯IQR。Aの約1%はpoll42.189µs/epoll0.231µs、全Ready42.558/16.460µs。Bの全Ready1.939/2.066 M msg/s。Aは同一Ready状態のLT再通知で、新しい通信イベントではない。
-追加probeは1024/4096fd、約1%/全Readyを各20回。APIのみ・索引走査・集合照合・時計を別ループで測定。4096fd全ReadyでAPIのみpoll293.7/epoll124.6µs、ユーザー走査1.82/1.23µs。時計ペア約24ns、最短epollは約225nsで、短い区間を過度に分解しない。別ループの区間を足して厳密な内訳としない。
-4096fd/全Ready/1KiB・64バースト・CPU2固定・各30回の追加対照。ランダム送信でpoll/epoll費用比中央値0.9567、95%区間0.9373〜0.9721。昇順送信では1.0039、区間0.9944〜1.0181。別seed・CPU未固定の追試は0.9828、区間0.9416〜1.0288。解析・描画を停止したCPU固定の第2seedではランダム順0.9733、区間0.9653〜0.9969、ただしHolm補正符号検定p0.395で強い再現とは断定しない。昇順の第2seedも0.9979、区間0.9849〜1.0091で明確な差なし。小差の逆転は条件依存で、一般的なpoll優位とはしない。
-同じReady集合でもpollの返却索引は配列順、epollは通知/カーネル順。昇順対照はProducerの送信順だけを変え、epoll返却順を強制しない。全Ready・ランダムのProducer中央値はpoll2.169ms/epoll2.526ms。pollで待ちながらepoll登録を残す対照では2.709ms。Consumerはpoll3.774ms/epoll3.691ms。epollが送信中の通知費用も持つ点と整合するが、Ready List/キャッシュ等の要因を一意に特定したわけではない。各区間中央値は足し算で総中央値にはならない。
-同一スレッドsocketpairのバースト合成負荷で、Webサーバの並行到着ではない。ReleaseFast、Zig0.17.0、OrbStack/Linux7.0.14 aarch64。VM/ホスト負荷は残る。追加集計ではseed/run重複検査、ペアbootstrap、符号検定とHolm補正を保存し、外れ値は除外しない。過去のpointwise CIだけで強い一般化をしない。
-benchmarks/poll-epoll/audit-analyze.py / results/audit-v2
+目安55秒。Kerrisk氏の講義で「高Ready率ではpollが逆転した」表を見つけ、現在のLinuxで同じような現象が出るかを調べた。過去の参考値・現在のC再構成・現在のZig再構成を別パネルに分け、異なる環境/未知の条件を同一系列の線で結ばない。selectも本実験には含むが、LTの図は主題のpoll/epollだけに絞る。
+元のaltio/altio_speed.cは公式TLPIのdist/book版20260523や公開候補で入手できなかった。講義の仕様に基づく独立したCとZigの再構成であり、オリジナルの無改変実行ではない。pipeや低位連続fdを使う考え方は確認したが、表が実際に使ったfd種、timeout、maxevents、イベント走査等の詳細は未確認。主比較のpipe、timeout=-1、容量N、走査なしには仮定を含む。図の未知条件の注意を省略しない。
+図はReady検出のみ、データは読まず、1 byteを入れたReady状態を繰り返し取得する。新規I/Oメッセージを100万回受信した実験ではない。CはGCC -O2、Zig0.17.0 ReleaseFast、Linux7.0.14-orbstack aarch64、M2 MacBook Air上のFedora VM、CPU2固定。VM affinityは物理CPU専有を保証しない。初期登録・Ready生成・事前集合検証は計時外。
+全Ready/1000fd/100万回の秒数、各3sampleの中央値と名目95%bootstrap区間：c/poll 27.241s [27.232,27.312]; c/epoll 10.703s [10.437,10.803]; zig/poll 27.303s [27.150,27.309]; zig/epoll 10.698s [10.442,10.748]。原典はpoll12.7s/epoll47.3s。元の測定日時・CPU・kernel・sample数は不明。n=3の区間は粗く、確認的有意性の証拠にはしない。
+Ready10/20/50/100%とN100/1000、N1/10/100/1000の中間1Ready、K0/1/5/10のDEL+ADDを全条件保存。C/ZigのReady集合・fd範囲・件数は一致し、条件を揃えた比較だがラッパーや最適化が完全に同じではない。言語性能の優劣と結論しない。
+別対照ではpipe→socket→通常fd配置→timeout0→索引走査と一要因ずつ変えた。maxevents1/16/64/Nの単発費用と、全1000Ready fdを集める費用も分けた。返すイベントが少ない1回を、全Readyを取得する1回と同じ仕事とはしない。追加の登録/投入順対照（各5sample）では、ADD後にランダム投入した場合の返却順hashを独立に確認した。全Ready/socket/連続fdのZigは投入後ADD14.769µs、投入前ADD15.619µs/回。順序による費用差はあるが、kernel内のcache miss等の直接証拠ではなく、過去の逆転の完全な原因は未特定。原典と現在の差の完全な原因は未特定。元ソース・旧環境が不明なので、CPUやkernelの改善だけに帰属させない。
+既存のN1024 socketpair Aは取得API+索引変換、送信込みBはProducer開始から内容照合までを含む別実験。既存の4096fd/全Ready/1KiBの小さなpoll優位とも、範囲・fd数・データ量が異なる。既存rawとAdaptive結果は変更していない。
+https://man7.org/training/download/lusp_epoll_slides-mkerrisk-man7.org.pdf （January2026 rev d49d0b54be95、物理17/18ページ）
+https://man7.org/tlpi/code/index.html
+benchmarks/poll-epoll/kerrisk-reproduction/REPORT.md / SOURCES.md / results/main
 benchmarks/poll-epoll/ANALYSIS.md
-https://man7.org/linux/man-pages/man2/poll.2.html
-https://man7.org/linux/man-pages/man7/epoll.7.html
 -->
 
 ---
@@ -347,6 +349,8 @@ Adaptive/固定epollの完了速度改善率のペア中央値、95%percentile b
 切替はバースト完全drain後、poll期間はepollをclose、復帰時は全fd再登録。全sampleで内容・byte数・メッセージ数が一致。任意の同時到着の正しさまでは証明しない。
 benchmarks/poll-epoll/ANALYSIS.md
 benchmarks/poll-epoll/results/audit-v2/dynamic-warmed.jsonl / diagnostics.jsonl / analysis.json / phase-summary.csv
+
+Kerrisk再構成の登録費用：N100/R1/100万回のZigでK0 127.1ns/反復 / K1 524.7ns/反復 / K5 2046.5ns/反復 / K10 3999.3ns/反復。各反復K組のDEL+ADDを含み、1件は2syscall。既存Adaptiveの4096fd close/再生成/全ADDとは違う処理なので、単純に1件費用を4096倍して切替費用を説明しない。今回の追試のためにAdaptive実装・保存結果は変更していない。詳細はkerrisk-reproduction/REPORT.md。
 -->
 
 ---
@@ -742,6 +746,7 @@ Zigは観察の道具であって今回の話をZigだけに閉じない。runti
 - [epoll(7)](https://man7.org/linux/man-pages/man7/epoll.7.html) / [io_uring(7)](https://man7.org/linux/man-pages/man7/io_uring.7.html)
 - [io_uring_register(2)](https://man7.org/linux/man-pages/man2/io_uring_register.2.html)
 - [Linux v7.0.14: eventpoll.c](https://github.com/gregkh/linux/blob/v7.0.14/fs/eventpoll.c)
+- [Kerrisk: epoll講義](https://man7.org/training/download/lusp_epoll_slides-mkerrisk-man7.org.pdf)
 
 </div>
 <div>

@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-18T23:08:59.260Z",
+  "checkedAt": "2026-10-19T00:21:03.527Z",
   "slides": [
     {
       "number": 1,
@@ -48,7 +48,7 @@
     },
     {
       "number": 10,
-      "title": "Zigで実測してみた",
+      "title": "Kerrisk氏の測定を、CとZigで追試",
       "overflow": []
     },
     {
@@ -120,7 +120,7 @@
   "animation": {
     "before": 7,
     "after": 3,
-    "url": "http://127.0.0.1:44387/12?clicks=4"
+    "url": "http://127.0.0.1:37085/12?clicks=4"
   },
   "presenter": true,
   "codeColors": {
