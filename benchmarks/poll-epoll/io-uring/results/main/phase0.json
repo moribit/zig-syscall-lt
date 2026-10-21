@@ -1,0 +1,26 @@
+{
+  "command": [
+    "/tmp/zig-uring-probe"
+  ],
+  "returncode": 0,
+  "stdout": "{\"status\":\"SUPPORTED\",\"libc_linked\":false,\"setup_errno\":0,\"register_errno\":0,\"features\":262143,\"sq_entries\":8,\"cq_entries\":16,\"recv_supported\":true,\"poll_add_supported\":true,\"cancel_supported\":true,\"bytes\":17,\"content_valid\":true,\"enter_calls\":1}\n",
+  "stderr": "",
+  "uname": "Linux zig-syscall-lab 7.0.14-orbstack-00380-ga7e0a2dc9535 #1 SMP PREEMPT Fri Aug  7 03:48:40 UTC 2026 aarch64 GNU/Linux",
+  "zig": "0.17.0",
+  "libc_linked": false,
+  "io_uring_disabled": "0",
+  "process_status": "Name:\tpython3\nUmask:\t0022\nState:\tR (running)\nTgid:\t20148\nNgid:\t0\nPid:\t20148\nPPid:\t8\nTracerPid:\t0\nUid:\t501\t501\t501\t501\nGid:\t501\t501\t501\t501\nFDSize:\t64\nGroups:\t4 10 18 39 63 104 501 67278 \nNStgid:\t20148\nNSpid:\t20148\nNSpgid:\t8\nNSsid:\t8\nKthread:\t0\nVmPeak:\t  257000 kB\nVmSize:\t  256832 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t   20540 kB\nVmRSS:\t   20540 kB\nRssAnon:\t   11044 kB\nRssFile:\t    9496 kB\nRssShmem:\t       0 kB\nVmData:\t   11996 kB\nVmStk:\t     132 kB\nVmExe:\t       4 kB\nVmLib:\t   13520 kB\nVmPTE:\t     108 kB\nVmSwap:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffff\nThreads:\t1\nSigQ:\t0/32138\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000001001000\nSigCgt:\t0000000000000002\nCapInh:\t0000000000000000\nCapPrm:\t0000000000000000\nCapEff:\t0000000000000000\nCapBnd:\t000001ffffffffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tvulnerable\nSpeculationIndirectBranch:\tunknown\nCpus_allowed:\t7f\nCpus_allowed_list:\t0-6\nMems_allowed:\t1\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t56\nnonvoluntary_ctxt_switches:\t1\n",
+  "date_utc": "2026-10-21T14:29:13.267350+00:00",
+  "status": "SUPPORTED",
+  "setup_errno": 0,
+  "register_errno": 0,
+  "features": 262143,
+  "sq_entries": 8,
+  "cq_entries": 16,
+  "recv_supported": true,
+  "poll_add_supported": true,
+  "cancel_supported": true,
+  "bytes": 17,
+  "content_valid": true,
+  "enter_calls": 1
+}

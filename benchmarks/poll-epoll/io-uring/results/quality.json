@@ -1,0 +1,49 @@
+{
+  "checked_at": "2026-10-21T14:50:35.662388+00:00",
+  "zig": "0.17.0",
+  "release_fast": true,
+  "libc_linked": false,
+  "minimal_recv": "17 bytes verified; setup/mmap/enter/REGISTER_PROBE successful",
+  "tests": {
+    "zig_primary": 8,
+    "zig_additional": 3,
+    "existing": 3,
+    "end_to_end_scenarios": 14,
+    "backends_per_scenario": 4,
+    "all_passed": true
+  },
+  "measurements": {
+    "main": 1520,
+    "sq_capacity_control": 80,
+    "warmups": 160,
+    "main_raw_sha256": "2083380c3b1fca34e76cc3d59a49fd8d017cdfb0b27074bb1d0eadc68b6ba441",
+    "capacity_raw_sha256": "ba73dc3147263b57123a16c42bfea4c794039ed1745ac643a3ab95e159d20ac9",
+    "existing_files_unchanged": 177,
+    "performance_zig_sources_match_snapshot": true
+  },
+  "strace": {
+    "independent_observations": 12,
+    "io_call_counts_match": true,
+    "excluded_from_performance": true
+  },
+  "slides": {
+    "build": true,
+    "pdf_export": true,
+    "pages": 23,
+    "all_pages_rendered_and_visually_checked": true,
+    "overflow": [],
+    "dark_code_and_colors": true,
+    "click_animation": true,
+    "presenter_notes": true,
+    "pdf_sha256": "3c132c73b26a4f54c076400cf4d09e465c805350332c23bcb65bb2df1fc99b71"
+  },
+  "report_svg_visually_checked": 5,
+  "unmeasured": [
+    "SQPOLL",
+    "multishot",
+    "registered resources",
+    "physical Linux",
+    "independent day replication",
+    "whole-system attributable CPU"
+  ]
+}

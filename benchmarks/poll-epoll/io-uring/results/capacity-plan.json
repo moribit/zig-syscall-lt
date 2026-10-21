@@ -1,0 +1,21 @@
+{
+  "reason": "Post-implementation fairness audit: SQ64 variant also bounds submission batch to 64. Hold batch=64 and CQ-copy=N while changing only SQ capacity; do not infer pure SQ cost from the coupled initial variant.",
+  "runs": 10,
+  "bursts": 32,
+  "warmup_bursts": 4,
+  "seed_base": 20261021,
+  "ordering_seed": 20261022,
+  "affinity": [
+    2
+  ],
+  "fds": [
+    1024,
+    4096
+  ],
+  "ready_percent": [
+    1,
+    100
+  ],
+  "payload": 1024,
+  "batch": 64
+}
