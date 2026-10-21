@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-19T00:21:03.527Z",
+  "checkedAt": "2026-10-21T14:47:26.792Z",
   "slides": [
     {
       "number": 1,
@@ -63,7 +63,7 @@
     },
     {
       "number": 13,
-      "title": "なぜio_uringは速くなり得る？",
+      "title": "同じ受信処理を、3方式で実測",
       "overflow": []
     },
     {
@@ -118,9 +118,9 @@
     }
   ],
   "animation": {
-    "before": 7,
-    "after": 3,
-    "url": "http://127.0.0.1:37085/12?clicks=4"
+    "before": 4,
+    "after": 0,
+    "url": "http://127.0.0.1:35729/12?clicks=4"
   },
   "presenter": true,
   "codeColors": {

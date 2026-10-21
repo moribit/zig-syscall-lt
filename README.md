@@ -27,7 +27,7 @@ npm run export
 10. Kerrisk氏の測定を、CとZigで追試
 11. 動的に切り替えれば速くなる？
 12. io_uringは、I/Oを依頼して完了を受け取る
-13. なぜio_uringは速くなり得る？
+13. 同じ受信処理を、3方式で実測
 14. epollは「I/Oできる状態」を教える
 15. 「準備完了」と「操作完了」の違い
 16. Zigのstd.Ioで、I/O実装を分離する
@@ -102,3 +102,7 @@ orb -m zig-syscall-lab python3 benchmarks/poll-epoll/analyze.py /tmp/poll-epoll-
 追加監査の[原因分析レポート](benchmarks/poll-epoll/ANALYSIS.md)では、待機APIと送信側の費用を区別し、送信順の対照・CPU割当・Adaptiveの区間別挙動と高Ready区間の延長を検証しています。過去のrawと分析ファイルは保持しています。
 
 Kerrisk氏の講義資料を追試した[独立C/Zig再構成実験](benchmarks/poll-epoll/kerrisk-reproduction/README.md)と[結果レポート](benchmarks/poll-epoll/kerrisk-reproduction/REPORT.md)も追加しました。元Cソースは未入手のため厳密再現ではなく、仮定と実測を分け、100万反復の結果・対照・再生成可能なCSV/SVGを保存しています。
+
+## io_uringの実受信比較
+
+[実行手順と設計](benchmarks/poll-epoll/io-uring/README.md) / [実測レポート](benchmarks/poll-epoll/io-uring/ANALYSIS.md)。Zig 0.17.0のstd.os.linuxでRECV/POLL_ADDを動かし、同一系列のpoll/epollと送信・受信・内容検証込みで比較しました。基本32条件ではRECVがepollの速度中央値を上回らず、バッチ化によるenter/CPU削減と全体性能を区別しています。初期化と未完了要求の終了費用、全raw・CSV・SVGも保存しています。std.Io.Eventedの測定ではありません。

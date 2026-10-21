@@ -386,26 +386,26 @@ Zig0.17.0同梱: lib/std/os/linux/IoUring.zig
 
 <div class="eyebrow">12 / WHY IT CAN HELP</div>
 
-# なぜio_uringは速くなり得る？
+# 同じ受信処理を、3方式で実測
 
-<div class="reason-list">
-<div v-click><b>まとめて依頼</b><p>複数のI/Oをバッチで投入し、同時に進行させる。</p></div>
-<div v-click><b>共有リングで受け渡し</b><p>依頼・結果の受け渡しを効率化。syscall境界をまたぐ回数を減らせる。</p></div>
-<div v-click><b>繰り返しの準備を減らす</b><p>registered buffers：バッファを事前登録し、操作ごとの準備を削減。</p></div>
-</div>
+<img class="audit-measured" src="/benchmarks/uring-recv-e2e.svg" alt="送信・内容検証・再投入を含む32バーストの処理速度。poll、epoll、io_uring RECVを同じ系列で各10回測定。" />
 
-<div class="takeaway">I/Oの待ち時間と、1件ごとの手間をまとめて減らす余地がある</div>
+<div class="benchmark-numbers"><span>全Ready / 4,096 fd：<b class="bench-poll">poll 0.747</b> / <b class="bench-epoll">epoll 0.710</b> / <b class="ref-result">RECV 0.680</b> 百万件/秒</span><small>バッチ投入でenterは減った。今回のRECVは、全32条件でepollを上回らなかった。</small></div>
 
-<p class="fine">syscallが不要になるわけではない。効果は操作・設定・ワークロードに依存する。</p>
+<div class="takeaway">syscallの削減と、処理全体の速さを分けて確かめる</div>
+<p class="fine">1 KiB / 32バースト×10回。送信〜内容検証・再投入。初期化/終了は別計時。OrbStack / Zig 0.17.0。</p>
 
 <!--
-目安45秒。共有リングはI/Oデータすべてを常にzero-copyで渡すという意味ではない。
-setup / mmap / register / enterなどのsyscallを使う。submitや完了待機をまとめると、1件ずつ要求・待機する場合の境界通過や待機/再開に伴うcontext switchを減らせる可能性がある。ただしsyscallの呼び出しとschedulerのcontext switchは同義ではない。
-SQPOLLなどでsubmit syscallを減らせるが、追加threadやCPUコストがあり無条件な利益ではない。registered buffersはメモリを事前登録しpin/mapping等の処理を償却する最適化で、対応操作やmemlock制限がある。すべてのプログラムで有効になるわけではない。
-PostgreSQLの最大3倍をここの仕組みだけの効果と結び付けて断定しない。FUSE等の追加ベンチマークは条件の紹介に時間が必要なので本編には追加しない。
-https://man7.org/linux/man-pages/man7/io_uring.7.html
+目安50秒。仕組みを説明したので、同じ受信処理を実際に書いて比べた。新規の同一系列でpoll+recv、epoll LT+recv、io_uring RECVを測定し、過去のrawと混ぜていない。Zig0.17.0 ReleaseFast、M2 MacBook Air / OrbStack Fedora、Linux7.0.14 aarch64、CPU2。affinityは物理CPU専有を保証しない。
+N64/256/1024/4096、Ready1/10/50/100%、payload64/1024B。Ready個数はceil(N*pct/100)。全32基本条件のRECV/epollペア速度比中央値は1を超えず、初期化・終了込みでも同様。10sample、名目95%percentile bootstrap10000回、外れ値除外なし。これは今回の有限・送信先行の合成負荷とVMに限り、WebサーバやLinux全般の勝敗ではない。
+単一スレッドでProducer全送信後にConsumerが全受信・内容検証し、次回rearm/flush完了までがE2E。既存workloadのProducerとreceiveを再利用した。Consumerは件数とpayloadを共通プロトコルとして知るが、将来のReady fdのidentityを受け取らない。RECVは全fdに初期要求を用意し、inactive要求をバースト間で保持する。32バーストの再投入境界は31回。最後は未完了をcancelし、受付CQEだけでなく対象終端CQEまで確認してからbufferを解放する。
+全Ready/4096fd/1024B、最大バッチの中央値：poll 0.747、epoll 0.710、RECV 0.680 Mmsg/s。別のバッチ1→最大の対照では、E2Eのenterが126976→31回、0.590→0.680 Mmsg/s、プロセスCPU222.447→192.825ms。初期enterは別で4096→1回。バッチは効果があったが、最大batchが全variantで最速ではなく、epollにも届かなかった。CQ回収1/64、SQ64/Nも別対照とし、SQ64はbatch64を揃えた追加系列で監査した。
+仕組みとして、複数要求のバッチ投入、ユーザー/カーネルの共有リング、登録bufferによる繰り返し準備削減には余地がある。共有リングは全データのzero-copyを意味せず、syscallとcontext switchも同義ではない。今回registered buffers/files、SQPOLL、multishotは使っていない。SQPOLLは専用threadのCPUも評価する必要がある。PostgreSQLの最大3倍をこの実験やio_uring単独の効果へ結び付けない。
+POLL_ADD oneshot+recvも測定したが、再武装を含む通知→排出サイクルで、既存Aのデータ非消費LT再通知とは異なるため専用図へ分離した。図はRECVの実受信Bを主指標としている。実測はstd.os.linuxのABIであり、std.Io.Eventedの性能ではない。Eventedビルド問題とは独立して実行できている。
+初期化、mmap、専用buffer確保、初期要求、終了cancel/破棄は別記し、backend初期化+E2E+終了込みもレポートへ掲載した。CPUはgetrusageのプロセス時間で、kernel worker/ホスト全体を含む保証はない。Producerのsend中にRECV処理が進む費用もE2Eに含む。区間時計の費用を含み、中央値を単純加算しない。原因をkernel内cache等だけへ帰属していない。
+https://man7.org/linux/man-pages/man2/io_uring_enter.2.html
 https://man7.org/linux/man-pages/man2/io_uring_register.2.html
-https://kernel.org/doc/html/latest/filesystems/fuse/fuse-io-uring.html
+benchmarks/poll-epoll/io-uring/ANALYSIS.md / BENCHMARK_DESIGN.md / results/main
 -->
 
 ---
@@ -556,6 +556,7 @@ Io/Uring.zigにはprocessSpawnPathやinheritParentDir/Fileとの不整合もあ�
 再実行：npm run check:backends。完全記録 docs/validation-backends.json、手順 snippets/README.md。
 https://ziglang.org/documentation/0.17.0/std/
 0.17.0同梱 lib/std/Io/Uring.zig:759 / lib/std/Io.zig:51
+今回のRECV/POLL_ADD実測はstd.os.linux.IoUringを使い、std.Io.Eventedを使っていない。低レベルではRECVの最小実行・三方式比較・未完了要求の終了まで確認済み。Eventedのビルド失敗という結論は変更しない。
 -->
 
 ---
@@ -743,7 +744,7 @@ Zigは観察の道具であって今回の話をZigだけに閉じない。runti
 ### Linux
 - [syscalls(2)](https://man7.org/linux/man-pages/man2/syscalls.2.html) / [read(2)](https://man7.org/linux/man-pages/man2/read.2.html) / [write(2)](https://man7.org/linux/man-pages/man2/write.2.html)
 - [poll(2)](https://man7.org/linux/man-pages/man2/poll.2.html) / [epoll_wait(2)](https://man7.org/linux/man-pages/man2/epoll_wait.2.html)
-- [epoll(7)](https://man7.org/linux/man-pages/man7/epoll.7.html) / [io_uring(7)](https://man7.org/linux/man-pages/man7/io_uring.7.html)
+- [epoll(7)](https://man7.org/linux/man-pages/man7/epoll.7.html) / [io_uring(7)](https://man7.org/linux/man-pages/man7/io_uring.7.html) / [enter(2)](https://man7.org/linux/man-pages/man2/io_uring_enter.2.html)
 - [io_uring_register(2)](https://man7.org/linux/man-pages/man2/io_uring_register.2.html)
 - [Linux v7.0.14: eventpoll.c](https://github.com/gregkh/linux/blob/v7.0.14/fs/eventpoll.c)
 - [Kerrisk: epoll講義](https://man7.org/training/download/lusp_epoll_slides-mkerrisk-man7.org.pdf)

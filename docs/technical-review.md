@@ -91,3 +91,7 @@ Linuxの3テストは0/全Ready、集合一致、LT再通知、部分消費、EA
 最終の固定モデル評価（全warmup先行）はB=200ms：-0.19%（95%区間-2.25〜+2.25%） / B=1000ms：+2.53%（95%区間+1.75〜+3.57%） / B=5000ms：+4.51%（95%区間+3.58〜+4.95%）。初回追加runnerのwarmup順序不備を修正し、予備系列も保存・別掲した。旧200msの結果を全条件へ一般化する説明を更新した。実切替ログとPhase別CPU・バースト数を保存し、理想的なPhase境界切替とは区別した。
 
 測定版と同じベースのLinux stable v7.0.14を参照したが、OrbStack固有patchとの完全一致は未確認。perfのcycles/instructionsは非対応で、キャッシュ要因は未解決。物理Linux追試はしていない。
+
+## 2026-10-21：io_uring RECV / POLL_ADD追加
+
+[設計と実測](../benchmarks/poll-epoll/io-uring/ANALYSIS.md)を追加。同一Zig 0.17.0でlibcなしの最小RECV、opcode probe、SQ/CQ、oneshot POLL_ADD、未完了要求の終端まで検証した。既存Workload/Poll/Epollを直接利用した新系列で、基本32条件・各10回とバッチ/CQ/SQ対照を測定。古いraw・Adaptiveは保持。std.Io.Eventedを経由しておらず、既存のビルド問題とは独立した実験。
