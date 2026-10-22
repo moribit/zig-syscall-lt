@@ -66,11 +66,22 @@ def main():
     ap.add_argument("--consumer-cpu",type=int,default=2)
     ap.add_argument("--producer-cpu",type=int,default=3)
     ap.add_argument("--confirmation-plan",type=Path)
+    ap.add_argument("--correctness-gate",type=Path,help="Completed correctness series for these exact Zig sources")
     args=ap.parse_args()
     out=args.output.resolve()
     if out.exists(): raise RuntimeError("Refuse to overwrite existing series")
     out.mkdir(parents=True)
     metadata(args,out,args.zig)
+    if args.stage != "correctness":
+        gate=args.correctness_gate
+        if not gate or not (gate/"COMPLETE").exists():raise RuntimeError("Correctness gate has not passed; performance measurement prohibited")
+        old=json.loads((gate/"environment.json").read_text())
+        current=json.loads((out/"environment.json").read_text())
+        for path,sha in current["sources"].items():
+            if path.endswith(".zig") and old["sources"].get(path)!=sha:raise RuntimeError("Correctness gate source mismatch")
+        checks=[json.loads(s) for s in (gate/"raw.jsonl").read_text().splitlines()]
+        if len(checks)!=21 or any(r["status"]!="OK" for r in checks):raise RuntimeError("Incomplete correctness matrix")
+        (out/"correctness-gate.json").write_text(json.dumps(dict(path=str(gate),raw_sha256=digest(gate/"raw.jsonl"),sources=old["sources"]),indent=2)+"\n")
     binary=out/"bench"
     build=command([args.zig,"build-exe",ROOT/"benchmarks/poll-epoll/continuous-main.zig","-O","ReleaseFast",f"-femit-bin={binary}"])
     (out/"build.log").write_text(build.stdout+build.stderr)
