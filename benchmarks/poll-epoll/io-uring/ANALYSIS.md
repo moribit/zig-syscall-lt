@@ -1,4 +1,6 @@
-# io_uring RECV / POLL_ADDの実測（Zig 0.17.0）
+# io_uring RECV / POLL_ADDの実測（Zig 0.17.0・OrbStackの保存済み系列）
+
+2026-10-22に[Linux実機でも追試](PHYSICAL_ANALYSIS.md)した。本ページの数値は以前のVM系列で、実機の結果とは混ぜていない。
 
 ## 1. 動作確認
 

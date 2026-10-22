@@ -95,3 +95,7 @@ Linuxの3テストは0/全Ready、集合一致、LT再通知、部分消費、EA
 ## 2026-10-21：io_uring RECV / POLL_ADD追加
 
 [設計と実測](../benchmarks/poll-epoll/io-uring/ANALYSIS.md)を追加。同一Zig 0.17.0でlibcなしの最小RECV、opcode probe、SQ/CQ、oneshot POLL_ADD、未完了要求の終端まで検証した。既存Workload/Poll/Epollを直接利用した新系列で、基本32条件・各10回とバッチ/CQ/SQ対照を測定。古いraw・Adaptiveは保持。std.Io.Eventedを経由しておらず、既存のビルド問題とは独立した実験。
+
+## 2026-10-22：Linux実機へ追試
+
+io_uring比較はIntel i7-3615QM / EndeavourOS / Linux6.18.9 x86_64の実機で再測定した。[実機レポート](../benchmarks/poll-epoll/io-uring/PHYSICAL_ANALYSIS.md)とresults/physical-20261022に保存。Zigコアソース・plan・scheduleはVM系列と一致し、主1520件+SQ対照80件、全正しさ検査と別straceが通過した。VM結果と混ぜず、旧結果のSHAを保持している。6/32条件でRECV/epollペア速度比中央値が1を超えたが、CPU/kernel/architecture等が同時に異なり、仮想化単独の効果は未特定。

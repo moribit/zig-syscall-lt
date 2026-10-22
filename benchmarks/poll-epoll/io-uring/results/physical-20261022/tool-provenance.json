@@ -1,0 +1,8 @@
+{
+  "strace_source": "https://archive.archlinux.org/packages/s/strace/strace-6.19-1-x86_64.pkg.tar.zst",
+  "strace_package_sha256": "4e907bab6bbbe10f63a34772e646926bd616f684652402c792883fb022cd22c6",
+  "installation": "User temporary directory only; no system package or security changes",
+  "analysis_packages": "analysis-packages.txt",
+  "data_transfer_archive_sha256": "804b9d4bf88ef181ce5c613517f254f4b7cf7af41f33b2c4669ecc435cecf86b",
+  "pdf_qa_transfer_archive_sha256": "d150472de8ca62245e0538ca0d3622c531993529a1edbada47e2f1ff181b2e5c"
+}

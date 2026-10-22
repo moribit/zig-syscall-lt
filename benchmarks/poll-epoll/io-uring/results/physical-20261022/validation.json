@@ -1,0 +1,11 @@
+{
+  "rows": 1672,
+  "measured": 1520,
+  "conditions": 152,
+  "existing_files_unchanged": 177,
+  "source_hashes_match": true,
+  "raw_sha256": "8d2719b50aca86b8bb0704afe07e0141e7a8c86d4545944f23bcbad2f580f2eb",
+  "interval": "Paired or per-group median percentile bootstrap 10000 resamples; descriptive, no outliers removed",
+  "python": "3.14.2 (main, Jan  2 2026, 14:27:39) [GCC 15.2.1 20251112]",
+  "matplotlib": "3.11.2"
+}

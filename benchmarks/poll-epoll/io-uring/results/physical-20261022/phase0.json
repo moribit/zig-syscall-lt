@@ -1,0 +1,26 @@
+{
+  "command": [
+    "/tmp/zig-syscall-metal-20261022.RRRGbt/bin/zig-uring-probe"
+  ],
+  "returncode": 0,
+  "stdout": "{\"status\":\"SUPPORTED\",\"libc_linked\":false,\"setup_errno\":0,\"register_errno\":0,\"features\":262143,\"sq_entries\":8,\"cq_entries\":16,\"recv_supported\":true,\"poll_add_supported\":true,\"cancel_supported\":true,\"bytes\":17,\"content_valid\":true,\"enter_calls\":1}\n",
+  "stderr": "",
+  "uname": "Linux mimoc-macmini 6.18.9-arch1-2 #1 SMP PREEMPT_DYNAMIC Mon, 09 Feb 2026 17:16:33 +0000 x86_64 GNU/Linux",
+  "zig": "0.17.0",
+  "libc_linked": false,
+  "io_uring_disabled": "0",
+  "process_status": "Name:\tpython3\nUmask:\t0022\nState:\tR (running)\nTgid:\t27720\nNgid:\t0\nPid:\t27720\nPPid:\t27719\nTracerPid:\t0\nUid:\t1000\t1000\t1000\t1000\nGid:\t1000\t1000\t1000\t1000\nFDSize:\t64\nGroups:\t3 10 983 985 1000 \nNStgid:\t27720\nNSpid:\t27720\nNSpgid:\t27720\nNSsid:\t27720\nKthread:\t0\nVmPeak:\t   32672 kB\nVmSize:\t   32636 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t   22392 kB\nVmRSS:\t   22392 kB\nRssAnon:\t   10512 kB\nRssFile:\t   11880 kB\nRssShmem:\t       0 kB\nVmData:\t   12104 kB\nVmStk:\t     132 kB\nVmExe:\t       4 kB\nVmLib:\t   10276 kB\nVmPTE:\t     100 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t1\nSigQ:\t0/63441\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000001001000\nSigCgt:\t0000000000000002\nCapInh:\t0000000000000000\nCapPrm:\t0000000000000000\nCapEff:\t0000000000000000\nCapBnd:\t000001ffffffffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tthread vulnerable\nSpeculationIndirectBranch:\tconditional enabled\nCpus_allowed:\tff\nCpus_allowed_list:\t0-7\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t16\nnonvoluntary_ctxt_switches:\t4\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+  "date_utc": "2026-10-22T01:21:03.353985+00:00",
+  "status": "SUPPORTED",
+  "setup_errno": 0,
+  "register_errno": 0,
+  "features": 262143,
+  "sq_entries": 8,
+  "cq_entries": 16,
+  "recv_supported": true,
+  "poll_add_supported": true,
+  "cancel_supported": true,
+  "bytes": 17,
+  "content_valid": true,
+  "enter_calls": 1
+}

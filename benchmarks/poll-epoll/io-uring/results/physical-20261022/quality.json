@@ -1,0 +1,65 @@
+{
+  "checked_at": "2026-10-22T01:40:00.680542+00:00",
+  "measurement_git_sha": "7a39516073d735029f86d2e2cc3cb5a8de84334d",
+  "host": "mimoc-macmini",
+  "dmi": "Macmini6,2",
+  "virtualization_detected": "none",
+  "kernel": "Linux mimoc-macmini 6.18.9-arch1-2 #1 SMP PREEMPT_DYNAMIC Mon, 09 Feb 2026 17:16:33 +0000 x86_64 GNU/Linux",
+  "architecture": "x86_64",
+  "zig": "0.17.0",
+  "optimization": "ReleaseFast/native",
+  "libc_linked": false,
+  "affinity": [
+    2
+  ],
+  "smt_siblings": "2,6",
+  "governor": "schedutil",
+  "fd_limit_actual": [
+    16384,
+    16384
+  ],
+  "fd_limit_note": "ulimit -n applied to soft and hard in measurement SSH shell; OS and other sessions unchanged",
+  "phase0": "SUPPORTED; 17-byte RECV content verified",
+  "tests": {
+    "zig_io": 8,
+    "zig_fault": 3,
+    "zig_existing": 3,
+    "end_to_end_scenarios": 14,
+    "backends_per_scenario": 4,
+    "all_pass": true
+  },
+  "measurements": {
+    "main": 1520,
+    "capacity": 80,
+    "warmups": 160,
+    "raw_sha256": "8d2719b50aca86b8bb0704afe07e0141e7a8c86d4545944f23bcbad2f580f2eb",
+    "capacity_raw_sha256": "9a29e38627cef5ae7ed8012a6cd14d2b2ab7e652916e2ea10a5862d61637385b",
+    "plan_and_schedule_match_vm": true,
+    "benchmark_zig_core_matches_vm": true,
+    "historical_result_files_preserved": 173
+  },
+  "strace": {
+    "independent_runs": 12,
+    "excluded_from_timing": true,
+    "x86_syscall_counts_verified": true
+  },
+  "slides": {
+    "build_on_mac": true,
+    "build_on_physical_linux": true,
+    "pdf_export_on_physical_linux": true,
+    "automated_visual_on_physical_linux": true,
+    "pages": 23,
+    "all_pdf_pages_visually_checked": true,
+    "report_svgs_visually_checked": 5,
+    "presenter": true,
+    "click_animation": true,
+    "dark_code_and_colors": true,
+    "pdf_sha256": "f4e6cdc1637ac179d1de211857a539c16a1fd649e4ecdc2dd70efb7795f8aea8"
+  },
+  "limitations": [
+    "CPU/architecture/kernel/native target differ from VM; not a virtualization-only comparison",
+    "No exclusive CPU or SMT reservation, frequency not fixed",
+    "Single finite-burst series with 10 samples per condition, no independent-day replication",
+    "Kerrisk/Adaptive not rerun on this host"
+  ]
+}

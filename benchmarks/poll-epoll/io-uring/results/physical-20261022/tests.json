@@ -1,0 +1,37 @@
+[
+  {
+    "command": [
+      "zig",
+      "test",
+      "/tmp/zig-syscall-metal-20261022.RRRGbt/repo/benchmarks/poll-epoll/io-uring-tests.zig"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "1/8 io-uring-tests.test_0...OK\n2/8 io-uring.tests.test.RECV before arrival, partial completion, repeated receive and EAGAIN...OK\n3/8 io-uring.tests.test.EOF and invalid fd are explicit terminal completions...OK\n4/8 io-uring.tests.test.SQ full, wraparound, no dropped entries...OK\n5/8 io-uring.tests.test.real CQ overflow or backlog is detected, never silently discarded...OK\n6/8 io-uring.tests.test.zero arrival and mixed pending requests cancel to terminal CQEs before buffer free...OK\n7/8 io-uring.tests.test.initialization failure and repeated ring lifecycle do not leak fds...io_uring_setup errno=22 (INVAL)\nOK\n8/8 io-uring.tests.test.interrupted enter retries until the actual receive completes...OK\nAll 8 tests passed.\n"
+  },
+  {
+    "command": [
+      "zig",
+      "test",
+      "/tmp/zig-syscall-metal-20261022.RRRGbt/repo/benchmarks/poll-epoll/tests.zig"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "1/3 tests.test.same ready sets, zero/all ready, LT repeated notifications, partial receive and EAGAIN...OK\n2/3 tests.test.producer shutdown, data drained before EOF, HUP, unregister and resource closure...OK\n3/3 tests.test.actual EINTR is retried by poll and epoll...OK\nAll 3 tests passed.\n"
+  },
+  {
+    "command": [
+      "zig",
+      "test",
+      "/tmp/zig-syscall-metal-20261022.RRRGbt/repo/benchmarks/poll-epoll/io-uring-fault-tests.zig"
+    ],
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "1/3 io-uring-fault-tests.test_0...OK\n2/3 io-uring.fault-tests.test.buffer and pending allocation failures close initialized ring mappings and fds...OK\n3/3 io-uring.fault-tests.test.reverse arrivals identify each socket by user_data and poll signals EOF readability...OK\nAll 3 tests passed.\n"
+  },
+  {
+    "end_to_end_scenarios": 14,
+    "backends_per_scenario": 4,
+    "status": "PASS"
+  }
+]

@@ -81,6 +81,33 @@ raw各行には条件、実際のReady個数、seed/run、bursts、順序、時�
 
 既存Aの同じReady状態を非消費で繰り返す指標と、POLL_ADDの再武装込みサイクルは直接比較しない。主図は送信・実受信込みB。RECVはsyscallを減らせてもキュー処理・投入・kernel仕事を持ち、常に高速ではない。SQ64の初期variantはbatch上限も64となるため、追加対照でbatch=64を揃えてSQだけを変更した。
 
-SQPOLL、multishot、provided/registered buffers、fixed filesは未実施。性能は有限・送信先行バーストとVMの範囲に限る。別日の独立系列、物理Linux、継続到着、TCP/TLS、ホスト/kernel workerを含む全体CPUは今後の課題。
+SQPOLL、multishot、provided/registered buffers、fixed filesは未実施。性能は有限・送信先行バーストと各測定環境の範囲に限る。実機追試は下記に分離し、別日の独立系列、継続到着、TCP/TLS、ホスト/kernel workerを含む全体CPUは今後の課題。
 
 出典：[io_uring_enter(2)](https://man7.org/linux/man-pages/man2/io_uring_enter.2.html)、[io_uring_register(2)](https://man7.org/linux/man-pages/man2/io_uring_register.2.html)、[io_uring(7)](https://man7.org/linux/man-pages/man7/io_uring.7.html)。共有リングのrelease/acquireは実際の0.17.0 `std/os/linux/IoUring.zig`を調査し、独自に再発明していない。
+
+## 2026-10-22：Linux実機での追試
+
+[実機レポート](PHYSICAL_ANALYSIS.md) / [実機データ](results/physical-20261022)。Intel i7-3615QM、EndeavourOS、Linux6.18.9 x86_64、Zig0.17.0で同じ実装・条件・順序を再実行した。VMのresults/mainは保持し、混ぜて集計しない。CPU2とSMT sibling6は専有せず、schedutilのまま。fd上限だけ測定シェル内で16384へ上げる。
+
+```sh
+# Linux実機上の、リポジトリルートで実行
+export PATH="$HOME/.zvm/0.17.0:$PATH"
+ulimit -n 16384
+python3 benchmarks/poll-epoll/io-uring/run.py \
+  --output /tmp/uring-physical-new \
+  --binary-dir /tmp/uring-physical-new/bin \
+  --machine-label "Physical Linux / CPU model / distribution"
+python3 benchmarks/poll-epoll/io-uring/capacity.py --output /tmp/uring-physical-new
+python3 benchmarks/poll-epoll/io-uring/observe.py /tmp/uring-physical-new
+python3 benchmarks/poll-epoll/io-uring/analyze.py /tmp/uring-physical-new
+# 公開済みの実機レポートとスライドを再生成
+python3 benchmarks/poll-epoll/io-uring/physical-report.py
+python3 benchmarks/poll-epoll/io-uring/slides.py \
+  --directory benchmarks/poll-epoll/io-uring/results/physical-20261022
+```
+
+matplotlibは集計用、straceは性能計時後だけ利用する。今回strace6.19はArch公式archiveのpackageを専用/tmp領域へ展開し、Python依存も専用venvへ入れた。system全体のpackage/権限/seccomp設定は変更していない。environment.jsonのvirtualization_detectedはnone、DMI/CPU/sibling/governorを保存した。VMではなく実機でコンパイル・正しさテスト・性能測定・strace・集計を行った。PDF生成環境は性能測定には関係しない。
+
+CPU/architecture/kernel/native targetも同時に変わるため、VMとの差を仮想化だけの効果と呼ばない。最新のio_uringスライドは実機データを使い、他の過去の実験ページは環境表記を維持する。
+
+実機追試のfd上限について：実際の`ulimit -n 16384`はBashでsoft/hard双方を16384へ設定した。environment.jsonが実測値である。影響は測定SSHシェルと子だけで、OS設定や他セッションは変更していない。今後softのみを上げるなら`ulimit -Sn 16384`を使う。
