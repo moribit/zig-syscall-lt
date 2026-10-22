@@ -1,0 +1,28 @@
+{
+  "source_commit": "38814b3",
+  "physical_host": "Intel i7-3615QM / Linux 6.18.9-arch1-2 / x86_64",
+  "zig_version": "0.17.0",
+  "optimization": "ReleaseFast",
+  "continuous_build": "PASS",
+  "zig_test_command": "zig test benchmarks/poll-epoll/continuous-tests.zig -O ReleaseFast",
+  "zig_test_passed": 5,
+  "formatted_sources_tested_on_physical_host": true,
+  "correctness_diagnosis": {
+    "epoll_pass": 3,
+    "oneshot_pass": 3,
+    "multishot_pass": 0,
+    "multishot_fail": 3,
+    "overall_gate": "FAIL"
+  },
+  "performance_without_gate_rejected_on_physical_host": true,
+  "failed_series_analysis_rejected": true,
+  "python_compile": "PASS",
+  "zig_fmt_check": "PASS",
+  "slidev_build": "PASS",
+  "historical_hashes_verified": 299,
+  "historical_hash_changes": 0,
+  "performance_runs": 0,
+  "slides_changed": false,
+  "pdf_export_and_visual_review": "NOT_RUN: no slide changes; correctness gate not passed",
+  "tcp_echo": "NOT_RUN: prerequisites not met"
+}

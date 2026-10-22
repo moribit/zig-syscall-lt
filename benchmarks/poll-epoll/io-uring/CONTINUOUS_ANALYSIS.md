@@ -79,7 +79,9 @@ buffer末尾で分割され得るため、テストをレコード全体の復�
 multishotでは、watchdog時にpending接続の`recv(MSG_PEEK | MSG_DONTWAIT)`が0を返した。
 socketはEOFを示す一方で、その要求の終端CQEが届いていない。
 100ms timeout付き`io_uring_enter`で再度待機しても解消しなかった。
-straceを付けた別実行は完走した。straceによるタイミング変化を性能改善と扱わない。
+straceを付けた初期版の別実行は完走した。その版は最終burstを丸ごと送って
+2,016件になるため、上表の2,000件と同一条件の性能比較には使えない。
+straceによるタイミング変化も性能改善と扱わない。
 
 根拠は `continuous/results/continuous-evidence-20261022/` 内の
 `repeated/diagnostic.jsonl` と再生成可能な `correctness-summary.csv`。
