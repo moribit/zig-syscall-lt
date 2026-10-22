@@ -1,0 +1,7 @@
+[epoll] created fd=7
+[epoll_ctl] ADD fd 3
+[epoll_ctl] ADD fd 5
+[epoll_wait] no fd ready; waiting...
+[writer] pipe B: read fd=5, write fd=6
+[epoll_wait] ready: fd 5 (data has not been read)
+[read] returned=5, buffer=hello

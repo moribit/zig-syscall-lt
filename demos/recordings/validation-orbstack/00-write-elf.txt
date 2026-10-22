@@ -1,0 +1,30 @@
+
+Elf file type is EXEC (Executable file)
+Entry point 0x1022df8
+There are 9 program headers, starting at offset 64
+
+Program Headers:
+  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align
+  PHDR           0x000040 0x0000000001000040 0x0000000001000040 0x0001f8 0x0001f8 R   0x8
+  LOAD           0x000000 0x0000000001000000 0x0000000001000000 0x012df8 0x012df8 R   0x10000
+  LOAD           0x012df8 0x0000000001022df8 0x0000000001022df8 0x0517d4 0x0517d4 R E 0x10000
+  LOAD           0x0645d0 0x00000000010845d0 0x00000000010845d0 0x000018 0x000a30 RW  0x10000
+  LOAD           0x0645e8 0x00000000010945e8 0x00000000010945e8 0x004af8 0x006a68 RW  0x10000
+  TLS            0x0645d0 0x00000000010745d0 0x00000000010745d0 0x000000 0x040015 R   0x8
+  GNU_RELRO      0x0645d0 0x00000000010845d0 0x00000000010845d0 0x000018 0x000a30 R   0x1
+  GNU_EH_FRAME   0x00ad20 0x000000000100ad20 0x000000000100ad20 0x000ddc 0x000ddc R   0x4
+  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x1000000 RW  0
+
+ Section to Segment mapping:
+  Segment Sections...
+   00     
+   01     .rodata .eh_frame_hdr .eh_frame 
+   02     .text 
+   03     .got .relro_padding 
+   04     .data .bss 
+   05     .tbss 
+   06     .got .relro_padding 
+   07     .eh_frame_hdr 
+   08     
+
+There is no dynamic section in this file.

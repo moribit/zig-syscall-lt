@@ -1,0 +1,6 @@
+[io_uring] ring created
+[SQE] READ fd 3, user_data=42
+[submit] request submitted; waiting for completion...
+[writer] writing hello to fd 4
+[CQE] user_data=42, res=5
+[buffer] hello

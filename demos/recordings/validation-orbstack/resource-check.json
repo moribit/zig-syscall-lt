@@ -1,0 +1,45 @@
+{
+  "00-write": {
+    "created_fds": [],
+    "closed_all_created_fds": true,
+    "exit_success": true
+  },
+  "01-blocking": {
+    "created_fds": [
+      3,
+      4
+    ],
+    "closed_all_created_fds": true,
+    "exit_success": true
+  },
+  "02-poll": {
+    "created_fds": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "closed_all_created_fds": true,
+    "exit_success": true
+  },
+  "03-epoll": {
+    "created_fds": [
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "closed_all_created_fds": true,
+    "exit_success": true
+  },
+  "04-io-uring": {
+    "created_fds": [
+      3,
+      4,
+      5
+    ],
+    "closed_all_created_fds": true,
+    "exit_success": true
+  }
+}

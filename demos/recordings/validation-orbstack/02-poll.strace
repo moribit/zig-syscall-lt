@@ -1,0 +1,15 @@
+23648 12:58:26.222724 pipe2([3, 4], O_NONBLOCK|O_CLOEXEC) = 0 <0.000010>
+23648 12:58:26.222837 pipe2([5, 6], O_NONBLOCK|O_CLOEXEC) = 0 <0.000024>
+23648 12:58:26.222887 ppoll([{fd=3, events=POLLIN}, {fd=5, events=POLLIN}], 2, {tv_sec=0, tv_nsec=0}, NULL, 8) = 0 (Timeout) <0.000008>
+23648 12:58:26.222922 read(5, 0xffffc370d638, 5) = -1 EAGAIN (Resource temporarily unavailable) <0.000006>
+23648 12:58:26.223221 ppoll([{fd=3, events=POLLIN}, {fd=5, events=POLLIN}], 2, {tv_sec=3, tv_nsec=0}, NULL, 8 <unfinished ...>
+23649 12:58:26.223334 nanosleep({tv_sec=1, tv_nsec=0}, NULL) = 0 <1.003676>
+23649 12:58:27.227139 write(6, "hello", 5) = 5 <0.000020>
+23648 12:58:27.227253 <... ppoll resumed>) = 1 ([{fd=5, revents=POLLIN}], left {tv_sec=1, tv_nsec=996011173}) <1.004009>
+23649 12:58:27.227445 +++ exited with 0 +++
+23648 12:58:27.227519 read(5, "hello", 5) = 5 <0.000011>
+23648 12:58:27.227672 close(5)          = 0 <0.000012>
+23648 12:58:27.227709 close(6)          = 0 <0.000017>
+23648 12:58:27.227745 close(3)          = 0 <0.000010>
+23648 12:58:27.227773 close(4)          = 0 <0.000013>
+23648 12:58:27.228031 +++ exited with 0 +++

@@ -1,0 +1,5 @@
+[read] empty non-blocking pipe: EAGAIN
+[poll] no fd ready; waiting for fd 3, 5...
+[writer] pipe B: read fd=5, write fd=6
+[poll] ready: fd 5 (data has not been read)
+[read] returned=5, buffer=hello

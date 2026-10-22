@@ -1,0 +1,4 @@
+[pipe] read fd=3, write fd=4
+[read] waiting for data...
+[writer] writing hello to fd 4
+[read] returned=5, buffer=hello

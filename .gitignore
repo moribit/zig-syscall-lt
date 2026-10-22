@@ -8,3 +8,4 @@ components.d.ts
 
 .zig-cache/
 zig-out/
+demos/.build/
