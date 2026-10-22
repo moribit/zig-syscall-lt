@@ -66,6 +66,7 @@ const Producer = struct {
         var data: [4096]u8 = undefined;
         var arrival = p.start;
         for (p.send_times, 0..) |*sent_at, message| {
+            if (p.c.pattern != .randomized and message >= p.c.rate * p.c.duration_ns / 1000000000) break;
             switch (p.c.pattern) {
                 .uniform => arrival = p.start + @as(u64, @intCast(message)) * 1000000000 / p.c.rate,
                 .burst => arrival = p.start + @as(u64, @intCast(message / 32 * 32)) * 1000000000 / p.c.rate,
