@@ -66,6 +66,7 @@ csvwrite('paired',pairs)
 validation=dict(rows=len(raw),measured=sum(not x['warmup'] for x in raw),conditions=len(groups),existing_files_unchanged=len(manifest),source_hashes_match=True,raw_sha256=env['raw_sha256'],interval='Paired or per-group median percentile bootstrap 10000 resamples; descriptive, no outliers removed',python=sys.version,matplotlib=matplotlib.__version__)
 (out/'validation.json').write_text(json.dumps(validation,indent=2)+'\n')
 plt.rcParams.update({'font.family':'DejaVu Sans','font.size':14,'svg.fonttype':'none','svg.hashsalt':'zig-uring-20261021','axes.spines.top':False,'axes.spines.right':False})
+plot_env=env.get('plot_environment','M2 / OrbStack Fedora / Linux 7.0.14 aarch64 / Zig 0.17.0 ReleaseFast / CPU 2')
 colors={'poll':'#1d4ed8','epoll':'#b45309','uring':'#7e22ce','uring-poll':'#047857'}
 def save(fig,name):
  fig.savefig(out/(name+'.svg'),metadata={'Date':None});plt.close(fig);path=out/(name+'.svg');path.write_text('\n'.join(line.rstrip() for line in path.read_text().splitlines())+'\n')
@@ -76,23 +77,23 @@ for payload in [64,1024]:
    rows=sorted([x for x in summary if x['label']=='baseline' and x['fds']==n and x['payload']==payload and x['backend']==backend],key=lambda x:x['ready_fds'])
    xs=[x['actual_ready_ratio']*100 for x in rows];ax.plot(xs,[x['msg_s_median']/1e6 for x in rows],'-o',color=colors[backend],label=backend);ax.fill_between(xs,[x['msg_s_ci95_low']/1e6 for x in rows],[x['msg_s_ci95_high']/1e6 for x in rows],color=colors[backend],alpha=.15)
   ax.set(title=f'{n} fds / {payload} B',xlabel='Actual Ready (%)',ylabel='Million messages / s',ylim=(0,None));ax.grid(alpha=.2);ax.legend(fontsize=11)
- fig.supxlabel('Send + receive + content validation + rearm | 32 bursts | median n=10, nominal 95% bootstrap\nM2 / OrbStack Fedora / Linux 7.0.14 aarch64 / Zig 0.17.0 ReleaseFast / CPU 2 | setup/teardown excluded',fontsize=9);save(fig,'e2e-'+str(payload))
+ fig.supxlabel(f'Send + receive + content validation + rearm | 32 bursts | median n=10, nominal 95% bootstrap\n{plot_env} | setup/teardown excluded',fontsize=9);save(fig,'e2e-'+str(payload))
 fig,axes=plt.subplots(1,2,figsize=(12,4.7),layout='constrained')
 for ax,n in zip(axes,[1024,4096]):
  for backend in ['poll','epoll','uring-poll']:
   rows=sorted([x for x in summary if x['label']=='baseline' and x['fds']==n and x['payload']==1024 and x['backend']==backend],key=lambda x:x['ready_fds']);ax.plot([x['actual_ready_ratio']*100 for x in rows],[x['msg_s_median']/1e6 for x in rows],'-o',color=colors[backend],label=backend)
  ax.set(title=f'{n} fds / 1024 B',xlabel='Actual Ready (%)',ylabel='Million notification+drain cycles / s',ylim=(0,None));ax.legend(fontsize=11);ax.grid(alpha=.2)
-fig.supxlabel('Oneshot POLL_ADD + recv + rearm, not repeated non-consuming LT | 32 bursts | median n=10\nM2 / OrbStack Fedora / Linux 7.0.14 aarch64 / Zig 0.17.0 ReleaseFast / CPU 2',fontsize=9);save(fig,'poll-add')
+fig.supxlabel(f'Oneshot POLL_ADD + recv + rearm, not repeated non-consuming LT | 32 bursts | median n=10\n{plot_env}',fontsize=9);save(fig,'poll-add')
 fig,axes=plt.subplots(1,2,figsize=(12,4.7),layout='constrained')
 for ax,n in zip(axes,[1024,4096]):
  for pct,style in [(1,'-o'),(100,'--s')]:
   rows=[next(x for x in summary if x['fds']==n and x['ready_percent_requested']==pct and x['payload']==1024 and x['backend']=='uring' and x['label']==label) for label in ['batch-1','batch-8','batch-32','baseline']]
   ax.plot([1,8,32,n],[x['msg_s_median']/1e6 for x in rows],style,label=f'Ready {pct}%')
  ax.set(title=f'{n} fds / 1024 B',xscale='log',xlabel='Submission batch limit',ylabel='Million messages / s',ylim=(0,None));ax.legend();ax.grid(alpha=.2)
-fig.supxlabel('32 bursts | same work, tail batches flushed after each CQ batch | median n=10\nM2 / OrbStack Fedora / Linux 7.0.14 aarch64 / Zig 0.17.0 ReleaseFast / CPU 2',fontsize=9);save(fig,'batch')
+fig.supxlabel(f'32 bursts | same work, tail batches flushed after each CQ batch | median n=10\n{plot_env}',fontsize=9);save(fig,'batch')
 fig,axes=plt.subplots(1,2,figsize=(12,4.7),layout='constrained')
 for ax,pct in zip(axes,[1,100]):
  rows=[next(x for x in summary if x['fds']==4096 and x['ready_percent_requested']==pct and x['payload']==1024 and x['backend']==backend and x['label']=='baseline') for backend in ['poll','epoll','uring']]
  xs=list(range(3));ax.bar([x-.18 for x in xs],[x['e2e_ns_median']/1e6 for x in rows],width=.36,label='Burst window');ax.bar([x+.18 for x in xs],[x['lifecycle_ns_median']/1e6 for x in rows],width=.36,label='Backend lifecycle');ax.set(xticks=xs,xticklabels=['poll','epoll','uring'],ylabel='ms / 32 bursts',title=f'4096 fds / Ready {pct}% / 1024 B',ylim=(0,None));ax.legend(fontsize=10)
-fig.supxlabel('Lifecycle = backend init + measured window + cancel/drain + destroy (socket creation separate)\nMedian n=10 / M2 OrbStack Linux 7.0.14 / Zig 0.17.0 ReleaseFast / CPU 2',fontsize=9);save(fig,'lifecycle')
+fig.supxlabel(f'Lifecycle = backend init + measured window + cancel/drain + destroy (socket creation separate)\nMedian n=10 / {plot_env}',fontsize=9);save(fig,'lifecycle')
 print(json.dumps(validation,indent=2))

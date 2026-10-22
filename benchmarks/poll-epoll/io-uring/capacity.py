@@ -2,7 +2,7 @@
 """Additional matched control: hold batch=64 and vary SQ only."""
 import argparse,csv,datetime,hashlib,json,random,statistics as st,subprocess as sp,time
 from pathlib import Path
-root=Path(__file__).resolve().parent;out=root/'results/main';plan=json.loads((root/'results/capacity-plan.json').read_text());p=argparse.ArgumentParser();p.add_argument('--analyze-only',action='store_true');args=p.parse_args();binary=Path('/tmp/zig-uring-bench')
+root=Path(__file__).resolve().parent;plan=json.loads((root/'results/capacity-plan.json').read_text());p=argparse.ArgumentParser();p.add_argument('--analyze-only',action='store_true');p.add_argument('--output',type=Path,default=root/'results/main');args=p.parse_args();out=args.output;env=json.loads((out/'environment.json').read_text());binary=Path(env.get('binary_path','/tmp/zig-uring-bench'))
 conditions=[dict(fds=n,ready_fds=(n*pct+99)//100,ready_percent=pct,capacity=cap,batch=64,payload=1024,cq_batch=n) for n in plan['fds'] for pct in plan['ready_percent'] for cap in [64,n]]
 if not args.analyze_only:
  assert not (out/'capacity.jsonl').exists()
