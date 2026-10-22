@@ -194,7 +194,12 @@ pub fn main(init: std.process.Init) !void {
     var last_completion = start;
     var eof_count: usize = 0;
     while (eof_count < c.n) {
-        if (m.now() > start + c.duration_ns + 15000000000) @panic("consumer watchdog");
+        if (m.now() > start + c.duration_ns + 15000000000) {
+            std.debug.print("watchdog: received={d} EOF={d}/{d} pending=", .{received, eof_count, c.n});
+            for (pending, 0..) |p, i| if (p) { std.debug.print("{d},", .{i}); };
+            std.debug.print("\n", .{});
+            @panic("consumer watchdog");
+        }
         if (c.mode == .epoll) {
             counters.waits += 1;
             const n = m.check(l.epoll_wait(ep, &events, events.len, 100)) catch |err| {
@@ -229,7 +234,8 @@ pub fn main(init: std.process.Init) !void {
             }
         } else {
             counters.peak_cq = @max(counters.peak_cq, ring.u.cq_ready());
-            const n = ring.copy(&cq, true) catch @panic("CQ retrieval/overflow");
+            if (ring.u.cq_ready() == 0) boundedWait(&ring) catch @panic("bounded CQ wait");
+            const n = ring.copy(&cq, false) catch @panic("CQ retrieval/overflow");
             var rearm: [256]usize = undefined;
             var rearm_count: usize = 0;
             for (cq[0..n]) |completion| {
@@ -323,4 +329,14 @@ fn queue(c: Config, r: *Ring, group: *l.IoUring.BufferGroup, w: *Workload, buffe
     }
     pending[i] = true;
     if (r.u.sq.sqe_tail -% r.u.sq.sqe_head >= c.batch) try r.flush();
+}
+fn boundedWait(r: *Ring) !void {
+    var ts: l.kernel_timespec = .{ .sec = 0, .nsec = 100000000 };
+    var arg: l.io_uring_getevents_arg = .{ .sigmask = 0, .sigmask_sz = 0, .pad = 0, .ts = @intFromPtr(&ts) };
+    r.enters += 1;
+    const raw = l.syscall6(.io_uring_enter, @intCast(r.u.fd), 0, 1, l.IORING_ENTER_GETEVENTS | l.IORING_ENTER_EXT_ARG, @intFromPtr(&arg), @sizeOf(l.io_uring_getevents_arg));
+    switch (l.errno(raw)) {
+        .SUCCESS, .TIME, .INTR => {},
+        else => return error.EnterFailed,
+    }
 }

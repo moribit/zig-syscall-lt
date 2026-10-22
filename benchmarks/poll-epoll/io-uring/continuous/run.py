@@ -112,9 +112,19 @@ def main():
             c=cases[item["case"]]
             times=out/f"send-{number:05}.u64le"
             cmd=[binary,item["mode"],c["fds"],c["active"],c["payload"],c["rate"],duration,item["seed"],c["pattern"],c["batch"],args.consumer_cpu,args.producer_cpu,times]
-            before=dict(loadavg=Path("/proc/loadavg").read_text().strip(), utc=time.time())
-            proc=command(cmd,timeout=40)
-            row=dict(item,condition=c,sequence=number,command=list(map(str,cmd)),before=before,exit=proc.returncode)
+            sensors = {}
+            for p in list(Path("/sys/class/thermal").glob("thermal_zone*/temp")) + list(Path("/sys/devices/system/cpu").glob("cpu[0-9]*/cpufreq/scaling_cur_freq")):
+                try: sensors[str(p)] = p.read_text().strip()
+                except OSError: pass
+            before=dict(loadavg=Path("/proc/loadavg").read_text().strip(), utc=time.time(), sensors=sensors)
+            row=dict(item,condition=c,sequence=number,command=list(map(str,cmd)),before=before,exit=None)
+            try:
+                proc=command(cmd,timeout=40)
+            except subprocess.TimeoutExpired as err:
+                row.update(status="TIMEOUT",exit=None,stderr=str(err),stdout=(err.stdout or b"").decode(errors="replace") if isinstance(err.stdout,bytes) else err.stdout)
+                raw.write(json.dumps(row)+"\n");raw.flush()
+                raise
+            row["exit"] = proc.returncode
             if proc.returncode:
                 row.update(status="FAILED",stderr=proc.stderr,stdout=proc.stdout)
                 raw.write(json.dumps(row)+"\n");raw.flush()
