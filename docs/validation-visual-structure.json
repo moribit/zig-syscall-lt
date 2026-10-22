@@ -1,0 +1,105 @@
+{
+  "baseline": "373d301",
+  "slides": 20,
+  "sections": {
+    "pages": [
+      7,
+      10,
+      13
+    ],
+    "layout": "api-section",
+    "name_only": true,
+    "centered": true,
+    "font_px": 112,
+    "transition": "none"
+  },
+  "diagram_pages": [
+    8,
+    11,
+    14
+  ],
+  "diagram_common_geometry": [
+    {
+      "number": 8,
+      "left": 52,
+      "right": 628,
+      "width": 420,
+      "font": "20px"
+    },
+    {
+      "number": 11,
+      "left": 52,
+      "right": 628,
+      "width": 420,
+      "font": "20px"
+    },
+    {
+      "number": 14,
+      "left": 52,
+      "right": 628,
+      "width": 420,
+      "font": "20px"
+    }
+  ],
+  "code_blocks": 4,
+  "call_expressions_checked": 8,
+  "max_code_lines": 3,
+  "minimum_code_font_px": 18,
+  "source_check_command": "npm run check:slides",
+  "animation_order": [
+    "SQE prepared",
+    "submit / io_uring_enter",
+    "CQE received",
+    "buffer hello"
+  ],
+  "animation_steps_verified": [
+    {
+      "click": 1,
+      "rows": [
+        false,
+        true,
+        true
+      ],
+      "buffer": true
+    },
+    {
+      "click": 2,
+      "rows": [
+        false,
+        false,
+        true
+      ],
+      "buffer": true
+    },
+    {
+      "click": 3,
+      "rows": [
+        false,
+        false,
+        false
+      ],
+      "buffer": true
+    },
+    {
+      "click": 4,
+      "rows": [
+        false,
+        false,
+        false
+      ],
+      "buffer": false
+    }
+  ],
+  "speaker_notes_count": 20,
+  "presenter_check": true,
+  "slidev_build": "PASS (host and OrbStack staging)",
+  "pdf_pages": 20,
+  "pdf_visual_review": "PASS: all 20 final PDF pages rendered and inspected",
+  "pdf_sha256": "62a69d96a02ed4b249606eb6b8af513893fc4f7e92ae7708e46fb941cd209bcb",
+  "preserved_files": 514,
+  "preserved_hash_changes": 0,
+  "demo_programs_changed": false,
+  "benchmarks_or_results_changed": false,
+  "old_deck_snapshot": "docs/archive/pre-visual-373d301",
+  "human_rehearsal": "not performed; flexible timing and actual-time fields in demos/PRESENTER.md"
+}

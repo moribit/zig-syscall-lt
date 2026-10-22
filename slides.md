@@ -2,10 +2,10 @@
 theme: default
 title: Zigで覗く、Linuxの非同期I/O
 info: |
-  Webエンジニア向け15分LT。短いZigプログラムとstraceで、poll・epoll・io_uringの役割を観察する。
+  Webエンジニア向けLT。短いZigプログラムとstraceで、poll・epoll・io_uringの役割を観察する。
 class: cover
 layout: default
-colorSchema: light
+colorSchema: dark
 aspectRatio: 16/9
 canvasWidth: 1100
 transition: fade
@@ -28,7 +28,7 @@ exportFilename: zig-linux-async-io
 <div class="cover-bottom">いつも使う async/await の、少し下へ。</div>
 
 <!--
-目安15秒。全体14分＋操作の余白1分。発表前の手順は demos/PRESENTER.md。
+目安15秒。15分前後を目安に、初学者の理解を優先して説明する。発表前の手順は demos/PRESENTER.md。
 口頭で「hotoさんのPython非同期処理LTを見て、待つ仕組みが気になった」と動機を話す。専用スライドにはしない。
 今日は性能ではなく、カーネルに何を頼み、何が返るかを見る。OrbStackのLinuxで実演する。
 -->
@@ -74,29 +74,35 @@ https://docs.python.org/3/library/asyncio-eventloop.html
 目安65秒（writeミニデモ40秒を含む）。Zigの文法講座にはしない。raw syscallは他言語でも可能。
 ターミナルへ。sh demos/run.sh 0 --source でwriteの1行を指す。sh demos/run.sh 0、次に sh demos/run.sh 0 --trace。
 期待: stdout hello、戻り値6。straceの write(1, "hello\n", 6) = 6 を指す。説明ログはstderrにもwriteするので区別。
-fd=1がstdoutと分かったところでスライド4へ戻る。時間が押せばソース表示を省く。
+fd=1がstdoutと分かったところでスライド4へ戻る。ソース全文を表示したうえでwriteの行に注目する。
 https://ziglang.org/documentation/0.17.0/
 -->
 
 ---
+class: api-explainer
+---
 
-<div class="eyebrow">03 / システムコール</div>
+<div class="eyebrow">システムコール</div>
 
 # システムコールは、OSへの依頼
 
-<div class="syscall-map">
-<div class="space-label">ユーザー空間</div><div class="flow-node">Application<small>Zigのプログラム</small></div>
-<div></div><div class="down-arrow ref-operation">↓ write / read</div>
-<div class="space-label">境界を越える</div><div class="boundary">syscall境界</div>
-<div class="space-label">カーネル空間</div><div class="flow-node">Linux Kernel<small>fdに対応するTerminal / Pipe / Socketへ処理する</small></div>
+```zig
+const n = linux.write(1, "hello\n", 6);
+```
+
+<div class="code-key"><span class="ref-fd">1：stdoutのfd</span><span class="ref-buffer">hello：データ</span><span class="ref-result">6 byteを依頼 → n byteを書き込んだ</span></div>
+<div class="syscall-map compact-syscall">
+<div class="space-label">ユーザー空間</div><div class="flow-node">Application</div>
+<div class="space-label">syscall境界</div><div class="boundary"><span class="ref-operation">write ↓</span>　／　<span class="ref-result">↑ 戻り値 n</span></div>
+<div class="space-label">カーネル空間</div><div class="flow-node">Linux Kernel → Terminal</div>
 </div>
-<div class="takeaway">普通の関数呼び出しの先で、カーネルに処理を頼む</div>
+<div class="takeaway">Zigからlibcを経由せず、Linuxへ処理を依頼する</div>
 
 <!--
-目安40秒。直前のstraceが境界を越えた依頼の記録。Zigのwrite関数はraw syscallを発行する薄い入口。
-ユーザー空間の関数を呼ぶだけの処理と区別する。straceはすべての関数やメモリ操作を記録するものではない。
-ターミナル操作なし。
-https://man7.org/linux/man-pages/man2/syscalls.2.html
+目安45秒。直前のwriteデモと同じ呼び出し。nはraw syscallの戻り値で、正常なら書き込んだbyte数。
+エラーはraw値にエンコードされ、部分書き込みもあり得る。確認処理はdemos/00-write.zig全文で示す。
+普通の関数呼び出しの先でsyscall境界を越える。straceはすべての関数やメモリ操作を記録するものではない。
+https://man7.org/linux/man-pages/man2/write.2.html
 -->
 
 ---
@@ -116,27 +122,58 @@ https://man7.org/linux/man-pages/man2/syscalls.2.html
 ターミナルへ。sh demos/run.sh 1 --source は read とsendLaterだけ指す。sh demos/run.sh 1 --trace。
 readの開始→1秒後にwriterがwrite→readが5を返す、を追う。sleepは送信の遅延用で、読み手自身は本物のreadでブロックしている。
 待機中のスレッドがCPUを使い続けるとは説明しない。ログにhelloが出たらスライド6へ戻る。
-時間が押せばソース表示を省く。https://man7.org/linux/man-pages/man7/pipe.7.html
+ソース全文を表示し、readと遅延writerの役割を分ける。https://man7.org/linux/man-pages/man7/pipe.7.html
 -->
 
 ---
 
-<div class="eyebrow">05 / poll の仕組み</div>
+<div class="eyebrow">待ち方を考える</div>
+
+# データがないとき、どう待てばいい？
+
+<div class="waiting-choices"><div><h3>blocking read</h3><p>このfdに届くまで<br><strong>スレッドが待つ</strong></p></div><div><h3>non-blocking read</h3><p>まだ届いていなければ<br><strong class="ref-result">EAGAINで戻る</strong></p></div></div>
+<div class="many-fds"><span class="ref-fd">fd A ?</span><span class="ref-fd">fd B ?</span><span class="ref-fd">fd C ?</span><span>…</span><strong>何度も調べ続ける？</strong></div>
+<div class="takeaway">どのfdが読み取り可能になったか、まとめて知りたい</div>
+
+<!--
+目安40秒。直前の1本のreadから、複数接続を待つ問題へ進む。
+non-blockingなら即座にEAGAINで戻せるが、全fdを忙しく再確認し続けるのは避けたい。
+blocking待機中のスレッドがCPUを使い続けるわけではない。EAGAINとPromise pendingを同一視しない。
+次のpollは「複数fdのどれかがReadyになるまで待つ」ための道具。
+-->
+
+---
+layout: api-section
+apiSection: true
+transition: none
+---
+
+# poll
+
+<!--
+目安5秒。話題の区切り。fd一覧を渡す方式から見てみる。 装飾・クリックなしで次へ進む。
+-->
+
+---
+class: api-explainer
+---
+
+<div class="eyebrow api-poll">POLL / fd一覧を毎回渡す</div>
 
 # pollは、fdがReadyになるのを待つ
 
-<div class="flow horizontal live-runtime">
-<div>Application<small>監視する<span class="ref-fd">fd一覧</span></small></div><span class="connector">→</span>
-<div><strong class="ref-operation">poll</strong><small>毎回、一覧を渡す</small></div><span class="connector">→</span>
-<div>Kernel<small><span class="ref-fd">Readyなfd</span>を返す</small></div>
-</div>
-<div class="live-two-states"><p>non-blocking read<br><strong class="ref-result">まだデータがない → EAGAIN</strong></p><p>pollで待つ<br><strong class="ref-fd">読めるfdが分かる → readする</strong></p></div>
-<div class="takeaway">Readyは「読み取りを試せる状態」。データはreadで取る</div>
+```zig
+const count = linux.poll(&fds, fds.len, 3000);
+```
+<div class="code-key"><span class="ref-fd">fds：監視fdの一覧</span><span class="ref-result">revents：各fdに起きたイベント</span></div>
+<IoFlow mode="poll" />
+<div class="takeaway">pollはデータを読まない。Readyを受け取ってからread</div>
 
 <!--
-目安35秒。ReadyはI/Oがブロックせず進められる状態。EOFやエラーの場合もある。
-EAGAINはPromiseのpendingそのものではない。確認を高速ループする代わりにpollで待つ。
-poll自体は待機中にブロックし得る。複数fdを1つの待機APIで扱う点が重要。
+目安50秒。コードはdemos/02-poll.zigの同じ行。fdsを毎回渡す点を図の最上段で強調する。
+countはイベントのあったfd数。reventsは各要素に返るイベント。3000はtimeoutのms、速度測定ではない。
+図は上から依頼→返却→read。右向きは依頼、左向きは結果、往復は依頼と結果をまとめた表現。
+Readyはブロックせず進められる状態で、EOFやエラーも含み得る。データ取得はreadの段階。
 https://man7.org/linux/man-pages/man2/poll.2.html
 -->
 
@@ -147,35 +184,51 @@ https://man7.org/linux/man-pages/man2/poll.2.html
 # 2本のpipe、届くのは片方だけ
 
 <div class="live-observe"><div><b>01</b><span>空のpipeでは <strong class="ref-result">EAGAIN</strong></span></div><div><b>02</b><span><strong class="ref-operation">poll</strong> が返すのは <strong class="ref-fd">Readyなfd</strong></span></div><div><b>03</b><span>そのあと <strong class="ref-operation">read</strong> すると <strong class="ref-buffer">hello</strong></span></div></div>
-<div class="live-terminal">ターミナルへ ↗ <small>ソース → 実行 → strace</small></div>
+<div class="live-terminal">ターミナルへ ↗ <small>Readyが返っても、まだreadしていない</small></div>
 
 <!--
 目安85秒。ここでターミナルへ。sh demos/run.sh 2 --source、sh demos/run.sh 2、sh demos/run.sh 2 --trace。
 ソースではfds配列・poll・readを指す。最初のtimeout=0は空の状態の確認、次のpollが本当の待機。
 期待: EAGAIN → no fd ready → writerがpipe Bへ送信 → Bの読み取りfdがReady → read hello。
-straceではaarch64のppollを指す。readでhelloを取得したらスライド8へ戻る。
-時間が押せば通常実行を省きstraceだけ。失敗時は sh demos/run.sh 2 --saved を見せ、そこで止めず次へ。
+straceではaarch64のppollを指す。readでhelloを取得したらスライド10のepollへ進む。
+ソース全文を見せ、実行ログで図と順序を対応させる。失敗時は sh demos/run.sh 2 --saved を見せ、そこで止めず次へ。
 -->
 
 ---
+layout: api-section
+apiSection: true
+transition: none
+---
 
-<div class="eyebrow">06 / epoll の仕組み</div>
-
-# epollは、監視対象を登録しておく
-
-<div class="flow horizontal live-runtime">
-<div>Application<small><span class="ref-fd">fd A / fd B</span></small></div><span class="connector">→</span>
-<div><strong class="ref-operation">epoll_ctl</strong><small>監視集合を登録</small></div><span class="connector">→</span>
-<div>Kernel<small>監視集合を保持</small></div>
-</div>
-<div class="live-registered"><span class="ref-operation">epoll_wait</span><span>→</span><span class="ref-fd">Readyなfd</span><span>→</span><span class="ref-operation">read</span><span>→</span><span class="ref-buffer">hello</span></div>
-<div class="takeaway">一覧を毎回渡すpollと、登録を保持するepoll</div>
+# epoll
 
 <!--
-目安35秒。create1でepoll instance自体のfdができる。ctl ADDで監視集合を登録する。
-epoll_waitには出力先のevent配列を渡すが、監視fd一覧を渡し直すわけではない。
-今回のデモはLevel-triggered。epollはI/Oそのものを代行しない。速度の優劣には踏み込まない。
-https://man7.org/linux/man-pages/man7/epoll.7.html
+目安5秒。話題の区切り。一覧を登録して保持する方式へ。 装飾・クリックなしで次へ進む。
+-->
+
+---
+class: api-explainer
+---
+
+<div class="eyebrow api-epoll">EPOLL / 監視集合を保持する</div>
+
+# epollは、初期登録と待機を分ける
+
+```zig
+const created = linux.epoll_create1(linux.EPOLL.CLOEXEC);
+_ = linux.epoll_ctl(epfd, linux.EPOLL.CTL_ADD, fd, &event);
+const count = linux.epoll_wait(epfd, &events, events.len, 3000);
+```
+<div class="excerpt-label">呼び出しの抜粋。fdの変換・戻り値の確認はデモ全文で。</div>
+<IoFlow mode="epoll" />
+<div class="takeaway">最初に登録し、以後は監視fd一覧を渡し直さず待つ</div>
+
+<!--
+目安60秒。demos/03-epoll.zigの3つの実在APIを抜粋。create1の戻り値createdを確認してepfdへ変換する処理は省略した。
+ctl行は成功/失敗の確認を省略して表示。デモ全文にはlinux.errnoの検査がある。
+図の囲み行が初期登録。instanceのfd epfdを使い、監視集合はKernel側で保持される。
+waitのeventsは結果の受け取り配列で、監視fd一覧ではない。今回Level-triggered、不要なDEL/ADDはしない。
+次のターミナルで登録とwaitを別々に確認する。https://man7.org/linux/man-pages/man7/epoll.7.html
 -->
 
 ---
@@ -185,33 +238,52 @@ https://man7.org/linux/man-pages/man7/epoll.7.html
 # 同じpipe、同じhelloで見てみる
 
 <div class="live-observe"><div><b>01</b><span><strong class="ref-operation">epoll_ctl ADD</strong> で <strong class="ref-fd">2つのfd</strong>を登録</span></div><div><b>02</b><span><strong class="ref-operation">epoll_wait</strong> が <strong class="ref-fd">Readyなfd</strong>を返す</span></div><div><b>03</b><span><strong class="ref-operation">read</strong> で <strong class="ref-buffer">hello</strong>を取得</span></div></div>
-<div class="live-terminal">ターミナルへ ↗ <small>登録と待機を分けて見る</small></div>
+<div class="live-terminal">ターミナルへ ↗ <small>登録は最初の一度。waitでReadyを受け取る</small></div>
 
 <!--
 目安90秒。ターミナルへ。sh demos/run.sh 3 --source、sh demos/run.sh 3 --trace。
 ソースではcreate1・ADDのループ・wait・readの順に指す。期待: ADD2件→wait→pipe BがReady→hello。
 straceのepoll_create1、epoll_ctl ADD2件、aarch64のepoll_pwaitを見る。データ取得はread。
 pollと同じpipe2本・同じhello。監視一覧を毎回渡すか、登録を保持するかが違う。
-read helloを見たらスライド10へ戻る。時間が押せばソースを省く。失敗時: sh demos/run.sh 3 --saved。
+read helloを見たらスライド13のio_uringへ進む。ソース全文で登録→待機→readを確認。失敗時: sh demos/run.sh 3 --saved。
 -->
 
 ---
+layout: api-section
+apiSection: true
+transition: none
+---
 
-<div class="eyebrow">07 / io_uring の仕組み</div>
+# io_uring
+
+<!--
+目安5秒。話題の区切り。Ready通知から、操作を依頼する方式へ。 装飾・クリックなしで次へ進む。
+-->
+
+---
+class: api-explainer uring-explainer
+---
+
+<div class="eyebrow api-uring">IO_URING / READ操作と完了</div>
 
 # io_uringは、操作を頼んで完了を受け取る
 
-<div class="live-rings">
-<div class="live-ring-row"><div>Application</div><span>→</span><div v-click="1"><b>SQ：依頼のキュー</b><small><span class="ref-operation">SQE：READの依頼</span><br><span class="ref-result">user_data = 42</span></small></div><span v-click="2">→</span><div v-click="2">Linux Kernel</div></div>
-<div class="live-ring-row"><div v-click="4">Application</div><span v-click="4">←</span><div v-click="3"><b>CQ：完了のキュー</b><small><span class="ref-operation">CQE：操作の結果</span><br><span class="ref-result">user_data = 42 / res = 5</span></small></div><span v-click="3">←</span><div v-click="3">Linux Kernel</div></div>
-</div>
-<div class="takeaway">今回はoneshot READ。依頼1件と、その完了を対応付ける</div>
+```zig
+_ = try ring.read(42, pipe[0], .{ .buffer = &buffer }, 0);
+_ = try ring.submit();
+const cqe = try ring.copy_cqe();
+```
+<div class="excerpt-label">std.os.linux.IoUring：低レベルラッパー。エラー処理はデモ全文で。</div>
+<IoFlow mode="uring" />
+<div class="takeaway">res は読み取ったbyte数、または負のerrno</div>
 
 <!--
-目安55秒。4クリックでSQE→カーネル→CQE→アプリの順に見せる。
-SQはSubmission Queue、CQはCompletion Queue。Entryはその中の1件。共有リングのため通常のメモリアクセスも使う。
-user_dataは自分で付ける識別子、resは読み取りbyte数または負のerrno。
-システムコールが不要になるわけではない。初期化setupと投入/待機enterがある。
+目安80秒。4クリック：1 READのSQEを共有SQへ準備、2 submitで通知しカーネルが処理、3 CQへ完了が返る、4 user_data=42とhelloを対応付ける。
+SQ=Submission Queue、CQ=Completion Queue。SQE/CQEはそれぞれの1件。Applicationは左、Kernelは右で他方式と同じ。
+SQ/CQは双方から見える共有リング。図の右列は「Kernelからも見える」側を表し、カーネル専用メモリという意味ではない。
+ring.readはSQEを準備し、submitがSQを公開して今回io_uring_enterで通知する。copy_cqeはCQを進め、必要ならenterで待つ。
+この3行は正常経路の呼び出し抜粋。実デモはsubmitとcopy_cqeの失敗時にpending bufferを先に解放しないようpanicする。標準ライブラリのAPIを変えているわけではない。
+io_uring_setup/mmapは初期化。共有リングのメモリ操作とenter syscallを区別する。「syscallが一切不要」と言わない。
 https://man7.org/linux/man-pages/man7/io_uring.7.html
 -->
 
@@ -222,15 +294,15 @@ https://man7.org/linux/man-pages/man7/io_uring.7.html
 # READを投入すると、何が返る？
 
 <div class="live-observe"><div><b>01</b><span><strong class="ref-operation">SQE</strong> に <strong class="ref-fd">pipeのfd</strong>と <strong class="ref-result">42</strong>を設定</span></div><div><b>02</b><span><strong class="ref-operation">submit</strong> して、データの到着を待つ</span></div><div><b>03</b><span><strong class="ref-operation">CQE</strong> は <strong class="ref-result">42 / 5 byte</strong>、bufferには <strong class="ref-buffer">hello</strong></span></div></div>
-<div class="live-terminal">ターミナルへ ↗ <small>SQE → submit → CQE → buffer</small></div>
+<div class="live-terminal">ターミナルへ ↗ <small>READを投入。CQEが来たらbufferにhello</small></div>
 
 <!--
 目安180秒。ここは3分確保。ターミナルへ。sh demos/run.sh 4 --source（60秒）、sh demos/run.sh 4（40秒）、sh demos/run.sh 4 --trace（40秒）、説明と切り替え40秒。
-ソースではIoUring.init→ring.read(42, fd, buffer, 0)→submit→copy_cqe→resとbufferを指す。
+ソースではIoUring.init→ring.read(42, pipe[0], buffer, 0)→submit→copy_cqe→resとbufferを指す。
 期待: writer到着後CQE user_data=42,res=5とhello。read操作はカーネルが実施した。copy_cqeはCQも進める。
 straceのsetup/enterを見る。SQE作成とCQE回収はメモリ操作なので個別syscallとして見えない。通常のread(fd,...)がないことだけで未実行と考えない。
 IoUringはZigのLinux低レベルAPI。std.Io.Eventedや過去のmultishotとは別。pipe oneshot READのみ。
-buffer helloまで見たらスライド12へ戻る。失敗時は10秒以内に切り替え、sh demos/run.sh 4 --saved と録画済みstraceを示す。
+buffer helloまで見たらスライド16へ戻り、ReadinessとCompletionを復習する。失敗時は10秒以内に切り替え、sh demos/run.sh 4 --saved と録画済みstraceを示す。
 -->
 
 ---
@@ -253,6 +325,26 @@ buffer helloまで見たらスライド12へ戻る。失敗時は10秒以内に�
 
 ---
 
+<div class="eyebrow">3方式を、同じ順序で振り返る</div>
+
+# 同じhelloを受け取る、3つの方法
+
+<div class="three-methods">
+<div><h3 class="api-poll">poll</h3><div class="review-step"><b>1</b><span class="ref-fd">fd一覧を渡す</span></div><span class="review-arrow">↓</span><div class="review-step"><b>2</b><span class="ref-fd">Ready通知</span></div><span class="review-arrow">↓</span><div class="review-step"><b>3</b><span><span class="ref-operation">read</span>する</span></div><div class="review-data ref-buffer">hello</div></div>
+<div><h3 class="api-epoll">epoll</h3><div class="review-step"><b>1</b><span class="ref-fd">fdを事前登録</span></div><span class="review-arrow">↓</span><div class="review-step"><b>2</b><span class="ref-fd">Ready通知</span></div><span class="review-arrow">↓</span><div class="review-step"><b>3</b><span><span class="ref-operation">read</span>する</span></div><div class="review-data ref-buffer">hello</div></div>
+<div><h3 class="api-uring">io_uring READ</h3><div class="review-step"><b>1</b><span><span class="ref-operation">READ</span>を依頼</span></div><span class="review-arrow">↓</span><div class="review-step"><b>2</b><span class="ref-result">CQE：操作完了</span></div><span class="review-arrow">↓</span><div class="review-step"><b>3</b><span class="ref-buffer">bufferを確認</span></div><div class="review-data ref-buffer">hello</div></div>
+</div>
+<div class="takeaway">一覧か登録か。Readyの通知か、操作の完了か。</div>
+
+<!--
+目安50秒。各列を同じ1→2→3→helloの順でたどる。poll/epollは監視集合の扱いが違うが、readはアプリが呼ぶ。
+io_uring READは読み取り操作を先に依頼し、その完了でbufferを確認する。
+これは今回使った操作の比較。io_uringにもPOLL_ADDがあるためAPI全体を完全に排他的なモデルと説明しない。
+速度の優劣ではなく依頼と返却の違いを振り返る。以降ターミナル操作なし。
+-->
+
+---
+
 <div class="eyebrow">09 / 観察して分かったこと</div>
 
 # 短いプログラムでも、役割が見える
@@ -263,7 +355,7 @@ buffer helloまで見たらスライド12へ戻る。失敗時は10秒以内に�
 <!--
 目安35秒。複雑なruntimeの中にも、今日見たような役割分担がある。
 このデモは性能比較やWebサーバ全体の再現ではない。Linux機能・ポリシーによりio_uringを使えない環境もある。
-時間が押せばこのスライドは1文で進む。詳細な制約や過去の実験はREADMEからたどれる。
+図とデモから何が分かったか、聴衆の理解を確かめながら進む。詳細な制約や過去の実験はREADMEからたどれる。
 -->
 
 ---
@@ -295,5 +387,5 @@ buffer helloまで見たらスライド12へ戻る。失敗時は10秒以内に�
 <!--
 目安10秒。サンプルと当日の手順はdemos/README.mdとdemos/PRESENTER.md。
 旧23枚はdocs/archive/pre-live-demo-ae3ee2a/slides.md。benchmarks以下のraw・レポート・グラフは維持。
-ここまで14分。残り1分は切り替えやトラブル用。リハーサルの実測欄をPRESENTERで記入する。
+所要時間は目安。分かりやすさを優先し、リハーサルの実測欄をPRESENTERで記入する。
 -->

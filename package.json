@@ -9,6 +9,7 @@
     "check:snippets": "node scripts/check-snippets.mjs",
     "check:linux": "node scripts/check-linux.mjs",
     "check:visual": "node scripts/check-visual.mjs",
+    "check:slides": "node scripts/check-slide-excerpts.mjs",
     "check:backends": "node scripts/check-backends.mjs"
   },
   "dependencies": {

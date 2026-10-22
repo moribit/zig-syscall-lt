@@ -1,0 +1,92 @@
+{
+  "checkedAt": "2026-10-22T04:03:22.967Z",
+  "slides": [
+    {
+      "number": 1,
+      "title": "Zigで覗く、Linuxの非同期I/O",
+      "overflow": []
+    },
+    {
+      "number": 2,
+      "title": "async/await の下では何が起きている？",
+      "overflow": []
+    },
+    {
+      "number": 3,
+      "title": "Zigとは？",
+      "overflow": []
+    },
+    {
+      "number": 4,
+      "title": "システムコールは、OSへの依頼",
+      "overflow": []
+    },
+    {
+      "number": 5,
+      "title": "fdは、プロセスが持つ番号",
+      "overflow": []
+    },
+    {
+      "number": 6,
+      "title": "pollは、fdがReadyになるのを待つ",
+      "overflow": []
+    },
+    {
+      "number": 7,
+      "title": "2本のpipe、届くのは片方だけ",
+      "overflow": []
+    },
+    {
+      "number": 8,
+      "title": "epollは、監視対象を登録しておく",
+      "overflow": []
+    },
+    {
+      "number": 9,
+      "title": "同じpipe、同じhelloで見てみる",
+      "overflow": []
+    },
+    {
+      "number": 10,
+      "title": "io_uringは、操作を頼んで完了を受け取る",
+      "overflow": []
+    },
+    {
+      "number": 11,
+      "title": "READを投入すると、何が返る？",
+      "overflow": []
+    },
+    {
+      "number": 12,
+      "title": "「読み取れる」と「読み取った」の違い",
+      "overflow": []
+    },
+    {
+      "number": 13,
+      "title": "短いプログラムでも、役割が見える",
+      "overflow": []
+    },
+    {
+      "number": 14,
+      "title": "非同期処理の、少し下を覗いてみた",
+      "overflow": []
+    },
+    {
+      "number": 15,
+      "title": "デモと参考資料",
+      "overflow": []
+    }
+  ],
+  "animation": {
+    "before": 8,
+    "after": 0,
+    "url": "http://127.0.0.1:46797/10?clicks=4"
+  },
+  "presenter": true,
+  "semanticColors": {
+    "fd": "rgb(29, 78, 216)",
+    "buffer": "rgb(15, 118, 110)",
+    "result": "rgb(126, 34, 206)",
+    "operation": "rgb(180, 83, 9)"
+  }
+}

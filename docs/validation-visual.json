@@ -1,92 +1,344 @@
 {
-  "checkedAt": "2026-10-22T04:03:22.967Z",
+  "checkedAt": "2026-10-22T04:38:03.012Z",
   "slides": [
     {
       "number": 1,
       "title": "Zigで覗く、Linuxの非同期I/O",
-      "overflow": []
+      "overflow": [],
+      "background": "rgb(16, 23, 34)",
+      "code": []
     },
     {
       "number": 2,
       "title": "async/await の下では何が起きている？",
-      "overflow": []
+      "overflow": [],
+      "background": "rgb(16, 23, 34)",
+      "code": []
     },
     {
       "number": 3,
       "title": "Zigとは？",
-      "overflow": []
+      "overflow": [],
+      "background": "rgb(16, 23, 34)",
+      "code": []
     },
     {
       "number": 4,
       "title": "システムコールは、OSへの依頼",
-      "overflow": []
+      "overflow": [],
+      "background": "rgb(16, 23, 34)",
+      "code": [
+        {
+          "fontSize": 18,
+          "lines": 1,
+          "overflow": false
+        }
+      ]
     },
     {
       "number": 5,
       "title": "fdは、プロセスが持つ番号",
-      "overflow": []
+      "overflow": [],
+      "background": "rgb(16, 23, 34)",
+      "code": []
     },
     {
       "number": 6,
-      "title": "pollは、fdがReadyになるのを待つ",
-      "overflow": []
+      "title": "データがないとき、どう待てばいい？",
+      "overflow": [],
+      "background": "rgb(16, 23, 34)",
+      "code": []
     },
     {
       "number": 7,
-      "title": "2本のpipe、届くのは片方だけ",
-      "overflow": []
+      "title": "poll",
+      "overflow": [],
+      "background": "rgb(11, 17, 27)",
+      "code": []
     },
     {
       "number": 8,
-      "title": "epollは、監視対象を登録しておく",
-      "overflow": []
+      "title": "pollは、fdがReadyになるのを待つ",
+      "overflow": [],
+      "background": "rgb(16, 23, 34)",
+      "code": [
+        {
+          "fontSize": 18,
+          "lines": 1,
+          "overflow": false
+        }
+      ]
     },
     {
       "number": 9,
-      "title": "同じpipe、同じhelloで見てみる",
-      "overflow": []
+      "title": "2本のpipe、届くのは片方だけ",
+      "overflow": [],
+      "background": "rgb(16, 23, 34)",
+      "code": []
     },
     {
       "number": 10,
-      "title": "io_uringは、操作を頼んで完了を受け取る",
-      "overflow": []
+      "title": "epoll",
+      "overflow": [],
+      "background": "rgb(11, 17, 27)",
+      "code": []
     },
     {
       "number": 11,
-      "title": "READを投入すると、何が返る？",
-      "overflow": []
+      "title": "epollは、初期登録と待機を分ける",
+      "overflow": [],
+      "background": "rgb(16, 23, 34)",
+      "code": [
+        {
+          "fontSize": 18,
+          "lines": 3,
+          "overflow": false
+        }
+      ]
     },
     {
       "number": 12,
-      "title": "「読み取れる」と「読み取った」の違い",
-      "overflow": []
+      "title": "同じpipe、同じhelloで見てみる",
+      "overflow": [],
+      "background": "rgb(16, 23, 34)",
+      "code": []
     },
     {
       "number": 13,
-      "title": "短いプログラムでも、役割が見える",
-      "overflow": []
+      "title": "io_uring",
+      "overflow": [],
+      "background": "rgb(11, 17, 27)",
+      "code": []
     },
     {
       "number": 14,
-      "title": "非同期処理の、少し下を覗いてみた",
-      "overflow": []
+      "title": "io_uringは、操作を頼んで完了を受け取る",
+      "overflow": [],
+      "background": "rgb(16, 23, 34)",
+      "code": [
+        {
+          "fontSize": 18,
+          "lines": 3,
+          "overflow": false
+        }
+      ]
     },
     {
       "number": 15,
+      "title": "READを投入すると、何が返る？",
+      "overflow": [],
+      "background": "rgb(16, 23, 34)",
+      "code": []
+    },
+    {
+      "number": 16,
+      "title": "「読み取れる」と「読み取った」の違い",
+      "overflow": [],
+      "background": "rgb(16, 23, 34)",
+      "code": []
+    },
+    {
+      "number": 17,
+      "title": "同じhelloを受け取る、3つの方法",
+      "overflow": [],
+      "background": "rgb(16, 23, 34)",
+      "code": []
+    },
+    {
+      "number": 18,
+      "title": "短いプログラムでも、役割が見える",
+      "overflow": [],
+      "background": "rgb(16, 23, 34)",
+      "code": []
+    },
+    {
+      "number": 19,
+      "title": "非同期処理の、少し下を覗いてみた",
+      "overflow": [],
+      "background": "rgb(16, 23, 34)",
+      "code": []
+    },
+    {
+      "number": 20,
       "title": "デモと参考資料",
-      "overflow": []
+      "overflow": [],
+      "background": "rgb(16, 23, 34)",
+      "code": []
     }
   ],
   "animation": {
-    "before": 8,
+    "before": 4,
     "after": 0,
-    "url": "http://127.0.0.1:46797/10?clicks=4"
+    "steps": [
+      {
+        "click": 1,
+        "rows": [
+          false,
+          true,
+          true
+        ],
+        "buffer": true
+      },
+      {
+        "click": 2,
+        "rows": [
+          false,
+          false,
+          true
+        ],
+        "buffer": true
+      },
+      {
+        "click": 3,
+        "rows": [
+          false,
+          false,
+          false
+        ],
+        "buffer": true
+      },
+      {
+        "click": 4,
+        "rows": [
+          false,
+          false,
+          false
+        ],
+        "buffer": false
+      }
+    ],
+    "url": "http://127.0.0.1:43045/14?clicks=4"
   },
   "presenter": true,
   "semanticColors": {
-    "fd": "rgb(29, 78, 216)",
-    "buffer": "rgb(15, 118, 110)",
-    "result": "rgb(126, 34, 206)",
-    "operation": "rgb(180, 83, 9)"
+    "fd": "rgb(139, 185, 255)",
+    "buffer": "rgb(126, 224, 204)",
+    "result": "rgb(216, 180, 254)",
+    "operation": "rgb(255, 192, 120)"
+  },
+  "diagramGeometry": [
+    {
+      "number": 8,
+      "left": 52,
+      "right": 628,
+      "width": 420,
+      "font": "20px"
+    },
+    {
+      "number": 11,
+      "left": 52,
+      "right": 628,
+      "width": 420,
+      "font": "20px"
+    },
+    {
+      "number": 14,
+      "left": 52,
+      "right": 628,
+      "width": 420,
+      "font": "20px"
+    }
+  ],
+  "introOpacity": "1",
+  "sections": [
+    {
+      "number": 7,
+      "text": "poll",
+      "font": "\"JetBrains Mono\", monospace",
+      "size": "112px",
+      "background": "rgb(11, 17, 27)",
+      "dx": -0.0078125,
+      "dy": 0,
+      "footer": false
+    },
+    {
+      "number": 10,
+      "text": "epoll",
+      "font": "\"JetBrains Mono\", monospace",
+      "size": "112px",
+      "background": "rgb(11, 17, 27)",
+      "dx": 0,
+      "dy": 0,
+      "footer": false
+    },
+    {
+      "number": 13,
+      "text": "io_uring",
+      "font": "\"JetBrains Mono\", monospace",
+      "size": "112px",
+      "background": "rgb(11, 17, 27)",
+      "dx": -0.0078125,
+      "dy": 0,
+      "footer": false
+    }
+  ],
+  "codeColors": {
+    "background": "rgb(21, 30, 49)",
+    "tokens": [
+      {
+        "text": "const",
+        "color": "rgb(249, 117, 131)"
+      },
+      {
+        "text": " ",
+        "color": "rgb(255, 171, 112)"
+      },
+      {
+        "text": "n",
+        "color": "rgb(216, 180, 254)"
+      },
+      {
+        "text": " =",
+        "color": "rgb(249, 117, 131)"
+      },
+      {
+        "text": " linux",
+        "color": "rgb(255, 171, 112)"
+      },
+      {
+        "text": ".",
+        "color": "rgb(225, 228, 232)"
+      },
+      {
+        "text": "write",
+        "color": "rgb(255, 192, 120)"
+      },
+      {
+        "text": "(",
+        "color": "rgb(225, 228, 232)"
+      },
+      {
+        "text": "1",
+        "color": "rgb(139, 185, 255)"
+      },
+      {
+        "text": ", ",
+        "color": "rgb(225, 228, 232)"
+      },
+      {
+        "text": "\"hello",
+        "color": "rgb(126, 224, 204)"
+      },
+      {
+        "text": "\\n",
+        "color": "rgb(126, 224, 204)"
+      },
+      {
+        "text": "\"",
+        "color": "rgb(126, 224, 204)"
+      },
+      {
+        "text": ", ",
+        "color": "rgb(225, 228, 232)"
+      },
+      {
+        "text": "6",
+        "color": "rgb(216, 180, 254)"
+      },
+      {
+        "text": ");",
+        "color": "rgb(225, 228, 232)"
+      }
+    ]
   }
 }

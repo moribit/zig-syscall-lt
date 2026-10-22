@@ -1,8 +1,8 @@
 # Zigで覗く、Linuxの非同期I/O
 
-Webエンジニア向けの15分LT。Slidev製、全15枚。Zig 0.17.0の短いプログラムとstraceで、write・blocking read・poll・epoll・io_uringを実演します。コードはターミナルで見せ、スライドは概念図と観察ポイントに絞っています。今回の実演・検証環境はmacOS上のOrbStack / Fedora Linuxです。
+Webエンジニア向けの15分前後のLT。Slidev製、全20枚。Zig 0.17.0の短いプログラムとstraceで、write・blocking read・poll・epoll・io_uringを実演します。コード全文はターミナルで見せ、スライドには概念図と3行以下の呼び出し抜粋を載せています。今回の実演・検証環境はmacOS上のOrbStack / Fedora Linuxです。
 
-**当日の入口：[demos/README.md](demos/README.md) / [操作と15分の配分](demos/PRESENTER.md)**。Linux内で `sh demos/check.sh` を実行して事前ビルドし、本番は `sh demos/run.sh 2 --trace` のように使います。
+**当日の入口：[demos/README.md](demos/README.md) / [操作と進行の目安](demos/PRESENTER.md)**。Linux内で `sh demos/check.sh` を実行して事前ビルドし、本番は `sh demos/run.sh 2 --trace` のように使います。
 
 ## 起動・出力
 
@@ -20,33 +20,42 @@ npm run export
 1. タイトル
 2. async/await の下では何が起きている？
 3. Zigとは？（writeミニデモ）
-4. システムコールは、OSへの依頼
-5. fdは、プロセスが持つ番号（blocking readミニデモ）
-6. pollは、fdがReadyになるのを待つ
-7. pollライブデモ
-8. epollは、監視対象を登録しておく
-9. epollライブデモ
-10. io_uringは、操作を頼んで完了を受け取る
-11. io_uringライブデモ
-12. 「読み取れる」と「読み取った」の違い
-13. 短いプログラムでも、役割が見える
-14. 非同期処理の、少し下を覗いてみた
-15. デモと参考資料
+4. システムコールは、OSへの依頼（write抜粋）
+5. fdとblocking readミニデモ
+6. データがないとき、どう待てばいい？
+7. poll（区切り）
+8. pollの仕組み（fd一覧・revents）
+9. pollライブデモ
+10. epoll（区切り）
+11. epollの仕組み（初期登録と待機）
+12. epollライブデモ
+13. io_uring（区切り）
+14. io_uringの仕組み（SQE→submit→CQE）
+15. io_uringライブデモ
+16. ReadinessとCompletion
+17. 同じhelloを受け取る、3つの方法
+18. 観察して分かったこと
+19. まとめ
+20. デモと参考資料
 
-本編14分（io_uring実演3分を含む）＋操作の余白1分。人間の説明を含むリハーサルはPRESENTERの実測欄で確認してください。
+15分前後を目安に、分かりやすさを優先します。デモを含む進行目安は約17分で、操作の遅延や質疑は別に見込みます。リハーサルの実測欄は[PRESENTER](demos/PRESENTER.md)を使ってください。
 
 性能比較・Adaptive・Kerrisk追試・std.Ioの詳細は本編から外しました。既存のベンチマーク・raw・グラフ・分析は維持し、[旧23枚と当時のREADME](docs/archive/pre-live-demo-ae3ee2a/)も保存しています。以下の旧検証項目・実験レポートは補足資料です。
 
 ## 編集
 
 - `slides.md`：本文・編集可能なHTML図・各ページ末尾の発表者ノートと出典
-- `styles/index.css`：白背景・黒文字、図と余白、ダークコード背景
+- `styles/index.css`：ダーク背景・明るい文字、図と余白、コードのコントラスト
+- `layouts/api-section.vue`：API名だけを中央に置く共通区切り
+- `components/IoFlow.vue`：Application左・Kernel右の共通図
 - `setup/shiki.ts`：構文ハイライトと説明に対応する色
 - `global-bottom.vue`：ページ番号
 - `demos/`：今回のライブデモ5本・事前ビルド/検証・成功ログ・当日手順
 - `snippets/`：従来のZig 0.17.0実行例（補足）
 
-青はfd、緑はバッファ/データ、紫はbyte数・結果・user_data、茶は操作。同じ意味を図と説明で対応させ、ラベルも併記しています。本編にコードブロックはありません。従来のダークコード背景と構文ハイライト設定は補足資料向けに維持しています。SQ/CQは4クリックで段階表示し、PDFには最終状態を出力します。
+青はfd、緑はバッファ/データ、紫はbyte数・結果・user_data、茶は操作。同じ意味を図と説明で対応させ、ラベルも併記しています。各方式に3行以下のコード抜粋を置き、同じ色を図とコードへ対応させています。戻り値・エラー処理を含む全文はデモで表示します。SQ/CQは4クリックで段階表示し、PDFには最終状態を出力します。
+
+旧15枚版も[docs/archive/pre-visual-373d301](docs/archive/pre-visual-373d301/)へ本文・スタイル・PDFを保存しています。
 
 ## ライブデモの検証
 
@@ -57,6 +66,8 @@ OrbStack / Linux 7.0.14 / aarch64 / Zig 0.17.0で全5本×20回とstrace確認�
 sh demos/check.sh
 # Slidevビルド後に表示を確認
 npm run check:visual
+# 掲載した8つのAPI呼び出しとデモを照合
+npm run check:slides
 ```
 
 ## 旧スニペット・補足資料の検証
