@@ -108,3 +108,5 @@ Kerrisk氏の講義資料を追試した[独立C/Zig再構成実験](benchmarks/
 [実行手順と設計](benchmarks/poll-epoll/io-uring/README.md) / [実測レポート](benchmarks/poll-epoll/io-uring/ANALYSIS.md)。Zig 0.17.0のstd.os.linuxでRECV/POLL_ADDを動かし、同一系列のpoll/epollと送信・受信・内容検証込みで比較しました。実機追試では基本32条件のうち6条件でRECV/epollのペア速度比中央値が1を超えました。VM系列と分け、バッチ化によるenter/CPU削減と全体性能を区別しています。初期化と未完了要求の終了費用、全raw・CSV・SVGも保存しています。std.Io.Eventedの測定ではありません。
 
 最新の[Linux実機での結果](benchmarks/poll-epoll/io-uring/PHYSICAL_ANALYSIS.md)は、Intel i7-3615QM / EndeavourOS / Linux 6.18.9 x86_64 / Zig 0.17.0で測定しました。主系列1520件とSQ対照80件を新しいresultsへ保存し、io_uring実測スライドを実機の値へ更新しています。Kerrisk/Adaptiveは過去のVM系列として保持しています。
+
+継続到着型の追加実験は[事前計画](benchmarks/poll-epoll/io-uring/CONTINUOUS_DESIGN.md)・[実行手順](benchmarks/poll-epoll/io-uring/continuous/README.md)・[検証レポート](benchmarks/poll-epoll/io-uring/CONTINUOUS_ANALYSIS.md)を参照してください。epoll・oneshot・provided-buffer multishotを実装しましたが、実機6.18.9でmultishotのEOF検証が停止したため、探索・独立確認の性能測定はまだ行っていません。上流のEOF競合修正と照合し、失敗ログも保存しています。

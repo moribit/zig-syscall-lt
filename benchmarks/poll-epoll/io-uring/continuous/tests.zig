@@ -76,7 +76,9 @@ test "provided buffer exhaustion terminates, can recycle and rearm" {
     var ack = false;
     while (!terminal or !ack) {
         const c = try take(&ring);
-        if (c.user_data == 99) { ack = true; } else {
+        if (c.user_data == 99) {
+            ack = true;
+        } else {
             if (c.flags & l.IORING_CQE_F_BUFFER != 0) try group.put(c);
             terminal = c.flags & l.IORING_CQE_F_MORE == 0;
         }

@@ -49,7 +49,9 @@ test "stream parser splits and coalesces records and rejects duplicate/corruptio
     defer times.deinit();
     const Sink = struct {
         n: usize = 0,
-        pub fn append(s: *@This(), _: u64) !void { s.n += 1; }
+        pub fn append(s: *@This(), _: u64) !void {
+            s.n += 1;
+        }
     };
     var sink: Sink = .{};
     try std.testing.expectEqual(@as(u64, 0), try parser.feed(data[0..7], 20, &sink));

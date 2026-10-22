@@ -1,0 +1,71 @@
+{
+  "stage": "correctness",
+  "cases": [
+    {
+      "fds": 1,
+      "active": 0,
+      "payload": 64,
+      "pattern": "uniform",
+      "rate": 10000,
+      "batch": 32,
+      "percent": 0.0
+    },
+    {
+      "fds": 1,
+      "active": 1,
+      "payload": 64,
+      "pattern": "burst",
+      "rate": 10000,
+      "batch": 32,
+      "percent": 100.0
+    },
+    {
+      "fds": 64,
+      "active": 1,
+      "payload": 4096,
+      "pattern": "randomized",
+      "rate": 10000,
+      "batch": 32,
+      "percent": 1.5625
+    },
+    {
+      "fds": 64,
+      "active": 64,
+      "payload": 64,
+      "pattern": "burst",
+      "rate": 10000,
+      "batch": 32,
+      "percent": 100.0
+    },
+    {
+      "fds": 256,
+      "active": 26,
+      "payload": 256,
+      "pattern": "uniform",
+      "rate": 10000,
+      "batch": 32,
+      "percent": 10.15625
+    },
+    {
+      "fds": 1024,
+      "active": 1024,
+      "payload": 1024,
+      "pattern": "burst",
+      "rate": 10000,
+      "batch": 32,
+      "percent": 100.0
+    },
+    {
+      "fds": 4096,
+      "active": 41,
+      "payload": 1024,
+      "pattern": "uniform",
+      "rate": 10000,
+      "batch": 32,
+      "percent": 1.0009765625
+    }
+  ],
+  "runs": 1,
+  "duration_ms": 200,
+  "seed": 2026102200
+}

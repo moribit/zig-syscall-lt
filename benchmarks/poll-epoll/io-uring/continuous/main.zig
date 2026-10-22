@@ -8,9 +8,17 @@ const chunk = 16384;
 const Mode = enum { epoll, oneshot, multishot };
 const Pattern = enum { uniform, burst, randomized };
 const Config = struct {
-    mode: Mode, n: usize, active: usize, payload: usize, rate: u64,
-    duration_ns: u64, seed: u64, pattern: Pattern, batch: usize,
-    consumer_cpu: usize, producer_cpu: usize,
+    mode: Mode,
+    n: usize,
+    active: usize,
+    payload: usize,
+    rate: u64,
+    duration_ns: u64,
+    seed: u64,
+    pattern: Pattern,
+    batch: usize,
+    consumer_cpu: usize,
+    producer_cpu: usize,
 };
 fn pin(cpu: usize) !void {
     var set = std.mem.zeroes(l.cpu_set_t);
@@ -19,13 +27,16 @@ fn pin(cpu: usize) !void {
     try l.sched_setaffinity(0, &set);
 }
 const Cpu = struct {
-    user_us: u64, system_us: u64,
+    user_us: u64,
+    system_us: u64,
     fn get() Cpu {
         var usage: l.rusage = undefined;
         _ = m.check(l.getrusage(l.rusage.THREAD, &usage)) catch @panic("thread getrusage");
         return .{ .user_us = @intCast(usage.utime.sec * 1000000 + usage.utime.usec), .system_us = @intCast(usage.stime.sec * 1000000 + usage.stime.usec) };
     }
-    fn diff(end: Cpu, start: Cpu) Cpu { return .{ .user_us = end.user_us - start.user_us, .system_us = end.system_us - start.system_us }; }
+    fn diff(end: Cpu, start: Cpu) Cpu {
+        return .{ .user_us = end.user_us - start.user_us, .system_us = end.system_us - start.system_us };
+    }
 };
 fn until(deadline: u64) void {
     while (true) {
@@ -55,8 +66,13 @@ const Producer = struct {
     sequences: []u64,
     send_times: []u64,
     fn run(p: *Producer) void {
-        defer for (p.w.pairs) |pair| { _ = l.shutdown(pair[1], 1); };
-        p.body() catch |err| { p.failed = true; std.debug.print("producer: {s}\n", .{@errorName(err)}); };
+        defer for (p.w.pairs) |pair| {
+            _ = l.shutdown(pair[1], 1);
+        };
+        p.body() catch |err| {
+            p.failed = true;
+            std.debug.print("producer: {s}\n", .{@errorName(err)});
+        };
     }
     fn body(p: *Producer) !void {
         try pin(p.c.producer_cpu);
@@ -90,9 +106,16 @@ const Producer = struct {
                 p.calls += 1;
                 const raw = l.sendto(p.w.pairs[index][1], data[offset..].ptr, p.c.payload - offset, l.MSG.NOSIGNAL, null, 0);
                 switch (l.errno(raw)) {
-                    .SUCCESS => { if (raw == 0) return error.NoSendProgress; offset += raw; },
+                    .SUCCESS => {
+                        if (raw == 0) return error.NoSendProgress;
+                        offset += raw;
+                    },
                     .INTR => continue,
-                    .AGAIN => { p.eagain += 1; if (m.now() > p.start + p.c.duration_ns + 10000000000) return error.ProducerTimeout; std.atomic.spinLoopHint(); },
+                    .AGAIN => {
+                        p.eagain += 1;
+                        if (m.now() > p.start + p.c.duration_ns + 10000000000) return error.ProducerTimeout;
+                        std.atomic.spinLoopHint();
+                    },
                     else => return error.SendFailed,
                 }
             }
@@ -178,7 +201,10 @@ pub fn main(init: std.process.Init) !void {
         }
     } else {
         ring = try Ring.init(256, 16384);
-        if (c.mode == .multishot) group = @import("buffers.zig").init(&ring.u, a, chunk, 4096) catch |err| { ring.deinit(); return err; };
+        if (c.mode == .multishot) group = @import("buffers.zig").init(&ring.u, a, chunk, 4096) catch |err| {
+            ring.deinit();
+            return err;
+        };
         for (0..c.n) |i| queue(c, &ring, &group, &w, buffers, pending, i) catch @panic("initial queue");
         ring.flush() catch @panic("initial submission");
     }
@@ -196,11 +222,11 @@ pub fn main(init: std.process.Init) !void {
     var eof_count: usize = 0;
     while (eof_count < c.n) {
         if (m.now() > start + c.duration_ns + 15000000000) {
-            std.debug.print("watchdog: received={d} EOF={d}/{d} pending=", .{received, eof_count, c.n});
+            std.debug.print("watchdog: received={d} EOF={d}/{d} pending=", .{ received, eof_count, c.n });
             for (pending, 0..) |p, i| if (p) {
                 var peek: [1]u8 = undefined;
                 const rc = l.recvfrom(w.pairs[i][0], &peek, 1, l.MSG.PEEK | l.MSG.DONTWAIT, null, null);
-                std.debug.print("{d}(peek={d},errno={s}),", .{i, rc, @tagName(l.errno(rc))});
+                std.debug.print("{d}(peek={d},errno={s}),", .{ i, rc, @tagName(l.errno(rc)) });
             };
             std.debug.print("\n", .{});
             @panic("consumer watchdog");
@@ -221,7 +247,8 @@ pub fn main(init: std.process.Init) !void {
                     switch (l.errno(raw)) {
                         .SUCCESS => {
                             if (raw == 0) {
-                                closed[i] = true; eof_count += 1;
+                                closed[i] = true;
+                                eof_count += 1;
                                 _ = m.check(l.epoll_ctl(ep, l.EPOLL.CTL_DEL, w.pairs[i][0], null)) catch @panic("DEL on EOF");
                                 break;
                             }
@@ -232,7 +259,10 @@ pub fn main(init: std.process.Init) !void {
                             budget += raw;
                         },
                         .INTR => continue,
-                        .AGAIN => { counters.eagain += 1; break; },
+                        .AGAIN => {
+                            counters.eagain += 1;
+                            break;
+                        },
                         else => @panic("recv failure"),
                     }
                 }
@@ -257,7 +287,8 @@ pub fn main(init: std.process.Init) !void {
                     if (last_completion <= start + c.duration_ns) window_messages += count;
                 } else if (completion.res == 0) {
                     if (!terminal) @panic("EOF must terminate multishot");
-                    closed[i] = true; eof_count += 1;
+                    closed[i] = true;
+                    eof_count += 1;
                 } else {
                     if (!terminal) @panic("error without termination");
                     const err = -completion.res;
@@ -269,7 +300,10 @@ pub fn main(init: std.process.Init) !void {
                     counters.recycle_ns += m.now() - recycle_start;
                     counters.recycled += 1;
                 }
-                if (terminal and !closed[i]) { rearm[rearm_count] = i; rearm_count += 1; }
+                if (terminal and !closed[i]) {
+                    rearm[rearm_count] = i;
+                    rearm_count += 1;
+                }
             }
             for (rearm[0..rearm_count]) |i| {
                 queue(c, &ring, &group, &w, buffers, pending, i) catch @panic("rearm");
@@ -288,7 +322,9 @@ pub fn main(init: std.process.Init) !void {
     var enters: u64 = 0;
     var submitted: u64 = 0;
     const destroy_start = m.now();
-    if (c.mode == .epoll) { _ = l.close(ep); } else {
+    if (c.mode == .epoll) {
+        _ = l.close(ep);
+    } else {
         for (pending) |p| if (p) @panic("live receive at teardown");
         try ring.healthy();
         enters = ring.enters;
@@ -309,16 +345,33 @@ pub fn main(init: std.process.Init) !void {
     }
     const ns = @max(end, start + c.duration_ns) - start;
     const json = try std.json.Stringify.valueAlloc(a, .{
-        .config = c, .sent = producer.sent, .received = received, .bytes_received = producer.bytes,
-        .window_messages = window_messages, .duration_ns = ns, .drain_ns = end -| (start + c.duration_ns),
-        .last_completion_ns = last_completion -| start, .messages_s = @as(f64, @floatFromInt(received)) * 1e9 / @as(f64, @floatFromInt(ns)),
-        .p50_ns = latencies.percentile(50), .p95_ns = latencies.percentile(95), .p99_ns = latencies.percentile(99),
-        .consumer_cpu = consumer_cpu, .producer_cpu = producer.cpu,
-        .process_user_us = process_after.user - process_before.user, .process_system_us = process_after.system - process_before.system,
-        .backend_init_ns = backend_init_ns, .backend_destroy_ns = destroy_ns, .lifecycle_ns = m.now() - life_start,
-        .producer_send_calls = producer.calls, .producer_eagain = producer.eagain,
-        .producer_late_sum_ns = producer.late_sum_ns, .producer_late_max_ns = producer.late_max_ns,
-        .producer_last_send_ns = producer.last_sent_ns -| start, .enters = enters, .sqes = submitted, .counters = counters,
+        .config = c,
+        .sent = producer.sent,
+        .received = received,
+        .bytes_received = producer.bytes,
+        .window_messages = window_messages,
+        .duration_ns = ns,
+        .drain_ns = end -| (start + c.duration_ns),
+        .last_completion_ns = last_completion -| start,
+        .messages_s = @as(f64, @floatFromInt(received)) * 1e9 / @as(f64, @floatFromInt(ns)),
+        .p50_ns = latencies.percentile(50),
+        .p95_ns = latencies.percentile(95),
+        .p99_ns = latencies.percentile(99),
+        .consumer_cpu = consumer_cpu,
+        .producer_cpu = producer.cpu,
+        .process_user_us = process_after.user - process_before.user,
+        .process_system_us = process_after.system - process_before.system,
+        .backend_init_ns = backend_init_ns,
+        .backend_destroy_ns = destroy_ns,
+        .lifecycle_ns = m.now() - life_start,
+        .producer_send_calls = producer.calls,
+        .producer_eagain = producer.eagain,
+        .producer_late_sum_ns = producer.late_sum_ns,
+        .producer_late_max_ns = producer.late_max_ns,
+        .producer_last_send_ns = producer.last_sent_ns -| start,
+        .enters = enters,
+        .sqes = submitted,
+        .counters = counters,
     }, .{});
     defer a.free(json);
     try std.Io.File.stdout().writeStreamingAll(init.io, json);

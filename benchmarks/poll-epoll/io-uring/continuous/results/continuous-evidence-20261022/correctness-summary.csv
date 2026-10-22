@@ -1,0 +1,10 @@
+run,mode,exit,received,eof,expected_eof,status
+0,epoll,0,2000,64,64,PASS
+0,oneshot,0,2000,64,64,PASS
+0,multishot,-6,2000,61,64,FAIL
+1,epoll,0,2000,64,64,PASS
+1,oneshot,0,2000,64,64,PASS
+1,multishot,-6,2000,63,64,FAIL
+2,epoll,0,2000,64,64,PASS
+2,oneshot,0,2000,64,64,PASS
+2,multishot,-6,2000,60,64,FAIL

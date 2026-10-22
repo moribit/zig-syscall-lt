@@ -1,0 +1,6 @@
+1/5 continuous-tests.test_0...OK
+2/5 io-uring.continuous.protocol.test.stream parser splits and coalesces records and rejects duplicate/corruption...OK
+3/5 io-uring.continuous.tests.test.provided buffer multishot: multiple completions per SQE, recycle, EOF terminal...OK
+4/5 io-uring.continuous.tests.test.provided buffer exhaustion terminates, can recycle and rearm...OK
+5/5 io-uring.continuous.tests.test.cancel idle multishot retains buffers until terminal CQE...OK
+All 5 tests passed.

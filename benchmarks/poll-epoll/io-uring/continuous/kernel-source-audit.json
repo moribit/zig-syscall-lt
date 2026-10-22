@@ -1,0 +1,9 @@
+{
+  "url": "https://github.com/gregkh/linux/blob/v6.18.9/io_uring/poll.c",
+  "git_blob_sha": "0d5bb90d47433ba38050a7c126b88b3091bc9c6b",
+  "sha256": "77a1354ed495ddbe5d0fa7096c813febf5c1a3ec049347fed44c6ee50ae79428",
+  "has_HUP_retry_fix": false,
+  "upstream_fix": "https://github.com/torvalds/linux/commit/a68ed2df72131447d131531a08fe4dfcf4fa4653",
+  "issue": "https://github.com/axboe/liburing/issues/1549",
+  "qualification": "Stable tag source inspected; running Arch binary not disassembled; patched-kernel A/B not performed."
+}

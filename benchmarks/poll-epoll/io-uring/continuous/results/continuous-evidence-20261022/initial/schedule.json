@@ -1,0 +1,149 @@
+[
+  {
+    "case": 0,
+    "run": 0,
+    "mode": "multishot",
+    "warmup": false,
+    "seed": 2026102200
+  },
+  {
+    "case": 0,
+    "run": 0,
+    "mode": "epoll",
+    "warmup": false,
+    "seed": 2026102200
+  },
+  {
+    "case": 0,
+    "run": 0,
+    "mode": "oneshot",
+    "warmup": false,
+    "seed": 2026102200
+  },
+  {
+    "case": 3,
+    "run": 0,
+    "mode": "multishot",
+    "warmup": false,
+    "seed": 2026102200
+  },
+  {
+    "case": 3,
+    "run": 0,
+    "mode": "oneshot",
+    "warmup": false,
+    "seed": 2026102200
+  },
+  {
+    "case": 3,
+    "run": 0,
+    "mode": "epoll",
+    "warmup": false,
+    "seed": 2026102200
+  },
+  {
+    "case": 5,
+    "run": 0,
+    "mode": "multishot",
+    "warmup": false,
+    "seed": 2026102200
+  },
+  {
+    "case": 5,
+    "run": 0,
+    "mode": "epoll",
+    "warmup": false,
+    "seed": 2026102200
+  },
+  {
+    "case": 5,
+    "run": 0,
+    "mode": "oneshot",
+    "warmup": false,
+    "seed": 2026102200
+  },
+  {
+    "case": 4,
+    "run": 0,
+    "mode": "epoll",
+    "warmup": false,
+    "seed": 2026102200
+  },
+  {
+    "case": 4,
+    "run": 0,
+    "mode": "multishot",
+    "warmup": false,
+    "seed": 2026102200
+  },
+  {
+    "case": 4,
+    "run": 0,
+    "mode": "oneshot",
+    "warmup": false,
+    "seed": 2026102200
+  },
+  {
+    "case": 1,
+    "run": 0,
+    "mode": "multishot",
+    "warmup": false,
+    "seed": 2026102200
+  },
+  {
+    "case": 1,
+    "run": 0,
+    "mode": "epoll",
+    "warmup": false,
+    "seed": 2026102200
+  },
+  {
+    "case": 1,
+    "run": 0,
+    "mode": "oneshot",
+    "warmup": false,
+    "seed": 2026102200
+  },
+  {
+    "case": 2,
+    "run": 0,
+    "mode": "multishot",
+    "warmup": false,
+    "seed": 2026102200
+  },
+  {
+    "case": 2,
+    "run": 0,
+    "mode": "epoll",
+    "warmup": false,
+    "seed": 2026102200
+  },
+  {
+    "case": 2,
+    "run": 0,
+    "mode": "oneshot",
+    "warmup": false,
+    "seed": 2026102200
+  },
+  {
+    "case": 6,
+    "run": 0,
+    "mode": "oneshot",
+    "warmup": false,
+    "seed": 2026102200
+  },
+  {
+    "case": 6,
+    "run": 0,
+    "mode": "epoll",
+    "warmup": false,
+    "seed": 2026102200
+  },
+  {
+    "case": 6,
+    "run": 0,
+    "mode": "multishot",
+    "warmup": false,
+    "seed": 2026102200
+  }
+]
