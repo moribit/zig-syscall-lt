@@ -177,7 +177,7 @@ pub fn main(init: std.process.Init) !void {
         }
     } else {
         ring = try Ring.init(256, 16384);
-        if (c.mode == .multishot) group = l.IoUring.BufferGroup.init(&ring.u, a, 1, chunk, 4096) catch |err| { ring.deinit(); return err; };
+        if (c.mode == .multishot) group = @import("buffers.zig").init(&ring.u, a, chunk, 4096) catch |err| { ring.deinit(); return err; };
         for (0..c.n) |i| queue(c, &ring, &group, &w, buffers, pending, i) catch @panic("initial queue");
         ring.flush() catch @panic("initial submission");
     }

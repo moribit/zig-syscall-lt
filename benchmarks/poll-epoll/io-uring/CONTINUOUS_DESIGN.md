@@ -96,3 +96,13 @@ CPUやp99を悪化させたthroughput改善は無条件の優位としない。
 * https://man7.org/linux/man-pages/man3/io_uring_prep_recv_multishot.3.html
 * https://man7.org/linux/man-pages/man3/io_uring_setup_buf_ring.3.html
 * https://man7.org/linux/man-pages/man7/epoll.7.html
+
+## 性能測定前の追記：正しさ診断
+
+2026-10-22: incremental bufferを使った初期版は64接続・burst・全activeの
+検証で全2016レコードを受信した後、64件中60件のEOFしか観測せず停止した。
+strace付きでは完走するため原因は未特定。性能測定は開始していない。
+通常のprovided buffer（inc=false）と比較して切り分ける。
+非incremental方式を基準にする場合、各CQEのbufferを処理後に全体返却する。
+改善を狙った性能調整ではなく、EOF終端の正しさを確認する変更である。
+失敗系列も保存し、原因をZigまたはカーネルのバグと断定しない。
