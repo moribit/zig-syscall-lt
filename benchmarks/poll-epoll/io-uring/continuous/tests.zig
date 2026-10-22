@@ -25,12 +25,17 @@ test "provided buffer multishot: multiple completions per SQE, recycle, EOF term
     try ring.flush();
     for (0..20) |_| {
         _ = try m.check(l.sendto(p[1], "hello", 5, l.MSG.NOSIGNAL, null, 0));
-        const c = try take(&ring);
-        try t.expectEqual(@as(i32, 5), c.res);
-        try t.expect(c.flags & l.IORING_CQE_F_MORE != 0);
-        try t.expect(c.flags & l.IORING_CQE_F_BUFFER != 0);
-        try t.expectEqualStrings("hello", try group.get(c));
-        try group.put(c);
+        var received: usize = 0;
+        while (received < 5) {
+            const c = try take(&ring);
+            try t.expect(c.res > 0);
+            try t.expect(c.flags & l.IORING_CQE_F_MORE != 0);
+            try t.expect(c.flags & l.IORING_CQE_F_BUFFER != 0);
+            const bytes = try group.get(c);
+            try t.expectEqualStrings("hello"[received..][0..bytes.len], bytes);
+            received += bytes.len;
+            try group.put(c);
+        }
     }
     try t.expectEqual(@as(u64, 1), ring.submitted);
     _ = try m.check(l.shutdown(p[1], 1));

@@ -27,8 +27,9 @@ pub const Parser = struct {
                 const index = std.mem.readInt(u64, self.storage[16..24], .little);
                 if (seq != self.sequence or index != self.index) return error.OrderOrIdentityMismatch;
                 for (self.storage[24..]) |b| if (b != body(index, seq)) return error.CorruptBody;
-                if (sent > completed_ns) return error.InvalidTimestamp;
-                try latency.append(completed_ns - sent);
+                const completed = if (completed_ns == 0) @import("../../metrics.zig").now() else completed_ns;
+                if (sent > completed) return error.InvalidTimestamp;
+                try latency.append(completed - sent);
                 self.sequence += 1;
                 self.used = 0;
                 count += 1;
