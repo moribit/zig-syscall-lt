@@ -197,7 +197,11 @@ pub fn main(init: std.process.Init) !void {
     while (eof_count < c.n) {
         if (m.now() > start + c.duration_ns + 15000000000) {
             std.debug.print("watchdog: received={d} EOF={d}/{d} pending=", .{received, eof_count, c.n});
-            for (pending, 0..) |p, i| if (p) { std.debug.print("{d},", .{i}); };
+            for (pending, 0..) |p, i| if (p) {
+                var peek: [1]u8 = undefined;
+                const rc = l.recvfrom(w.pairs[i][0], &peek, 1, l.MSG.PEEK | l.MSG.DONTWAIT, null, null);
+                std.debug.print("{d}(peek={d},errno={s}),", .{i, rc, @tagName(l.errno(rc))});
+            };
             std.debug.print("\n", .{});
             @panic("consumer watchdog");
         }
