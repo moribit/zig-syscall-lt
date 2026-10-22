@@ -2,9 +2,9 @@ import { defineShikiSetup } from '@slidev/types'
 
 const colors = { fd: '#8bb9ff', buffer: '#7ee0cc', result: '#d8b4fe', operation: '#ffc078' }
 function role(value: string): keyof typeof colors {
-  if (/^(io|fd|fd5|0|1|2|5)$/.test(value)) return 'fd'
-  if (value.startsWith('"Hello') || /^(buf|url|"hello\\n")$/.test(value)) return 'buffer'
-  if (/^(n|6|14|128|future|response|text|res)$/.test(value)) return 'result'
+  if (/^(io|fd|fd5|fds|epfd|pipe|0|1|2|5)$/.test(value)) return 'fd'
+  if (value.startsWith('"Hello') || /^(buffer|buf|event|events|url|"hello\\n")$/.test(value)) return 'buffer'
+  if (/^(n|count|cqe|42|3000|6|14|128|future|response|text|res|revents)$/.test(value)) return 'result'
   return 'operation'
 }
 
@@ -17,7 +17,7 @@ export default defineShikiSetup(() => ({
       // still receive the same semantic hue as their explanation labels.
       const text = node.children.map((child: any) => child.children?.map((c: any) => c.value ?? '').join('') ?? child.value ?? '').join('')
       const comment = text.indexOf('//')
-      const ranges = [...text.matchAll(/"Hello, World!\\n"|"hello\\n"|\b(?:io|fd|fd5|buf|url|n|6|14|128|0|1|2|5|future|response|text|res|async|await|cancel|read|writev|write|EAGAIN)\b/g)]
+      const ranges = [...text.matchAll(/"Hello, World!\\n"|"hello\\n"|\b(?:io|fd|fd5|fds|epfd|pipe|buffer|buf|event|events|url|n|count|cqe|42|3000|6|14|128|0|1|2|5|future|response|text|res|revents|async|await|cancel|read|writev|write|poll|epoll_ctl|epoll_wait|epoll_create1|submit|copy_cqe|EAGAIN)\b/g)]
         .filter(match => comment < 0 || match.index! < comment)
         .map(match => ({ start: match.index!, end: match.index! + match[0].length, color: colors[role(match[0])] }))
       let offset = 0

@@ -188,3 +188,54 @@
 .live-ring-row { display: grid; grid-template-columns: 1fr 32px 1.6fr 32px 1fr; gap: 10px; align-items: center; margin-bottom: 25px; text-align: center; }
 .live-ring-row > div { background: #f7f7f7; border-top: 2px solid #171717; padding: 17px 10px; font-size: 21px; }
 .live-ring-row small { display: block; font-size: 18px; margin-top: 7px; line-height: 1.6; }
+
+/* Beginner edition: a dark canvas, readable semantic hues, common I/O lanes. */
+:root { --slidev-theme-primary: #e8edf4; --code-fd: #8bb9ff; --code-buffer: #7ee0cc; --code-result: #d8b4fe; --code-operation: #ffc078; }
+.slidev-layout { background: #101722; color: #e8edf4; }
+.slidev-layout h1 + p { opacity: 1; }
+.slidev-layout h1 + .big-statement { color: #d8e0ec; }
+.slidev-layout h3, .eyebrow, .takeaway, .cover-bottom, .cover-sub strong,
+.slidev-layout .big-statement strong, .live-side-note strong,
+.closing-list b, .reference-grid h3 { color: #e8edf4; }
+.cover-sub, .fine, .space-label, .flow small, .flow-node small,
+.live-terminal small, .live-observe b, .reference-grid li,
+.slidev-layout .big-statement, .excerpt-label { color: #a4b2c4; }
+.slidev-layout a { color: #c9d7ed; }
+.slidev-layout :not(pre) > code { color: #e8edf4; background: #192433; }
+.flow.horizontal > div, .flow.vertical > div, .flow-node, .live-ring-row > div { background: #192433; border-color: #75859c; }
+.connector, .diagram-arrow, .down-arrow, .flow.vertical > span { color: #a4b2c4; }
+.takeaway, .live-cue, .live-fds > div, .live-observe > div, .closing-list > div,
+.live-side-note { border-color: #3b4b62; }
+.boundary { border-color: #75859c; }
+.slidev-layout.api-section { display: grid; place-items: center; padding: 0; background: #0b111b; }
+.slidev-layout.api-section h1 { color: #f1f5fa; font-family: "JetBrains Mono", monospace; font-size: 112px; font-weight: 700; line-height: 1; letter-spacing: -.025em; margin: 0; }
+.slidev-layout .api-poll { color: #8bb9ff; }
+.slidev-layout .api-epoll { color: #ffc078; }
+.slidev-layout .api-uring { color: #d8b4fe; }
+.api-explainer h1 { margin-bottom: 16px; }
+.api-explainer pre { font-size: 18px !important; line-height: 1.6 !important; padding: 11px 16px !important; }
+.api-explainer .code-key { font-size: 17px; margin-top: 9px; gap: 22px; }
+.excerpt-label { font-size: 16px; margin: 7px 0 9px; }
+.compact-syscall { margin: 22px 40px 0; gap: 12px 25px; }
+.compact-syscall .flow-node { padding: 10px 18px; }
+.io-flow { margin-top: 15px; }
+.io-lane-head, .io-lane { display: grid; grid-template-columns: 1fr 128px 1fr; align-items: center; column-gap: 14px; }
+.io-lane-head { font-size: 20px; margin-bottom: 9px; text-align: center; }
+.io-lane-head > span { font-size: 14px; color: #a4b2c4; white-space: nowrap; }
+.io-lane { margin: 6px 0; font-size: 20px; line-height: 1.5; }
+.io-lane > div { padding: 7px 12px; text-align: center; background: #192433; border-top: 1px solid #3b4b62; }
+.io-arrow { text-align: center; color: #a4b2c4; font-size: 29px; }
+.io-registration { outline: 1px dashed #ffc078; outline-offset: 3px; margin-bottom: 12px; }
+.io-completed { text-align: center; margin-top: 9px; font-size: 18px; }
+.waiting-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 42px; margin-top: 35px; }
+.waiting-choices > div { border-top: 2px solid #75859c; padding-top: 13px; }
+.waiting-choices h3 { font-size: 25px; }
+.waiting-choices p { font-size: 23px; }
+.many-fds { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 38px; font-size: 23px; }
+.many-fds > strong { font-size: 22px; }
+.three-methods { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-top: 25px; }
+.three-methods h3 { margin: 0 0 18px; font-size: 26px; text-align: center; }
+.review-step { display: grid; grid-template-columns: 25px 1fr; gap: 10px; background: #192433; border-top: 1px solid #3b4b62; padding: 12px; font-size: 22px; text-align: center; }
+.review-step b { color: #a4b2c4; font-size: 15px; align-self: center; }
+.review-arrow { display: block; text-align: center; color: #a4b2c4; font-size: 22px; line-height: 1.4; }
+.review-data { text-align: center; font-size: 27px; margin-top: 16px; }
