@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-22T01:34:06.881Z",
+  "checkedAt": "2026-10-22T04:03:22.967Z",
   "slides": [
     {
       "number": 1,
@@ -13,135 +13,80 @@
     },
     {
       "number": 3,
-      "title": "最近よく聞く io_uring",
+      "title": "Zigとは？",
       "overflow": []
     },
     {
       "number": 4,
-      "title": "ところで、Zigとは？",
-      "overflow": []
-    },
-    {
-      "number": 5,
-      "title": "Zigでシステムコールを試す",
-      "overflow": []
-    },
-    {
-      "number": 6,
       "title": "システムコールは、OSへの依頼",
       "overflow": []
     },
     {
-      "number": 7,
+      "number": 5,
       "title": "fdは、プロセスが持つ番号",
       "overflow": []
     },
     {
+      "number": 6,
+      "title": "pollは、fdがReadyになるのを待つ",
+      "overflow": []
+    },
+    {
+      "number": 7,
+      "title": "2本のpipe、届くのは片方だけ",
+      "overflow": []
+    },
+    {
       "number": 8,
-      "title": "データがまだないとき、どうする？",
+      "title": "epollは、監視対象を登録しておく",
       "overflow": []
     },
     {
       "number": 9,
-      "title": "なぜepollは低Ready率に強い？",
+      "title": "同じpipe、同じhelloで見てみる",
       "overflow": []
     },
     {
       "number": 10,
-      "title": "Kerrisk氏の測定を、CとZigで追試",
+      "title": "io_uringは、操作を頼んで完了を受け取る",
       "overflow": []
     },
     {
       "number": 11,
-      "title": "動的に切り替えれば速くなる？",
+      "title": "READを投入すると、何が返る？",
       "overflow": []
     },
     {
       "number": 12,
-      "title": "io_uringは、I/Oを依頼して完了を受け取る",
+      "title": "「読み取れる」と「読み取った」の違い",
       "overflow": []
     },
     {
       "number": 13,
-      "title": "同じ受信処理を、3方式で実測",
+      "title": "短いプログラムでも、役割が見える",
       "overflow": []
     },
     {
       "number": 14,
-      "title": "epollは「I/Oできる状態」を教える",
+      "title": "非同期処理の、少し下を覗いてみた",
       "overflow": []
     },
     {
       "number": 15,
-      "title": "「準備完了」と「操作完了」の違い",
-      "overflow": []
-    },
-    {
-      "number": 16,
-      "title": "Zigのstd.Ioで、I/O実装を分離する",
-      "overflow": []
-    },
-    {
-      "number": 17,
-      "title": "同じコードで、syscallは変わる？",
-      "overflow": []
-    },
-    {
-      "number": 18,
-      "title": "std.Ioにも、実装ごとの対応差がある",
-      "overflow": []
-    },
-    {
-      "number": 19,
-      "title": "I/Oを差し替えられると、何がうれしい？",
-      "overflow": []
-    },
-    {
-      "number": 20,
-      "title": "io_uringなら、何でも速い？",
-      "overflow": []
-    },
-    {
-      "number": 21,
-      "title": "使いたくても使えないことがある",
-      "overflow": []
-    },
-    {
-      "number": 22,
-      "title": "非同期I/Oの裏側を覗いてみた",
-      "overflow": []
-    },
-    {
-      "number": 23,
-      "title": "参考資料",
+      "title": "デモと参考資料",
       "overflow": []
     }
   ],
   "animation": {
-    "before": 4,
+    "before": 8,
     "after": 0,
-    "url": "http://127.0.0.1:44767/12?clicks=4"
+    "url": "http://127.0.0.1:46797/10?clicks=4"
   },
   "presenter": true,
-  "codeColors": {
-    "background": "rgb(21, 30, 49)",
-    "tokens": [
-      {
-        "text": "write",
-        "color": "rgb(255, 192, 120)"
-      },
-      {
-        "text": "1",
-        "color": "rgb(139, 185, 255)"
-      },
-      {
-        "text": "\"hello",
-        "color": "rgb(126, 224, 204)"
-      },
-      {
-        "text": "6",
-        "color": "rgb(216, 180, 254)"
-      }
-    ]
+  "semanticColors": {
+    "fd": "rgb(29, 78, 216)",
+    "buffer": "rgb(15, 118, 110)",
+    "result": "rgb(126, 34, 206)",
+    "operation": "rgb(180, 83, 9)"
   }
 }

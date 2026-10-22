@@ -1,6 +1,8 @@
 # Zigで覗く、Linuxの非同期I/O
 
-Webエンジニア向けの15分LT。Slidev製、全23枚。普段のasync/awaitからLinuxのI/O機構に興味を持ち、Zigで観察して得た発見を共有します。冒頭のhotoさんのPython非同期処理LTへの言及は、タイトルの発表者ノートにある口頭説明です。
+Webエンジニア向けの15分LT。Slidev製、全15枚。Zig 0.17.0の短いプログラムとstraceで、write・blocking read・poll・epoll・io_uringを実演します。コードはターミナルで見せ、スライドは概念図と観察ポイントに絞っています。今回の実演・検証環境はmacOS上のOrbStack / Fedora Linuxです。
+
+**当日の入口：[demos/README.md](demos/README.md) / [操作と15分の配分](demos/PRESENTER.md)**。Linux内で `sh demos/check.sh` を実行して事前ビルドし、本番は `sh demos/run.sh 2 --trace` のように使います。
 
 ## 起動・出力
 
@@ -15,29 +17,25 @@ npm run export
 
 ## 構成
 
-1. Zigで覗く、Linuxの非同期I/O
+1. タイトル
 2. async/await の下では何が起きている？
-3. 最近よく聞く io_uring
-4. ところで、Zigとは？
-5. Zigでシステムコールを試す
-6. システムコールは、OSへの依頼
-7. fdは、プロセスが持つ番号
-8. データがまだないとき、どうする？
-9. なぜepollは低Ready率に強い？
-10. Kerrisk氏の測定を、CとZigで追試
-11. 動的に切り替えれば速くなる？
-12. io_uringは、I/Oを依頼して完了を受け取る
-13. 同じ受信処理を、3方式で実測
-14. epollは「I/Oできる状態」を教える
-15. 「準備完了」と「操作完了」の違い
-16. Zigのstd.Ioで、I/O実装を分離する
-17. 同じコードで、syscallは変わる？
-18. std.Ioにも、実装ごとの対応差がある
-19. I/Oを差し替えられると、何がうれしい？
-20. io_uringなら、何でも速い？
-21. 使いたくても使えないことがある
-22. 非同期I/Oの裏側を覗いてみた
-23. 参考資料
+3. Zigとは？（writeミニデモ）
+4. システムコールは、OSへの依頼
+5. fdは、プロセスが持つ番号（blocking readミニデモ）
+6. pollは、fdがReadyになるのを待つ
+7. pollライブデモ
+8. epollは、監視対象を登録しておく
+9. epollライブデモ
+10. io_uringは、操作を頼んで完了を受け取る
+11. io_uringライブデモ
+12. 「読み取れる」と「読み取った」の違い
+13. 短いプログラムでも、役割が見える
+14. 非同期処理の、少し下を覗いてみた
+15. デモと参考資料
+
+本編14分（io_uring実演3分を含む）＋操作の余白1分。人間の説明を含むリハーサルはPRESENTERの実測欄で確認してください。
+
+性能比較・Adaptive・Kerrisk追試・std.Ioの詳細は本編から外しました。既存のベンチマーク・raw・グラフ・分析は維持し、[旧23枚と当時のREADME](docs/archive/pre-live-demo-ae3ee2a/)も保存しています。以下の旧検証項目・実験レポートは補足資料です。
 
 ## 編集
 
@@ -45,11 +43,23 @@ npm run export
 - `styles/index.css`：白背景・黒文字、図と余白、ダークコード背景
 - `setup/shiki.ts`：構文ハイライトと説明に対応する色
 - `global-bottom.vue`：ページ番号
-- `snippets/`：Zig 0.17.0の完全な実行例
+- `demos/`：今回のライブデモ5本・事前ビルド/検証・成功ログ・当日手順
+- `snippets/`：従来のZig 0.17.0実行例（補足）
 
-青はfd/I/Oインターフェース、緑はバッファ、紫はbyte数・結果、茶は操作。白背景の説明とダーク背景のコードで同じ色相を使い、ラベルも併記しています。SQ/CQ、epollの流れ、両方式の比較はクリックで段階表示します。PDFには最終状態を出力します。
+青はfd、緑はバッファ/データ、紫はbyte数・結果・user_data、茶は操作。同じ意味を図と説明で対応させ、ラベルも併記しています。本編にコードブロックはありません。従来のダークコード背景と構文ハイライト設定は補足資料向けに維持しています。SQ/CQは4クリックで段階表示し、PDFには最終状態を出力します。
 
-## 検証
+## ライブデモの検証
+
+OrbStack / Linux 7.0.14 / aarch64 / Zig 0.17.0で全5本×20回とstrace確認に成功。ログ・ソースハッシュ・ELF確認は[demos/recordings/validation-orbstack](demos/recordings/validation-orbstack)に保存しています。fdのcloseも確認しました。
+
+```sh
+# Linux内で実行
+sh demos/check.sh
+# Slidevビルド後に表示を確認
+npm run check:visual
+```
+
+## 旧スニペット・補足資料の検証
 
 Zig **0.17.0**、Node.jsが必要です。Linux固有コードの実行にはLinuxを使ってください。
 

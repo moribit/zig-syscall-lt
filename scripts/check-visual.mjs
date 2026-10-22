@@ -16,9 +16,13 @@ const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PAT
 const page = await browser.newPage({ viewport: { width: 1100, height: 619 } });
 const out = process.env.VISUAL_OUTPUT || '/tmp/zig-lt-visual';
 await mkdir(out, { recursive: true });
+const source = await readFile('slides.md', 'utf8');
+const slideCount = (source.match(/^---\s*$/gm) || []).length - 1;
+assert.equal(slideCount, 15);
+assert(!source.includes('```'), 'Live deck must not contain code blocks');
 const report = { checkedAt: new Date().toISOString(), slides: [], animation: {}, presenter: false };
 try {
-  for (let i = 1; i <= 23; i++) {
+  for (let i = 1; i <= slideCount; i++) {
     await page.goto(`${base}/${i}?clicks=99`);
     await page.locator('.slidev-layout:visible').first().waitFor();
     await page.evaluate(() => document.fonts.ready);
@@ -37,24 +41,21 @@ try {
     report.slides.push({ number: i, ...state });
     await page.screenshot({ path: `${out}/slide-${String(i).padStart(2,'0')}.png` });
   }
-  await page.goto(`${base}/5?clicks=99`); await page.waitForTimeout(200);
-  report.codeColors = await page.locator('.slidev-layout:visible pre').first().evaluate(el => ({
-    background: getComputedStyle(el).backgroundColor,
-    tokens: [...el.querySelectorAll('span')].filter(s => !s.children.length && ['1','6','write','"hello','hello'].includes(s.textContent)).map(s => ({ text: s.textContent, color: getComputedStyle(s).color }))
-  }));
-  assert.equal(report.codeColors.background, 'rgb(21, 30, 49)');
-  for (const [token, color] of [['1','rgb(139, 185, 255)'], ['6','rgb(216, 180, 254)'], ['write','rgb(255, 192, 120)']]) {
-    assert(report.codeColors.tokens.some(t => t.text===token && t.color===color), `Semantic color: ${token}`);
+  await page.goto(`${base}/7?clicks=99`); await page.waitForTimeout(200);
+  report.semanticColors = {};
+  for (const [concept,color] of [['fd','rgb(29, 78, 216)'], ['buffer','rgb(15, 118, 110)'], ['result','rgb(126, 34, 206)'], ['operation','rgb(180, 83, 9)']]) {
+    const actual = await page.locator(`.slidev-layout:visible .ref-${concept}`).first().evaluate(el => getComputedStyle(el).color);
+    assert.equal(actual,color); report.semanticColors[concept]=actual;
   }
-  await page.goto(`${base}/12?clicks=0`); await page.waitForTimeout(300);
+  await page.goto(`${base}/10?clicks=0`); await page.waitForTimeout(300);
   const before = await page.locator('.slidev-vclick-hidden').count();
   for (let i=0;i<4;i++) await page.keyboard.press('ArrowRight');
   await page.waitForTimeout(300);
   const after = await page.locator('.slidev-vclick-hidden').count();
   report.animation = { before, after, url: page.url() };
-  assert(before>after, 'Click steps must reveal the flow');
-  await page.goto(`${base}/presenter/12`); await page.waitForTimeout(500);
-  report.presenter = (await page.locator('body').innerText()).includes('目安80秒');
+  assert(before>after && new URL(page.url()).pathname==='/10', 'Four click steps must reveal SQ/CQ on slide 10');
+  await page.goto(`${base}/presenter/11`); await page.waitForTimeout(500);
+  report.presenter = (await page.locator('body').innerText()).includes('目安180秒');
   assert(report.presenter, 'Presenter notes must be available');
   await writeFile('docs/validation-visual.json', JSON.stringify(report,null,2)+'\n');
   console.log(JSON.stringify(report,null,2));

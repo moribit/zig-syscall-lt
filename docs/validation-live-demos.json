@@ -1,0 +1,76 @@
+{
+  "environment": "OrbStack / Fedora 44 / aarch64 / Linux 7.0.14 / Zig 0.17.0",
+  "optimization": "ReleaseSafe",
+  "sources": {
+    "02-poll.zig": "3806cff978b69b18ea20f558042ecc131d58302a4d8afd405c5282842d28f80b",
+    "03-epoll.zig": "780f65aec737367952c5b98e5489fdd025ff95256d6c123ce98f595e513f5ebb",
+    "04-io-uring.zig": "d474f091bea54ae00a269c572cb7a46bdc2139ba94be83d40222b71f64e45295",
+    "00-write.zig": "1838ee6dbbbd7d4f985bb07da81c06a64e0453086ff2b69b2d11d4cdfae03dcc",
+    "01-blocking.zig": "b9c2ba5ebb6b524a79223e52f28225f90dcb66c2c36edd00fae1b19bed2fec3b"
+  },
+  "repetitions_per_demo": 20,
+  "successful_runs": 100,
+  "traced_runs": 5,
+  "standalone_zig_run": "PASS (all 5)",
+  "reverse_order": "PASS (4,3,2,1,0)",
+  "dynamic_dependencies": "none (no ELF INTERP/NEEDED)",
+  "resources": {
+    "00-write": {
+      "created_fds": [],
+      "closed_all_created_fds": true,
+      "exit_success": true
+    },
+    "01-blocking": {
+      "created_fds": [
+        3,
+        4
+      ],
+      "closed_all_created_fds": true,
+      "exit_success": true
+    },
+    "02-poll": {
+      "created_fds": [
+        3,
+        4,
+        5,
+        6
+      ],
+      "closed_all_created_fds": true,
+      "exit_success": true
+    },
+    "03-epoll": {
+      "created_fds": [
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "closed_all_created_fds": true,
+      "exit_success": true
+    },
+    "04-io-uring": {
+      "created_fds": [
+        3,
+        4,
+        5
+      ],
+      "closed_all_created_fds": true,
+      "exit_success": true
+    }
+  },
+  "historical_files_unchanged": 329,
+  "slides": 15,
+  "slidev_build": "PASS",
+  "pdf_export": "PASS",
+  "pdf_pages": 15,
+  "pdf_visual_review": "all 15 pages rendered and inspected",
+  "semantic_colors": "PASS",
+  "sq_cq_clicks": 4,
+  "presenter_notes": "PASS",
+  "planned_total_seconds": 900,
+  "planned_content_seconds": 840,
+  "planned_io_uring_demo_seconds": 180,
+  "human_rehearsal": "not performed; checklist and actual-time fields in demos/PRESENTER.md",
+  "pdf_sha256": "5cd5d4cb85db266e629e3c10335896e0b2e79d41a8b6e16438bd41ce575b9824"
+}
